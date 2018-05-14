@@ -11,7 +11,7 @@ defmodule Lb2.Application do
       # Start the Ecto repository
       supervisor(Lb2.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(Lb2Web.Endpoint, []),
+      supervisor(Lb2Web.Endpoint, [])
       # Start your own worker by calling: Lb2.Worker.start_link(arg1, arg2, arg3)
       # worker(Lb2.Worker, [arg1, arg2, arg3]),
     ]
