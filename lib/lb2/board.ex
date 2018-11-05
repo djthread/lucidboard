@@ -28,9 +28,7 @@ defmodule Lb2.Board do
   end
 
   defp column_by_id(column_id) do
-    c in Column, select: c, where: c.id == ^column_id
-    |> from()
-    |> Repo.one()
+    Repo.one(from c in Column, where: c.id == ^column_id, select: c)
   end
 
   defp do_create_card(content) do

@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+
+  db:
+    restart: always
+    container_name: postgres
+    image: postgres
+    ports: [ '5432:5432' ]
+    environment:
+      POSTGRES_PASSWORD: aoeuaoeu
+    volumes:
+      - $PWD/postgres_data:/var/lib/postgres/data

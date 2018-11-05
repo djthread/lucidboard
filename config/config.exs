@@ -17,6 +17,9 @@ config :lb2, Lb2Web.Endpoint,
   pubsub: [name: Lb2.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :phoenix, :json_library, Jason
+
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

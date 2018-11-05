@@ -1,5 +1,7 @@
 defmodule Lb2.Repo do
-  use Ecto.Repo, otp_app: :lb2
+  use Ecto.Repo,
+    otp_app: :lb2,
+    adapter: Ecto.Adapters.Postgres
 
   @doc """
   Dynamically loads the repository url from the
