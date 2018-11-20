@@ -10,7 +10,7 @@ bin/dev.sh
 
 The [script's comments](bin/dev.sh) explain a bit more, but you'll get two
 docker containers -- a Postgres database (`lb2_dev_db`) and an Elixir
-development container (`lb2_dev`). The script will then run the fish shell
+development container (`lb2_dev_app`). The script will then run the fish shell
 inside the latter, dropping you into `/app` where the project files reside.
 
 When running this the first time, you'll need to install the dependencies and
