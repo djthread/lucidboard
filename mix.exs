@@ -41,9 +41,9 @@ defmodule Lb2.Mixfile do
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
-      {:credo, "~> 0.7", only: [:dev, :test]},
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.0"},
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -57,7 +57,8 @@ defmodule Lb2.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      lint: "credo --strict"
     ]
   end
 end
