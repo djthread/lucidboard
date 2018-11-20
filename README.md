@@ -1,15 +1,38 @@
 # Lb2
 
-To start your Phoenix server:
+A kanban tool.
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
+To start your Phoenix development environment:
+
+```bash
+assets/scripts/dev.sh
+```
+
+The [script's comments](assets/scripts/dev.sh) explain a bit more, but you'll
+get two docker containers -- a Postgres database (`lb2_dev_db`) and an Elixir
+development container (`lb2_dev`). The script will then run the fish shell
+inside the latter, dropping your into `/app` where the project files reside.
+
+When running this the first time, you'll need to install the dependencies and
+initialize the database:
+
+```bash
+mix deps.get
+cd assets; npm install; cd ..
+mix ecto.create
+mix ecto.migrate
+```
+
+Finally, start the application with `imp`. This is an alias for `iex -S mix
+phx.server` which will run the app with Elixir's interactive repl, iex. This
+will allow you to test lines of Elixir code and interact with the running
+application.
+
+```bash
+imp
+```
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
 
 ## Learn more
 

@@ -1,0 +1,24 @@
+version: '3.2'
+
+services:
+  db:
+    container_name: lb2_dev_db
+    image: postgres
+    volumes: [ "../db-docker-data:/var/lib/postgresql/data" ]
+    environment:
+      POSTGRES_PASSWORD: verysecure123
+
+  web:
+    container_name: lb2_dev
+    build: .
+    image: elixir-dev
+    tty: true
+    stdin_open: true
+    depends_on: [ db ]
+    volumes: [ "../..:/app" ]
+    ports: [ "4000:4000" ]
+    environment:
+      PG_PASS: verysecure123
+      PG_USER: postgres
+      PG_DB: lb2
+      PG_HOST: db
