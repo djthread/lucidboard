@@ -22,6 +22,20 @@ config :lb2, Lb2.Repo,
   hostname: System.get_env("PG_HOST"),
   pool_size: 10
 EOF
+
+cat << EOF
+Elixir development environment initialized!
+
+To install dependencies and set up the database, run the following commanads:
+
+    mix deps.get
+    cd assets; npm install; cd ..
+    mix ecto.create
+    mix ecto.migrate
+
+(Or execute these commands with the shortcut - \`setup\`)
+
+EOF
 fi
 
 docker-compose -p lb2_dev -f "$DIR/../assets/dev-env/docker-compose.yml" up -d
