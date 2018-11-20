@@ -1,11 +1,21 @@
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Lb2.Repo.insert!(%Lb2.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+alias Lb2.Repo
+alias Lb2.Board
+
+# jazz_genre = Repo.insert!(%Genre{ name: "jazz", wiki_tag: "Jazz" })
+# live_genre = Repo.insert!(%Genre{ name: "live", wiki_tag: "Concert" })
+
+# Repo.insert! %Artist{
+#   name: "Miles Davis",
+#   albums: [
+#     %Album{
+#       title: "Kind Of Blue",
+#       genres: [jazz_genre],
+#       tracks: [
+#         %Track{
+#           title: "So What",
+#           duration: 544,
+#           index: 1
+#         }
+#       }
+#     ]
+#   }

@@ -19,8 +19,7 @@ initialize the database:
 ```bash
 mix deps.get
 cd assets; npm install; cd ..
-mix ecto.create
-mix ecto.migrate
+mix ecto.setup
 ```
 
 Finally, start the application with `imp`. This is an alias for `iex -S mix

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Lucidboard2 docker-based dev environment starter
+# Lb2 docker-based dev environment starter
 #
 #   1. Write `dev.secret.exs` if it doesn't already exist
 #   2. docker-compose up -d (runs postgres and elixir containers)
@@ -30,8 +30,7 @@ To install dependencies and set up the database, run the following commanads:
 
     mix deps.get
     cd assets; npm install; cd ..
-    mix ecto.create
-    mix ecto.migrate
+    mix ecto.setup
 
 (Or execute these commands with the shortcut - \`setup\`)
 

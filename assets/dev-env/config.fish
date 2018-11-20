@@ -6,7 +6,6 @@ alias mdu "mix deps.update --all"
 function setup
     mix deps.get; and \
     cd assets; npm install; and cd ..; \
-    mix ecto.create; and \
-    mix ecto.migrate; and \
+    mix ecto.setup; and \
     echo "You may now start the dev server with `imp`."
 end
