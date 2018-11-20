@@ -8,8 +8,8 @@ To start your Phoenix development environment:
 bin/dev.sh
 ```
 
-The [script's comments](assets/scripts/dev.sh) explain a bit more, but you'll
-get two docker containers -- a Postgres database (`lb2_dev_db`) and an Elixir
+The [script's comments](bin/dev.sh) explain a bit more, but you'll get two
+docker containers -- a Postgres database (`lb2_dev_db`) and an Elixir
 development container (`lb2_dev`). The script will then run the fish shell
 inside the latter, dropping you into `/app` where the project files reside.
 
