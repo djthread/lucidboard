@@ -11,7 +11,7 @@ assets/scripts/dev.sh
 The [script's comments](assets/scripts/dev.sh) explain a bit more, but you'll
 get two docker containers -- a Postgres database (`lb2_dev_db`) and an Elixir
 development container (`lb2_dev`). The script will then run the fish shell
-inside the latter, dropping your into `/app` where the project files reside.
+inside the latter, dropping you into `/app` where the project files reside.
 
 When running this the first time, you'll need to install the dependencies and
 initialize the database:
@@ -33,6 +33,14 @@ imp
 ```
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+To close down and remove the docker containers, run the following script.
+Don't worry - all your code and database data (in `assets/db-docker-data`)
+will remain intact for next time.
+
+```bash
+assets/scripts/dev-down.sh
+```
 
 ## Learn more
 
