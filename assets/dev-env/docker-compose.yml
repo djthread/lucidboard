@@ -8,8 +8,8 @@ services:
     environment:
       POSTGRES_PASSWORD: verysecure123
 
-  web:
-    container_name: lb2_dev
+  app:
+    container_name: lb2_dev_app
     build: .
     image: elixir-dev
     tty: true

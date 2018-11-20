@@ -8,7 +8,7 @@
 #
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-SECRETFILE="$DIR/../../config/dev.secret.exs"
+SECRETFILE="$DIR/../config/dev.secret.exs"
 
 if [ ! -f "$SECRETFILE" ]; then
     cat << EOF > "$SECRETFILE"
@@ -24,6 +24,6 @@ config :lb2, Lb2.Repo,
 EOF
 fi
 
-docker-compose -f "$DIR/../dev-env/docker-compose.yml" up -d
+docker-compose -p lb2_dev -f "$DIR/../assets/dev-env/docker-compose.yml" up -d
 
-docker exec -it lb2_dev fish
+docker exec -it lb2_dev_app fish

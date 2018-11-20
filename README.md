@@ -5,7 +5,7 @@ A kanban tool.
 To start your Phoenix development environment:
 
 ```bash
-assets/scripts/dev.sh
+bin/dev.sh
 ```
 
 The [script's comments](assets/scripts/dev.sh) explain a bit more, but you'll
@@ -39,7 +39,7 @@ Don't worry - all your code and database data (in `assets/db-docker-data`)
 will remain intact for next time.
 
 ```bash
-assets/scripts/dev-down.sh
+bin/dev-down.sh
 ```
 
 ## Learn more
