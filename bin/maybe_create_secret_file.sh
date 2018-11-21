@@ -14,10 +14,10 @@ use Mix.Config
 
 config :lb2, Lb2.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("PG_USER"),
-  password: System.get_env("PG_PASS"),
-  database: System.get_env("PG_DB"),
-  hostname: System.get_env("PG_HOST"),
+  username: "postgres",
+  password: "verysecure123",
+  database: "lb2",
+  hostname: System.get_env("PG_HOST") || "localhost",
   pool_size: 10
 EOF
     exit 0

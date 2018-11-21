@@ -17,13 +17,11 @@ if "$DIR/maybe_create_secret_file.sh"; then
     cat << EOF
 Elixir development environment initialized!
 
-To install dependencies and set up the database, run the following commanads:
+To install dependencies and set up the database, run the following commands:
 
     mix deps.get
     cd assets; npm install; cd ..
     mix ecto.setup
-
-(Or execute these commands with the shortcut - \`setup\`)
 
 EOF
 fi
@@ -32,6 +30,7 @@ docker-compose -p lb2_dev \
     -f assets/dev-env/docker-compose.yml \
     run -d \
     -p 5432:5432 \
+    -e PG_HOST=localhost \
     --name lb2_dev_db \
     db && \
     echo "Postgres started. Listening on localhost:5432."

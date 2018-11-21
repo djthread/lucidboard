@@ -4,9 +4,10 @@ defmodule Lb2.Repo.Migrations.Initial do
 
   def change do
     create table("boards") do
-      add :name, :string
+      add :title, :string
       add :columns, {:array, :jsonb}, default: []
 
       timestamps()
     end
+  end
 end

@@ -18,7 +18,4 @@ services:
     volumes: [ "../..:/app" ]
     ports: [ "4000:4000" ]
     environment:
-      PG_PASS: verysecure123
-      PG_USER: postgres
-      PG_DB: lb2
       PG_HOST: db
