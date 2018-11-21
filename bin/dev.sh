@@ -6,24 +6,15 @@
 #   2. docker-compose up -d (runs postgres and elixir containers)
 #   3. Run fish, a friendly shell
 #
+# Note that if you have Elixir installed to your system, you may like to run
+# only postgres as a container. In this case, `db.sh` can be used instead of
+# this script. (`down.sh` will still work.)
+#
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-SECRETFILE="$DIR/../config/dev.secret.exs"
 
-if [ ! -f "$SECRETFILE" ]; then
-    cat << EOF > "$SECRETFILE"
-use Mix.Config
-
-config :lb2, Lb2.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("PG_USER"),
-  password: System.get_env("PG_PASS"),
-  database: System.get_env("PG_DB"),
-  hostname: System.get_env("PG_HOST"),
-  pool_size: 10
-EOF
-
-cat << EOF
+if "$DIR/maybe_create_secret_file.sh"; then
+    cat << EOF
 Elixir development environment initialized!
 
 To install dependencies and set up the database, run the following commanads:
@@ -37,6 +28,8 @@ To install dependencies and set up the database, run the following commanads:
 EOF
 fi
 
-docker-compose -p lb2_dev -f "$DIR/../assets/dev-env/docker-compose.yml" up -d
+docker-compose -p lb2_dev \
+    -f "$DIR/../assets/dev-env/docker-compose.yml" \
+    up -d
 
 docker exec -it lb2_dev_app fish
