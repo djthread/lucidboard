@@ -1,13 +1,10 @@
-defmodule Lb2.Board do
-  @moduledoc "Board Context"
-
+defmodule Lb2.LiveBoard do
+  @moduledoc """
+  A running board as a process
+  """
   import Ecto.Query
-  alias Lb2.Board.{Board, Column, Card}
+  alias Lb2.{Board, Card, Column}
   alias Lb2.Repo
-
-  def create_test_board do
-    create_board(~w(First Second Third))
-  end
 
   def create_card(column_id, content) do
     with %Column{} = col <- column_by_id(column_id),

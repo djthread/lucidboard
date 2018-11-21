@@ -1,10 +1,12 @@
-defmodule Lb2.Board.Board do
+defmodule Lb2.Board do
+  @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
+  alias Lb2.Column
 
   schema "boards" do
-    field :name, :string
-    field :columns, {:array, :integer}, cards: []
+    field :title, :string
+    embeds_many :columns, Column, on_replace: :delete
 
     timestamps()
   end
