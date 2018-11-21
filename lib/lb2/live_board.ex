@@ -18,14 +18,13 @@ defmodule Lb2.LiveBoard do
   def append_card_to_column(%Column{} = col, %Card{} = card) do
     cards = col.cards ++ [card.id]
 
-    with %{valid?: true} = changeset <-
-           Column.changeset(col, %{cards: cards}) do
+    with %{valid?: true} = changeset <- Column.changeset(col, %{cards: cards}) do
       Repo.update(changeset)
     end
   end
 
   defp column_by_id(column_id) do
-    Repo.one(from c in Column, where: c.id == ^column_id, select: c)
+    Repo.one(from(c in Column, where: c.id == ^column_id, select: c))
   end
 
   defp do_create_card(content) do

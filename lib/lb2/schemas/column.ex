@@ -5,8 +5,8 @@ defmodule Lb2.Column do
   alias Lb2.Card
 
   embedded_schema do
-    field :title, :string
-    embeds_many :cards, Card, on_replace: :delete
+    field(:title, :string)
+    embeds_many(:cards, Card, on_replace: :delete)
   end
 
   @doc false

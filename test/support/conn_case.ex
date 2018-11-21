@@ -14,6 +14,7 @@ defmodule Lb2Web.ConnCase do
   """
 
   use ExUnit.CaseTemplate
+  alias Ecto.Adapters.SQL.Sandbox
 
   using do
     quote do
@@ -26,13 +27,13 @@ defmodule Lb2Web.ConnCase do
     end
   end
 
-
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Lb2.Repo)
+    :ok = Sandbox.checkout(Lb2.Repo)
+
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Lb2.Repo, {:shared, self()})
+      Sandbox.mode(Lb2.Repo, {:shared, self()})
     end
+
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
-
 end

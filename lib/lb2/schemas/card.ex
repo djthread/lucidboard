@@ -4,7 +4,7 @@ defmodule Lb2.Card do
   import Ecto.Changeset
 
   embedded_schema do
-    field :body, :string
+    field(:body, :string)
   end
 
   @doc false

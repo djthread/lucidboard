@@ -5,8 +5,8 @@ defmodule Lb2.Board do
   alias Lb2.Column
 
   schema "boards" do
-    field :title, :string
-    embeds_many :columns, Column, on_replace: :delete
+    field(:title, :string)
+    embeds_many(:columns, Column, on_replace: :delete)
 
     timestamps()
   end

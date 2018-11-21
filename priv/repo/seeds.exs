@@ -14,4 +14,4 @@ Repo.insert!(%Board{
       ]
     }
   ]
-)
+})

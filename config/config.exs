@@ -12,13 +12,12 @@ config :lb2,
 # Configures the endpoint
 config :lb2, Lb2Web.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "ynHoNC75BVRedbPP06+hVh6fj9+J2vP+K51G0J9F7xeeqYXSMpHJ4cYT1N70Qqlw",
+  secret_key_base:
+    "ynHoNC75BVRedbPP06+hVh6fj9+J2vP+K51G0J9F7xeeqYXSMpHJ4cYT1N70Qqlw",
   render_errors: [view: Lb2Web.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Lb2.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Lb2.PubSub, adapter: Phoenix.PubSub.PG2]
 
 config :phoenix, :json_library, Jason
-
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -27,4 +26,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
