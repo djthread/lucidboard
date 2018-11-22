@@ -9,6 +9,8 @@ defmodule Lb2.Application do
 
     children = [
       supervisor(Lb2.Repo, []),
+      {Registry, keys: :unique, name: Lb2.BoardRegistry},
+      {DynamicSupervisor, name: Lb2.BoardSupervisor, strategy: :one_for_one},
       supervisor(Lb2Web.Endpoint, [])
     ]
 

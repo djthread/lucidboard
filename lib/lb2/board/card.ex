@@ -1,4 +1,4 @@
-defmodule Lb2.Card do
+defmodule Lb2.Board.Card do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset

@@ -1,8 +1,8 @@
-defmodule Lb2.Column do
+defmodule Lb2.Board.Column do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lb2.Card
+  alias Lb2.Board.Card
 
   embedded_schema do
     field(:title, :string)
