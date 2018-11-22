@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :lb2, Lb2Web.Endpoint,
-  http: [port: 4000],
+  http: [port: 8800],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -30,7 +30,7 @@ config :lb2, Lb2Web.Endpoint,
 #
 # The `http:` config above can be replaced with:
 #
-#     https: [port: 4000, keyfile: "priv/server.key", certfile: "priv/server.pem"],
+#     https: [port: 8800, keyfile: "priv/server.key", certfile: "priv/server.pem"],
 #
 # If desired, both `http:` and `https:` keys can be
 # configured to run both http and https servers on

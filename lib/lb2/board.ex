@@ -1,8 +1,9 @@
 defmodule Lb2.Board do
   @moduledoc """
-  A context for the board
+  A context for board operations
   """
-  alias Lb2.Board.{Board, Card, Column}
+  # alias Lb2.Board.{Board, Card, Column}
+  alias Lb2.Board.Board
   alias Lb2.Repo
   import Ecto.Query
 

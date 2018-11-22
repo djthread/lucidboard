@@ -31,7 +31,7 @@ application.
 imp
 ```
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Now you can visit [`localhost:8800`](http://localhost:8800) from your browser.
 
 To close down and remove the docker containers, run the following script.
 Don't worry - all your code and database data (in `assets/db-docker-data`)

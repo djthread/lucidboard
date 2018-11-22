@@ -14,7 +14,7 @@ RUN bash nodesource_setup.sh
 RUN apt-get install nodejs
 
 WORKDIR /app
-EXPOSE 4000
+EXPOSE 8800
 
 COPY config.fish /root/.config/fish/config.fish
 

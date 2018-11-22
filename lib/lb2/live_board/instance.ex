@@ -4,7 +4,6 @@ defmodule Lb2.LiveBoard.Instance do
   """
   use GenServer
   alias Lb2.Board, as: B
-  alias Lb2.Board.Board
 
   @registry Lb2.BoardRegistry
 
@@ -16,8 +15,8 @@ defmodule Lb2.LiveBoard.Instance do
   @impl true
   def init(id) do
     case B.by_id(id) do
-      %Board{} = board -> {:ok, board}
       nil -> {:stop, :not_found}
+      board -> {:ok, board}
     end
   end
 end
