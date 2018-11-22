@@ -1,5 +1,5 @@
 alias Lb2.Repo
-alias Lb2.{Board, Card, Column}
+alias Lb2.Board.{Board, Card, Column}
 
 Repo.insert!(%Board{
   title: "My Test Board",
