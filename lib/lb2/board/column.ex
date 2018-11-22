@@ -2,11 +2,11 @@ defmodule Lb2.Board.Column do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lb2.Board.Card
+  alias Lb2.Board.Slot
 
   embedded_schema do
     field(:title, :string)
-    embeds_many(:cards, Card, on_replace: :delete)
+    embeds_many(:slots, Slot, on_replace: :delete)
   end
 
   @doc false

@@ -7,13 +7,13 @@
 #
 # Steps:
 #
-#   1. Write `dev.secret.exs` if it doesn't already exist
+#   1. Write secret files if they don't already exist
 #   2. Start postgres, volume-mounted to `assets/db-docker-data`
 #
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-if "$DIR/maybe_create_secret_file.sh"; then
+if "$DIR/maybe_create_secret_files.sh"; then
     cat << EOF
 Elixir development environment initialized!
 

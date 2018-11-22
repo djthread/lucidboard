@@ -2,7 +2,7 @@
 #
 # Lb2 docker-based dev environment starter
 #
-#   1. Write `dev.secret.exs` if it doesn't already exist
+#   1. Write secret files if they don't already exist
 #   2. docker-compose up -d (runs postgres and elixir containers)
 #   3. Run fish, a friendly shell
 #
@@ -13,7 +13,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-if "$DIR/maybe_create_secret_file.sh"; then
+if "$DIR/maybe_create_secret_files.sh"; then
     cat << EOF
 Elixir development environment initialized!
 
