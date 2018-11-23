@@ -1,28 +1,30 @@
 defmodule Lb2.LiveBoard do
   @moduledoc """
-  Facade module for boards running as processes
+  GenServer for a live board
   """
+  use GenServer
+  alias Lb2.Board.Board
   # alias Lb2.Board.{Board, Card, Column}
-  alias Lb2.LiveBoard.Instance
+  alias Lb2.Board, as: B
 
-  @registry Lb2.BoardRegistry
-  @supervisor Lb2.BoardSupervisor
-
-  @spec open(integer) :: DynamicSupervisor.on_start_child()
-  def open(id, opts \\ []) do
-    supervisor = Keyword.get(opts, :supervisor, @supervisor)
-    DynamicSupervisor.start_child(supervisor, {Instance, id})
+  def start_link({board, name}) do
+    with {:ok, pid} <- GenServer.start_link(__MODULE__, board, name: name) do
+      {:ok, pid, board}
+    end
   end
 
-  @spec close(integer) :: :ok | {:error, :not_found}
-  def close(id, opts \\ []) do
-    supervisor = Keyword.get(opts, :supervisor, @supervisor)
-    [{pid, nil}] = Registry.lookup(@registry, id)
-    DynamicSupervisor.terminate_child(supervisor, pid)
-  end
+  @impl true
+  def init(%Board{id: nil}),
+    do: {:stop, "Board must exist in the database. (:id was nil.)"}
 
-  def call(board_id, msg) do
-    GenServer.call({:via, Registry, {@registry, board_id}}, msg)
+  def init(%Board{} = board), do: {:ok, board}
+
+  @impl true
+  def handle_call(msg, _from, board) do
+    case B.act(board, msg) do
+      {:ok, new_board} -> {:reply, new_board, new_board}
+      {:error, bad} -> {:reply, bad, board}
+    end
   end
 
   # def create_card(column_id, content) do

@@ -1,14 +1,15 @@
 defmodule Lb2.LiveBoardTest do
-  use ExUnit.Case, async: true
+  use Lb2Web.ConnCase
+  alias Lb2.Board, as: B
   alias Lb2.Board.Board
-  alias Lb2.LiveBoard
   alias Lb2.Repo
 
   test "Dynamic supervisor functions" do
-    opts = [supervisor: TestSupervisorName]
-    %{id: id} = %Board{title: "Awesome"} |> Repo.insert!()
-    {:ok, pid} = LiveBoard.open(id, opts)
+    {:ok, pid, board} = Lb2.start_live_board(%Board{title: "Awesome"})
     assert is_pid(pid)
-    :ok = LiveBoard.close(id, opts)
+    assert %Board{} = board
+    assert %{title: "Awesome"} = Lb2.call(board.id, :board)
+    :ok = Lb2.stop_live_board(board.id)
+    assert %{title: "Awesome"} = B.by_id(board.id)
   end
 end
