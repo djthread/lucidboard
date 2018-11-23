@@ -23,18 +23,7 @@ config :lb2, Lb2.Repo,
 EOF
 
     if [ ! -f "$TESTSECRETFILE" ]; then
-        cat << EOF > "$DEVSECRETFILE"
-use Mix.Config
-
-config :lb2, Lb2.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("PG_USER") || "postgres",
-  password: System.get_env("PG_PASS") || "verysecure123",
-  database: System.get_env("PG_DB") || "lb2",
-  hostname: System.get_env("PG_HOST") || "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
-EOF
+        cp "$DEVSECRETFILE" > "$TESTSECRETFILE"
         exit 0
     fi
 fi

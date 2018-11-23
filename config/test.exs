@@ -6,6 +6,10 @@ config :lb2, Lb2Web.Endpoint,
   http: [port: 8801],
   server: false
 
+config :lb2, Lb2.Repo,
+  pool: Ecto.Adapters.SQL.Sandbox
+EOF
+
 # Print only warnings and errors during test
 config :logger, level: :warn
 
