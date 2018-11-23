@@ -1,5 +1,4 @@
 defmodule Lb2.Repo.Migrations.Initial do
-  @moduledoc false
   use Ecto.Migration
 
   def change do
