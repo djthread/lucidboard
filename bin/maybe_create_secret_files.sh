@@ -23,7 +23,7 @@ config :lb2, Lb2.Repo,
 EOF
 
     if [ ! -f "$TESTSECRETFILE" ]; then
-        cp "$DEVSECRETFILE" > "$TESTSECRETFILE"
+        cp "$DEVSECRETFILE" "$TESTSECRETFILE"
         exit 0
     fi
 fi
