@@ -1,4 +1,4 @@
-defmodule Lb2.Board.Slot do
+defmodule Lb2.Board.Pile do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
@@ -9,9 +9,9 @@ defmodule Lb2.Board.Slot do
   end
 
   @doc false
-  def changeset(slot, attrs) do
-    slot
-    |> cast(attrs, [:cards])
-    |> validate_required([:cards])
+  def changeset(pile, attrs) do
+    pile
+    |> cast(attrs, [])
+    |> cast_embed(:cards)
   end
 end

@@ -2,10 +2,26 @@ defmodule Lb2.LiveBoard do
   @moduledoc """
   GenServer for a live board
   """
+
   use GenServer
-  alias Lb2.Board.Board
-  # alias Lb2.Board.{Board, Card, Column}
   alias Lb2.Board, as: B
+  alias Lb2.Board.{Board, Event}
+
+  defmodule State do
+    @moduledoc """
+    The state of a live board
+
+    * `:board` - The current state as `%Board{}`
+    * `:changeset` - The changeset needed to bring the database in sync
+    * `:events` - List of events that have occurred
+    """
+    defstruct board: nil, changeset: nil, events: []
+    @type t :: %__MODULE__{
+      board: Board.t(),
+      changeset: Ecto.Changeset.t(),
+      events: [Event.t()],
+    }
+  end
 
   def start_link({board, name}) do
     with {:ok, pid} <- GenServer.start_link(__MODULE__, board, name: name) do
@@ -17,15 +33,24 @@ defmodule Lb2.LiveBoard do
   def init(%Board{id: nil}),
     do: {:stop, "Board must exist in the database. (:id was nil.)"}
 
-  def init(%Board{} = board), do: {:ok, board}
+  def init(%Board{} = board), do: {:ok, %State{board: board}}
 
   @impl true
-  def handle_call(msg, _from, board) do
-    case B.act(board, msg) do
-      {:ok, new_board} -> {:reply, new_board, new_board}
-      {:error, bad} -> {:reply, bad, board}
+  def handle_call({:event, event}, _from, state) do
+    case B.act(state.board, event) do
+      {:ok, new_board} ->
+        state = %{state | board: new_board, events: [event | state.events]}
+        {:reply, new_board, state}
+
+      {:error, bad} ->
+        {:reply, bad, state}
     end
   end
+
+  def handle_call(:board, _from, state) do
+    {:reply, state.board, state}
+  end
+
 
   # def create_card(column_id, content) do
   #   with %Column{} = col <- column_by_id(column_id),

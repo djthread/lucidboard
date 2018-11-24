@@ -16,6 +16,6 @@ defmodule Lb2.Board.Board do
     board
     |> cast(attrs, [:title])
     |> cast_embed(:columns)
-    |> validate_required([])
+    |> validate_required([:title])
   end
 end

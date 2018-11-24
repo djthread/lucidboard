@@ -10,6 +10,7 @@ defmodule Lb2Test do
     assert %Board{} = board
     assert %{title: "Awesome"} = Lb2.call(board.id, :board)
     :ok = Lb2.stop_live_board(board.id)
+    catch_exit(Lb2.call(board.id, :board))
     assert %{title: "Awesome"} = B.by_id(board.id)
   end
 end
