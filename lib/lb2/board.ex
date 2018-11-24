@@ -14,16 +14,9 @@ defmodule Lb2.Board do
     [id, title] = grab(args, ~w/id title/a)
 
     columns =
-      board.columns
-      |> Enum.reduce([], fn col, acc ->
-        col = if id == col.id, do: %{col | title: title}, else: col
-        [col | acc]
-      end)
-      |> Enum.reverse()
-      |> Util.recursive_struct_to_map()
+      Util.change_column(board.columns, id, fn col -> %{col | title: title} end)
 
-    # {:ok, Board.changeset(changeset, %{"columns" => []})}
-    {:ok, Board.changeset(changeset, %{"columns" => columns})}
+    {:ok, change(changeset, %{columns: columns})}
   end
 
   def act(_board, changeset, event) do
@@ -44,5 +37,10 @@ defmodule Lb2.Board do
     fields
     |> Enum.reduce([], fn k, acc -> [Keyword.get(args, k) | acc] end)
     |> Enum.reverse()
+  end
+
+  defp change(changeset, params) do
+    params = Util.recursive_struct_to_map(params)
+    Board.changeset(changeset, params)
   end
 end

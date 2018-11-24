@@ -2,7 +2,6 @@ defmodule Lb2Test do
   use Lb2Web.ConnCase
   alias Lb2.Board, as: B
   alias Lb2.Board.Board
-  alias Lb2.Repo
 
   test "Dynamic supervisor functions" do
     {:ok, pid, board} = Lb2.start_live_board(%Board{title: "Awesome"})

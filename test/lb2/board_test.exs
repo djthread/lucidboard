@@ -3,7 +3,6 @@ defmodule Lb2.BoardTest do
   alias Ecto.Changeset
   alias Lb2.Board, as: B
   alias Lb2.Board.Board
-  alias Lb2.Repo
   alias Lb2.Board.{Board, Card, Column, Event, Pile}
 
   test "set_column_title" do

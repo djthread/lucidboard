@@ -3,6 +3,15 @@ defmodule Lb2.Board.Util do
   Helper functions for maniputaling board data
   """
 
+  def change_column(columns, id, fun) do
+    columns
+    |> Enum.reduce([], fn col, acc ->
+      col = if id == col.id, do: fun.(col), else: col
+      [col | acc]
+    end)
+    |> Enum.reverse()
+  end
+
   def recursive_struct_to_map(%{__struct__: _} = struct) do
     struct |> Map.from_struct() |> recursive_struct_to_map()
   end
