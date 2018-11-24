@@ -14,7 +14,8 @@ defmodule Lb2.Board.Board do
   @doc false
   def changeset(board, attrs) do
     board
-    |> cast(attrs, [:name, :columns])
+    |> cast(attrs, [:title])
+    |> cast_embed(:columns)
     |> validate_required([])
   end
 end
