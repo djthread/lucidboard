@@ -1,4 +1,4 @@
-defmodule Lb2.LiveBoardTest do
+defmodule Lb2Test do
   use Lb2Web.ConnCase
   alias Lb2.Board, as: B
   alias Lb2.Board.Board

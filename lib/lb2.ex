@@ -53,9 +53,8 @@ defmodule Lb2 do
   @spec stop_live_board(integer) :: :ok | {:error, :not_found}
   def stop_live_board(id, opts \\ []) do
     supervisor = Keyword.get(opts, :supervisor, @supervisor)
-
-    [{pid, nil}] =
-      Registry.lookup(Keyword.get(opts, :registry, @registry), id)
+    registry = Keyword.get(opts, :registry, @registry)
+    [{pid, nil}] = Registry.lookup(registry, id)
 
     DynamicSupervisor.terminate_child(supervisor, pid)
   end
@@ -63,6 +62,8 @@ defmodule Lb2 do
   @doc "Uses GenServer.call to act upon a LiveBoard"
   def call(board_id, msg, opts \\ []) do
     registry = Keyword.get(opts, :registry, @registry)
-    GenServer.call({:via, Registry, {registry, board_id}}, msg)
+    name = {:via, Registry, {registry, board_id}}
+
+    GenServer.call(name, msg)
   end
 end
