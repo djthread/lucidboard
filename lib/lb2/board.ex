@@ -3,20 +3,32 @@ defmodule Lb2.Board do
   A context for board operations
   """
   # alias Lb2.Board.{Board, Card, Column}
-  alias Lb2.Board.Board
+  alias Ecto.Changeset
+  alias Lb2.Board.{Board, Event, Util}
   alias Lb2.Repo
   import Ecto.Query
 
-  @type msg :: :board
+  @spec act(Board.t(), Changeset.t(), Event.t()) ::
+          {:ok, Changeset.t()} | {:error, String.t()}
+  def act(board, changeset, %{action: :set_column_title, args: args}) do
+    [id, title] = grab(args, ~w/id title/a)
 
-  @spec act(Board.t(), msg) :: {:ok, Board.t()}
-  def act(board, :board) do
-    {:ok, board}
+    columns =
+      board.columns
+      |> Enum.reduce([], fn col, acc ->
+        col = if id == col.id, do: %{col | title: title}, else: col
+        [col | acc]
+      end)
+      |> Enum.reverse()
+      |> Util.recursive_struct_to_map()
+
+    # {:ok, Board.changeset(changeset, %{"columns" => []})}
+    {:ok, Board.changeset(changeset, %{"columns" => columns})}
   end
 
-  def act(board, msg) do
-    IO.puts("act TBI: #{inspect(msg)}")
-    {:ok, board}
+  def act(_board, changeset, event) do
+    IO.puts("act TBI: #{inspect(event)}")
+    {:ok, changeset}
   end
 
   @doc "Get a board by its id"
@@ -27,4 +39,10 @@ defmodule Lb2.Board do
   @spec insert(Board.t() | Ecto.Changeset.t(Board.t())) ::
           {:ok, Board.t()} | {:error, Ecto.Changeset.t(Board.t())}
   def insert(%Board{} = board), do: Repo.insert(board)
+
+  defp grab(args, fields) do
+    fields
+    |> Enum.reduce([], fn k, acc -> [Keyword.get(args, k) | acc] end)
+    |> Enum.reverse()
+  end
 end

@@ -6,6 +6,7 @@ defmodule Lb2.LiveBoard do
   use GenServer
   alias Lb2.Board, as: B
   alias Lb2.Board.{Board, Event}
+  require Logger
 
   defmodule State do
     @moduledoc """
@@ -16,11 +17,12 @@ defmodule Lb2.LiveBoard do
     * `:events` - List of events that have occurred
     """
     defstruct board: nil, changeset: nil, events: []
+
     @type t :: %__MODULE__{
-      board: Board.t(),
-      changeset: Ecto.Changeset.t(),
-      events: [Event.t()],
-    }
+            board: Board.t(),
+            changeset: Ecto.Changeset.t(),
+            events: [Event.t()]
+          }
   end
 
   def start_link({board, name}) do
@@ -37,13 +39,23 @@ defmodule Lb2.LiveBoard do
 
   @impl true
   def handle_call({:event, event}, _from, state) do
-    case B.act(state.board, event) do
-      {:ok, new_board} ->
-        state = %{state | board: new_board, events: [event | state.events]}
+    case invoke_carefully({B, :act, [state.board, state.changeset, event]}) do
+      {:ok, new_board, new_changeset} ->
+        state = %{
+          state
+          | board: new_board,
+            changeset: new_changeset,
+            events: List.insert_at(state.events, -1, event)
+        }
+
         {:reply, new_board, state}
 
       {:error, bad} ->
         {:reply, bad, state}
+
+      {:caught, type, error, stacktrace} ->
+        Logger.error(Exception.format(type, error, stacktrace))
+        {:reply, :error, state}
     end
   end
 
@@ -51,6 +63,15 @@ defmodule Lb2.LiveBoard do
     {:reply, state.board, state}
   end
 
+  def handle_call(:events, _from, state) do
+    {:reply, state.events, state}
+  end
+
+  defp invoke_carefully({mod, fun, args}) do
+    apply(mod, fun, args)
+  catch
+    type, error -> {:caught, type, error, __STACKTRACE__}
+  end
 
   # def create_card(column_id, content) do
   #   with %Column{} = col <- column_by_id(column_id),
