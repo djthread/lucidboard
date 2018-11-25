@@ -27,8 +27,4 @@ defmodule Lb2.Board.Util do
   end
 
   def recursive_struct_to_map(val), do: val
-
-  # def find_column(board, changeset, event) do
-
-  # end
 end

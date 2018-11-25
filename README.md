@@ -5,10 +5,10 @@ A kanban tool.
 To start your Phoenix development environment:
 
 ```bash
-bin/dev.sh
+bin/dev
 ```
 
-The [script's comments](bin/dev.sh) explain a bit more, but you'll get two
+The [script's comments](bin/dev) explain a bit more, but you'll get two
 docker containers -- a Postgres database (`lb2_dev_db`) and an Elixir
 development container (`lb2_dev_app`). The script will then run the fish shell
 inside the latter, dropping you into `/app` where the project files reside.
@@ -38,7 +38,7 @@ Don't worry - all your code and database data (in `assets/db-docker-data`)
 will remain intact for next time.
 
 ```bash
-bin/dev-down.sh
+bin/down
 ```
 
 ## Learn more

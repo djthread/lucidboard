@@ -5,17 +5,22 @@ alias Lb2.Board.{Board, Card, Column, Pile}
   title: "My Test Board",
   columns: [
     %Column{title: "Col1"},
-    %Column{title: "Col2", piles: [%Pile{cards: [%Card{body: "hi"}]}]},
+    %Column{
+      title: "Col2",
+      piles: [
+        Pile.create(cards: [Card.create(body: "hi")])
+      ]
+    },
     %Column{
       title: "Col3",
       piles: [
-        %Pile{
+        Pile.create(
           cards: [
-            %Card{body: "hey"},
-            %Card{body: "sup"}
+            Card.create(body: "hey"),
+            Card.create(body: "sup")
           ]
-        },
-        %Pile{cards: [%Card{body: "definitely"}]}
+        ),
+        Pile.create(cards: [Card.create(body: "definitely")])
       ]
     }
   ]

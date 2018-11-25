@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# Shortcut to start postgres cli in its running docker container.
+#
+# Be sure and start postgres first with `db.sh`.
+#
+
+docker exec -it lb2_dev_db psql -U postgres

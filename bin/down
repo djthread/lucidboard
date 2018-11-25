@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Stops all our docker containers. Works with `dev.sh` or `db.sh`.
+# Stops all our docker containers. Works with `dev` or `db` scripts.
 #
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"

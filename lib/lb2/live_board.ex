@@ -41,14 +41,14 @@ defmodule Lb2.LiveBoard do
   def handle_call({:event, event}, _from, state) do
     case invoke_carefully({B, :act, [state.board, state.changeset, event]}) do
       {:ok, new_board, new_changeset} ->
-        state = %{
+        new_state = %{
           state
           | board: new_board,
             changeset: new_changeset,
-            events: List.insert_at(state.events, -1, event)
+            events: [event | state.events]
         }
 
-        {:reply, new_board, state}
+        {:reply, new_board, new_state}
 
       {:error, bad} ->
         {:reply, bad, state}

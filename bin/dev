@@ -13,7 +13,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-if "$DIR/maybe_create_secret_files.sh"; then
+if "$DIR/maybe_create_secret_files"; then
     cat << EOF
 Elixir development environment initialized!
 

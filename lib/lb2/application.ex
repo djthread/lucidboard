@@ -23,7 +23,7 @@ defmodule Lb2.Application do
     :ok
   end
 
-  def banner,
+  defp banner,
     do: ~S"""
          __            _     _ _                         _
         / / _   _  ___(_) __| | |__   ___   __ _ _ __ __| |

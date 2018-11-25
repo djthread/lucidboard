@@ -6,7 +6,7 @@ defmodule Lb2.Board.Event do
   * `:args` - Keyword list of parameters
   """
 
-  defstruct [:action, :args, :error]
+  defstruct [:action, :args]
 
   @type t :: %__MODULE__{
           action: atom,
