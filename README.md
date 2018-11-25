@@ -2,6 +2,8 @@
 
 A kanban tool.
 
+**Status:** Just getting started with the basics.
+
 To start your Phoenix development environment:
 
 ```bash
@@ -40,6 +42,19 @@ will remain intact for next time.
 ```bash
 bin/down
 ```
+
+## Shell Aliases
+
+Shell aliases are groovy! These [recommened few](assets/dev-env/config.fish) are imported to the fish shell in the docker-based dev environment.
+
+| Alias | Full Command          |
+| ----- | --------------------- |
+| imp   | iex -S mix phx.server |
+| im    | iex -S mix            |
+| mdg   | iex mix deps.get      |
+| mdu   | mix deps.update --all |
+| mt    | mix test              |
+| mer   | mix ecto.reset        |
 
 ## Learn more
 
