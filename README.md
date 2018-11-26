@@ -4,7 +4,9 @@ A kanban tool.
 
 **Status:** Just getting started.
 
-CI: https://circleci.com/gh/djthread/lb2
+**CI:** https://circleci.com/gh/djthread/lb2
+
+**Chat:** [Lucidboard on Telegram](http://t.me/lucidboard)
 
 To start your Phoenix development environment:
 
@@ -18,7 +20,8 @@ development container (`lb2_dev_app`). The script will then run the fish shell
 inside the latter, dropping you into `/app` where the project files reside.
 
 When running this the first time, you'll need to install the dependencies and
-initialize the database:
+initialize the database. (You may also simply type `setup` since it is an alias
+for these commands.)
 
 ```bash
 mix deps.get
@@ -47,16 +50,18 @@ bin/down
 
 ## Shell Aliases
 
-These [recommened few](assets/dev-env/config.fish) are imported to the fish shell in the docker-based dev environment.
+These [recommened few](assets/dev-env/config.fish) are imported to the fish
+shell in the docker-based dev environment.
 
-| Alias | Full Command          |
-| ----- | --------------------- |
-| imp   | iex -S mix phx.server |
-| im    | iex -S mix            |
-| mdg   | iex mix deps.get      |
-| mdu   | mix deps.update --all |
-| mt    | mix test              |
-| mer   | mix ecto.reset        |
+| Alias   | Full Command          |
+| ------- | --------------------- |
+| `imp`   | iex -S mix phx.server |
+| `im`    | iex -S mix            |
+| `mdg`   | iex mix deps.get      |
+| `mdu`   | mix deps.update --all |
+| `mt`    | mix test              |
+| `mer`   | mix ecto.reset        |
+| `setup` | mix deps.get<br>cd assets; npm install; cd ..<br> mix ecto.setup | 
 
 ## Learn more
 
