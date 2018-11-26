@@ -17,7 +17,9 @@ defmodule Lb2.BoardTest do
       ]
     }
 
-    {:ok, new_cs, _event} = B.act(board, cs, action)
+    {:ok, new_cs, event} = B.act(board, cs, action)
+
+    assert "has changed a column title to CHANGED IT" == event.desc
 
     assert "CHANGED IT" ==
              new_cs
@@ -27,28 +29,31 @@ defmodule Lb2.BoardTest do
              |> Map.get(:title)
   end
 
-  # test "reorder_columns" do
-  #   board = fixture()
-  #   cs = Board.changeset(board, %{})
+  test "reorder_columns" do
+    board = fixture()
+    cs = Board.changeset(board, %{})
 
-  #   event = %Event{
-  #     action: :set_column_title,
-  #     args: [
-  #       id: "36aa312a-2eb9-4ef8-aebd-0272ae56ca23",
-  #       title: "CHANGED IT"
-  #     ]
-  #   }
+    column_ids = [
+      "36aa312a-2eb9-4ef8-aebd-0272ae56ca23",
+      "6a5c5890-61be-4a9e-8520-24b22c4824d8",
+      "19485672-4cf5-4b6c-af68-42e97c0087d0"
+    ]
 
-  #   {:ok, new_cs} = B.act(board, cs, event)
+    action = %Action{
+      name: :reorder_columns,
+      args: [column_ids: column_ids]
+    }
 
-  #   assert "CHANGED IT" ==
-  #            new_cs
-  #            |> Changeset.apply_changes()
-  #            |> Map.get(:columns)
-  #            |> Enum.at(1)
-  #            |> Map.get(:title)
-  # end
+    {:ok, new_cs, event} = B.act(board, cs, action)
 
+    assert "has rearranged the columns" == event.desc
+
+    assert column_ids ==
+             new_cs
+             |> Changeset.apply_changes()
+             |> Map.get(:columns)
+             |> Enum.map(fn c -> c.id end)
+  end
 
   defp fixture do
     %Board{

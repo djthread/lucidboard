@@ -20,6 +20,21 @@ defmodule Lb2.Board do
      %Event{desc: "has changed a column title to #{title}"}}
   end
 
+  def act(board, changeset, %{
+        name: :reorder_columns,
+        args: [column_ids: column_ids]
+      }) do
+    columns =
+      Enum.sort(board.columns, fn c1, c2 ->
+        c1_idx = Enum.find_index(column_ids, fn cid -> cid == c1.id end)
+        c2_idx = Enum.find_index(column_ids, fn cid -> cid == c2.id end)
+        c1_idx < c2_idx
+      end)
+
+    {:ok, change(changeset, %{columns: columns}),
+     %Event{desc: "has rearranged the columns"}}
+  end
+
   def act(_board, changeset, action) do
     IO.puts("act TBI: #{inspect(action)}")
     {:ok, changeset, %Event{desc: "i am an event #{inspect(action)}"}}
