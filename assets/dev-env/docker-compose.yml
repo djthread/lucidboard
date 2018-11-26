@@ -5,6 +5,7 @@ services:
     container_name: lb2_dev_db
     image: postgres
     volumes: [ "../db-docker-data:/var/lib/postgresql/data" ]
+    ports: [ "5432:5432" ]
     environment:
       POSTGRES_PASSWORD: verysecure123
 

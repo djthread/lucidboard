@@ -2,7 +2,9 @@
 
 A kanban tool.
 
-**Status:** Just getting started with the basics.
+**Status:** Just getting started.
+
+CI: https://circleci.com/gh/djthread/lb2
 
 To start your Phoenix development environment:
 
@@ -45,7 +47,7 @@ bin/down
 
 ## Shell Aliases
 
-Shell aliases are groovy! These [recommened few](assets/dev-env/config.fish) are imported to the fish shell in the docker-based dev environment.
+These [recommened few](assets/dev-env/config.fish) are imported to the fish shell in the docker-based dev environment.
 
 | Alias | Full Command          |
 | ----- | --------------------- |
