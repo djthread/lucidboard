@@ -4,24 +4,25 @@ defmodule Lb2.Board do
   """
   # alias Lb2.Board.{Board, Card, Column}
   alias Ecto.Changeset
-  alias Lb2.Board.{Board, Event, Util}
+  alias Lb2.Board.{Action, Board, Event, Util}
   alias Lb2.Repo
   import Ecto.Query
 
-  @spec act(Board.t(), Changeset.t(), Event.t()) ::
-          {:ok, Changeset.t()} | {:error, String.t()}
-  def act(board, changeset, %{action: :set_column_title, args: args}) do
+  @spec act(Board.t(), Changeset.t(), Action.t()) ::
+          {:ok, Changeset.t(), Event.t()} | {:error, String.t()}
+  def act(board, changeset, %{name: :set_column_title, args: args}) do
     [id, title] = grab(args, ~w/id title/a)
 
     columns =
       Util.change_column(board.columns, id, fn col -> %{col | title: title} end)
 
-    {:ok, change(changeset, %{columns: columns})}
+    {:ok, change(changeset, %{columns: columns}),
+     %Event{desc: "has changed a column title to #{title}"}}
   end
 
-  def act(_board, changeset, event) do
-    IO.puts("act TBI: #{inspect(event)}")
-    {:ok, changeset}
+  def act(_board, changeset, action) do
+    IO.puts("act TBI: #{inspect(action)}")
+    {:ok, changeset, %Event{desc: "i am an event #{inspect(action)}"}}
   end
 
   @doc "Get a board by its id"

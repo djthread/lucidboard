@@ -1,15 +1,15 @@
 defmodule Lb2.Board.Event do
   @moduledoc """
-  An event queued, executing, or executed on a board
+  Something that has occurred on a LiveBoard
 
-  * `:action` - Atom identifying the action
-  * `:args` - Keyword list of parameters
+  * `:name` - Atom identifying the action
+  * `:desc` - String explaining what happened
   """
 
-  defstruct [:action, :args]
+  defstruct [:name, :desc]
 
   @type t :: %__MODULE__{
-          action: atom,
-          args: keyword
+          name: atom,
+          desc: String.t()
         }
 end

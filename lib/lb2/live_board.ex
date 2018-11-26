@@ -5,7 +5,7 @@ defmodule Lb2.LiveBoard do
 
   use GenServer
   alias Lb2.Board, as: B
-  alias Lb2.Board.{Board, Event}
+  alias Lb2.Board.{Action, Board, Event}
   require Logger
 
   defmodule State do
@@ -38,9 +38,9 @@ defmodule Lb2.LiveBoard do
   def init(%Board{} = board), do: {:ok, %State{board: board}}
 
   @impl true
-  def handle_call({:event, event}, _from, state) do
-    case invoke_carefully({B, :act, [state.board, state.changeset, event]}) do
-      {:ok, new_board, new_changeset} ->
+  def handle_call({:action, action}, _from, state) do
+    case invoke_carefully({B, :act, [state.board, state.changeset, action]}) do
+      {:ok, event, new_board, new_changeset} ->
         new_state = %{
           state
           | board: new_board,
@@ -55,7 +55,7 @@ defmodule Lb2.LiveBoard do
 
       {:caught, type, error, stacktrace} ->
         Logger.error("""
-        Error executing event #{inspect(event)}: \
+        Error executing action #{inspect(action)}: \
         #{Exception.format(type, error, stacktrace)}\
         """)
         {:reply, :error, state}

@@ -3,21 +3,21 @@ defmodule Lb2.BoardTest do
   alias Ecto.Changeset
   alias Lb2.Board, as: B
   alias Lb2.Board.Board
-  alias Lb2.Board.{Board, Card, Column, Event, Pile}
+  alias Lb2.Board.{Action, Board, Card, Column, Pile}
 
   test "set_column_title" do
     board = fixture()
     cs = Board.changeset(board, %{})
 
-    event = %Event{
-      action: :set_column_title,
+    action = %Action{
+      name: :set_column_title,
       args: [
         id: "36aa312a-2eb9-4ef8-aebd-0272ae56ca23",
         title: "CHANGED IT"
       ]
     }
 
-    {:ok, new_cs} = B.act(board, cs, event)
+    {:ok, new_cs, _event} = B.act(board, cs, action)
 
     assert "CHANGED IT" ==
              new_cs
@@ -26,6 +26,29 @@ defmodule Lb2.BoardTest do
              |> Enum.at(1)
              |> Map.get(:title)
   end
+
+  # test "reorder_columns" do
+  #   board = fixture()
+  #   cs = Board.changeset(board, %{})
+
+  #   event = %Event{
+  #     action: :set_column_title,
+  #     args: [
+  #       id: "36aa312a-2eb9-4ef8-aebd-0272ae56ca23",
+  #       title: "CHANGED IT"
+  #     ]
+  #   }
+
+  #   {:ok, new_cs} = B.act(board, cs, event)
+
+  #   assert "CHANGED IT" ==
+  #            new_cs
+  #            |> Changeset.apply_changes()
+  #            |> Map.get(:columns)
+  #            |> Enum.at(1)
+  #            |> Map.get(:title)
+  # end
+
 
   defp fixture do
     %Board{
