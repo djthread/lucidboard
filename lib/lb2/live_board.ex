@@ -54,7 +54,10 @@ defmodule Lb2.LiveBoard do
         {:reply, bad, state}
 
       {:caught, type, error, stacktrace} ->
-        Logger.error(Exception.format(type, error, stacktrace))
+        Logger.error("""
+        Error executing event #{inspect(event)}: \
+        #{Exception.format(type, error, stacktrace)}\
+        """)
         {:reply, :error, state}
     end
   end
