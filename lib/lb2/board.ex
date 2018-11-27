@@ -4,20 +4,20 @@ defmodule Lb2.Board do
   """
   # alias Lb2.Board.{Board, Card, Column}
   alias Ecto.Changeset
-  alias Lb2.Board.{Action, Board, Event, Util}
+  alias Lb2.Board.{Action, Board, Column, Event, Util}
   alias Lb2.Repo
   import Ecto.Query
 
-  @spec act(Board.t(), Changeset.t(), Action.t()) ::
+  @type action :: {atom, keyword}
+
+  @spec act(Changeset.t(), action) ::
           {:ok, Changeset.t(), Event.t()} | {:error, String.t()}
-  def act(board, changeset, %{name: :set_column_title, args: args}) do
-    [id, title] = grab(args, ~w/id title/a)
-
-    columns =
-      Util.change_column(board.columns, id, fn col -> %{col | title: title} end)
-
-    {:ok, change(changeset, %{columns: columns}),
-     %Event{desc: "has changed a column title to #{title}"}}
+  def act(changeset, {:set_column_title, args}) do
+    with {:ok, [id, title]} <- grab(args, ~w/id title/a),
+         fun <- fn col -> Column.changeset(col, %{title: title}) end,
+         {:ok, changeset} <- Util.update_column(changeset, id, fun) do
+      {:ok, changeset, event("has changed a column title to #{title}.")}
+    end
   end
 
   def act(board, changeset, %{
@@ -42,21 +42,50 @@ defmodule Lb2.Board do
 
   @doc "Get a board by its id"
   @spec by_id(integer) :: Board.t() | nil
-  def by_id(id), do: Repo.one(from(Board, where: [id: ^id]))
+  def by_id(id) do
+    Repo.one(
+      from(board in Board,
+        where: board.id == ^id,
+        left_join: columns in assoc(board, :columns),
+        left_join: piles in assoc(columns, :piles),
+        left_join: cards in assoc(piles, :cards),
+        preload: [columns: {columns, piles: {piles, cards: cards}}]
+      )
+    )
+  end
 
   @doc "Insert a board record"
   @spec insert(Board.t() | Ecto.Changeset.t(Board.t())) ::
           {:ok, Board.t()} | {:error, Ecto.Changeset.t(Board.t())}
   def insert(%Board{} = board), do: Repo.insert(board)
 
+  @spec grab(keyword, [atom]) :: {:ok, [term]} | {:error, String.t()}
   defp grab(args, fields) do
-    fields
-    |> Enum.reduce([], fn k, acc -> [Keyword.get(args, k) | acc] end)
-    |> Enum.reverse()
+    ret =
+      fields
+      |> Enum.reduce([], fn k, acc ->
+        case Keyword.fetch(args, k) do
+          {:ok, v} -> [v | acc]
+          :error -> throw(k)
+        end
+      end)
+      |> Enum.reverse()
+
+    {:ok, ret}
+  catch
+    k -> {:error, "Missing argument #{k}"}
   end
 
   defp change(changeset, params) do
     params = Util.recursive_struct_to_map(params)
     Board.changeset(changeset, params)
+  end
+
+  defp event(msg) when is_binary(msg) do
+    %Event{desc: msg}
+  end
+
+  defp event(keyword) when is_list(keyword) do
+    struct(Event, keyword)
   end
 end

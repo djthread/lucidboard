@@ -37,6 +37,7 @@ defmodule Lb2.Mixfile do
       {:gettext, "~> 0.11"},
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.0"},
+      {:focus, "~> 0.3.5"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end

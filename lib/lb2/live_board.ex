@@ -2,10 +2,9 @@ defmodule Lb2.LiveBoard do
   @moduledoc """
   GenServer for a live board
   """
-
   use GenServer
   alias Lb2.Board, as: B
-  alias Lb2.Board.{Action, Board, Event}
+  alias Lb2.Board.{Board, Event}
   require Logger
 
   defmodule State do
