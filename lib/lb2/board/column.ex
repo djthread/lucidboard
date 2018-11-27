@@ -2,18 +2,20 @@ defmodule Lb2.Board.Column do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lb2.Board.Pile
+  alias Lb2.Board.{Board, Pile}
 
-  embedded_schema do
+  schema "columns" do
     field(:title, :string)
-    embeds_many(:piles, Pile, on_replace: :delete)
+    field(:pos, :integer)
+    has_many(:piles, Pile)
+    belongs_to(:board, Board)
   end
 
   @doc false
   def changeset(column, attrs) do
     column
     |> cast(attrs, [:title])
-    |> cast_embed(:piles)
+    |> cast_assoc(:piles)
     |> validate_required([:title])
   end
 end

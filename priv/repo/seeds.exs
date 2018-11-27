@@ -4,23 +4,26 @@ alias Lb2.Board.{Board, Card, Column, Pile}
 %Board{
   title: "My Test Board",
   columns: [
-    %Column{title: "Col1"},
+    %Column{title: "Col1", pos: 0},
     %Column{
       title: "Col2",
+      pos: 1,
       piles: [
-        Pile.create(cards: [Card.create(body: "hi")])
+        %Pile{pos: 0, cards: [%Card{pos: 0, body: "hi"}]}
       ]
     },
     %Column{
       title: "Col3",
+      pos: 2,
       piles: [
-        Pile.create(
+        %Pile{
+          pos: 0,
           cards: [
-            Card.create(body: "hey"),
-            Card.create(body: "sup")
+            %Card{pos: 0, body: "hey"},
+            %Card{pos: 1, body: "sup"}
           ]
-        ),
-        Pile.create(cards: [Card.create(body: "definitely")])
+        },
+        %Pile{pos: 1, cards: [%Card{pos: 0, body: "definitely"}]}
       ]
     }
   ]

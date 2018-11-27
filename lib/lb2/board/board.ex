@@ -6,7 +6,7 @@ defmodule Lb2.Board.Board do
 
   schema "boards" do
     field(:title, :string)
-    embeds_many(:columns, Column, on_replace: :delete)
+    has_many(:columns, Column)
 
     timestamps()
   end
@@ -15,7 +15,7 @@ defmodule Lb2.Board.Board do
   def changeset(board, attrs) do
     board
     |> cast(attrs, [:title])
-    |> cast_embed(:columns)
+    |> cast_assoc(:columns)
     |> validate_required([:title])
   end
 end
