@@ -14,8 +14,7 @@ defmodule Lb2.Board do
           {:ok, Changeset.t(), Event.t()} | {:error, String.t()}
   def act(changeset, {:set_column_title, args}) do
     with {:ok, [id, title]} <- grab(args, ~w/id title/a),
-         fun <- fn col -> Column.changeset(col, %{title: title}) end,
-         {:ok, changeset} <- Util.update_column(changeset, id, fun) do
+         {:ok, changeset} <- Util.column_set_title(changeset, id, title) do
       {:ok, changeset, event("has changed a column title to #{title}.")}
     end
   end

@@ -3,20 +3,31 @@ defmodule Lb2.Board.Util do
   Helper functions for maniputaling board data
   """
   alias Ecto.Changeset
+  alias Lb2.Board.Board
   alias Lb2.{BoardScope, ColumnScope, PileScope}
   import Focus
 
   @type ok_or_error :: {:ok, Changeset.t()} | {:error, String.t()}
 
-  @doc "Update the column of the given id"
-  def update_column(changeset, id, fun) do
-    board = changeset.apply_changes()
+  @doc "Update the title of a given column by id"
+  def column_set_title(changeset, id, title) do
+    board = Changeset.apply_changes(changeset)
 
-    lens =
-      BoardScope.columns_lens()
-      ~> Lens.idx(Enum.find_index(board.columns, &(&1.id == id)))
+    new_board =
+      Lens.make_lens(:columns)
+      ~> Lens.make_lens(Enum.find_index(board.columns, &(&1.id == id)))
+      # BoardScope.columns_lens()
+      # ~> Lens.idx(Enum.find_index(board.columns, &(&1.id == id)))
+      # ~> ColumnScope.title_lens()
+      # |> Focus.set(%{columns: "sap"}, title)
+      |> Focus.view(board)
+      |> IO.inspect()
 
-    Focus.set(lens, board, "val")
+    with %{columns: new_columns} <- new_board,
+         %{valid?: true} = new_changeset <-
+           Board.changeset(changeset, %{columns: new_columns}) do
+      {:ok, new_changeset}
+    end
   end
 
   def change_column(columns, id, fun) do
