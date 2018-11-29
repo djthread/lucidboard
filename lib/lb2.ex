@@ -2,9 +2,9 @@ defmodule Lb2 do
   @moduledoc """
   Exposes high-level Lb2 functionality
   """
-  alias Lb2.Board, as: B
   alias Lb2.Board.Board
   alias Lb2.LiveBoard
+  alias Lb2.Twiddler
 
   @registry Lb2.BoardRegistry
   @supervisor Lb2.BoardSupervisor
@@ -24,14 +24,14 @@ defmodule Lb2 do
   def start_live_board(id_or_board, opts \\ [])
 
   def start_live_board(id, opts) when is_integer(id) do
-    case B.by_id(id) do
+    case Twiddler.by_id(id) do
       nil -> {:error, :no_board}
       board -> start_live_board(board, opts)
     end
   end
 
   def start_live_board(%Board{id: nil} = board, opts) do
-    with {:ok, new_board} <- B.insert(board) do
+    with {:ok, new_board} <- Twiddler.insert(board) do
       start_live_board(new_board, opts)
     end
   end

@@ -20,7 +20,8 @@ defmodule Lb2.Board.Util do
       # ~> Lens.idx(Enum.find_index(board.columns, &(&1.id == id)))
       # ~> ColumnScope.title_lens()
       # |> Focus.set(%{columns: "sap"}, title)
-      |> Focus.view(board)
+      |> Focus.set(%Board{columns: [%{id: 2}, %{id: 3}]}, title)
+      # |> Focus.view(board)
       |> IO.inspect()
 
     with %{columns: new_columns} <- new_board,
