@@ -31,6 +31,17 @@ defmodule Lb2.Board.Util do
     end
   end
 
+  def move_items(items, id, new_pos) do
+    case Enum.find(items, &(&1.id == id)) do
+      idx when not is_nil(idx) ->
+        {item, leftover} = List.pop_at(items, idx)
+        List.insert_at(leftover, new_pos, item)
+
+      nil ->
+        nil
+    end
+  end
+
   def change_column(columns, id, fun) do
     columns
     |> Enum.reduce([], fn col, acc ->

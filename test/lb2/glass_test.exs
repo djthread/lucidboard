@@ -8,14 +8,18 @@ defmodule Lb2.GlassTest do
   test "get column lens by id" do
     {:ok, lens} = Glass.column_by_id(fixture(), 2)
     assert "Col2" == Focus.view(lens, fixture()).title
-
     assert :error == Glass.column_by_id(fixture(), 99)
   end
 
   test "get card lens by id" do
     {:ok, lens} = Glass.card_by_id(fixture(), 2)
     assert "whoa" == Focus.view(lens, fixture()).body
+    assert :error == Glass.card_by_id(fixture(), 99)
+  end
 
+  test "get pile lens by id" do
+    {:ok, lens} = Glass.pile_by_id(fixture(), 2)
+    assert 1 == length Focus.view(lens, fixture()).cards
     assert :error == Glass.card_by_id(fixture(), 99)
   end
 

@@ -18,9 +18,9 @@ defmodule Lb2.TwiddlerTest do
 
     assert "OH YEAH" ==
              Lens.make_lens(:columns)
-             ~> Lens.idx(1)
+             ~> Lens.idx(2)
              ~> Lens.make_lens(:piles)
-             ~> Lens.idx(1)
+             ~> Lens.idx(0)
              ~> Lens.make_lens(:cards)
              ~> Lens.idx(0)
              ~> Lens.make_lens(:body)
