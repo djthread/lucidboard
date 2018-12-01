@@ -4,7 +4,6 @@ defmodule Lb2 do
   """
   alias Lb2.Board.Board
   alias Lb2.LiveBoard
-  alias Lb2.Twiddler
 
   @registry Lb2.BoardRegistry
   @supervisor Lb2.BoardSupervisor
@@ -21,26 +20,11 @@ defmodule Lb2 do
           DynamicSupervisor.on_start_child()
           | {:error, :no_board}
           | {:error, Ecto.Changeset.t()}
-  def start_live_board(id_or_board, opts \\ [])
-
-  def start_live_board(id, opts) when is_integer(id) do
-    case Twiddler.by_id(id) do
-      nil -> {:error, :no_board}
-      board -> start_live_board(board, opts)
-    end
-  end
-
-  def start_live_board(%Board{id: nil} = board, opts) do
-    with {:ok, new_board} <- Twiddler.insert(board) do
-      start_live_board(new_board, opts)
-    end
-  end
-
-  def start_live_board(%Board{} = board, opts) do
+  def start_live_board(id, opts \\ []) when is_integer(id) do
     supervisor = Keyword.get(opts, :supervisor, @supervisor)
     registry = Keyword.get(opts, :registry, @registry)
-    name = {:via, Registry, {registry, board.id}}
-    child_spec = {LiveBoard, {board, name}}
+    name = {:via, Registry, {registry, id}}
+    child_spec = {LiveBoard, {id, name}}
 
     DynamicSupervisor.start_child(supervisor, child_spec)
   end

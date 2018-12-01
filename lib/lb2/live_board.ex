@@ -3,7 +3,7 @@ defmodule Lb2.LiveBoard do
   GenServer for a live board
   """
   use GenServer
-  alias Lb2.Board, as: B
+  alias Lb2.Twiddler
   alias Lb2.Board.{Board, Event}
   require Logger
 
@@ -24,21 +24,23 @@ defmodule Lb2.LiveBoard do
           }
   end
 
-  def start_link({board, name}) do
-    with {:ok, pid} <- GenServer.start_link(__MODULE__, board, name: name) do
-      {:ok, pid, board}
+  def start_link({board_id, name}) do
+    GenServer.start_link(__MODULE__, board_id, name: name)
+  end
+
+  @impl true
+  def init(board_id) do
+    case Twiddler.by_id(board_id) do
+      %Board{} = board -> {:ok, %State{board: board}}
+      nil -> {:stop, "Board id #{board_id} not found!"}
     end
   end
 
   @impl true
-  def init(%Board{id: nil}),
-    do: {:stop, "Board must exist in the database. (:id was nil.)"}
-
-  def init(%Board{} = board), do: {:ok, %State{board: board}}
-
-  @impl true
   def handle_call({:action, action}, _from, state) do
-    case invoke_carefully({B, :act, [state.board, state.changeset, action]}) do
+    mfa = {Twiddler, :act, [state.board, state.changeset, action]}
+
+    case invoke_carefully(mfa) do
       {:ok, event, new_board, new_changeset} ->
         new_state = %{
           state
@@ -57,6 +59,7 @@ defmodule Lb2.LiveBoard do
         Error executing action #{inspect(action)}: \
         #{Exception.format(type, error, stacktrace)}\
         """)
+
         {:reply, :error, state}
     end
   end
