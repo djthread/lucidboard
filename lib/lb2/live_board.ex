@@ -7,19 +7,19 @@ defmodule Lb2.LiveBoard do
   alias Lb2.Board.{Board, Event}
   require Logger
 
+  @registry Lb2.BoardRegistry
+
   defmodule State do
     @moduledoc """
     The state of a live board
 
     * `:board` - The current state as `%Board{}`
-    * `:changeset` - The changeset needed to bring the database in sync
     * `:events` - List of events that have occurred
     """
     defstruct board: nil, changeset: nil, events: []
 
     @type t :: %__MODULE__{
             board: Board.t(),
-            changeset: Ecto.Changeset.t(),
             events: [Event.t()]
           }
   end
@@ -38,17 +38,10 @@ defmodule Lb2.LiveBoard do
 
   @impl true
   def handle_call({:action, action}, _from, state) do
-    mfa = {Twiddler, :act, [state.board, state.changeset, action]}
-
-    case invoke_carefully(mfa) do
-      {:ok, event, new_board, new_changeset} ->
-        new_state = %{
-          state
-          | board: new_board,
-            changeset: new_changeset,
-            events: [event | state.events]
-        }
-
+    case invoke_carefully({Twiddler, :act, [state.board, action]}) do
+      {:ok, new_board, change, event} ->
+        scribe(change, new_board.id)
+        new_state = %{state | board: new_board, events: [event | state.events]}
         {:reply, new_board, new_state}
 
       {:error, bad} ->
@@ -70,6 +63,11 @@ defmodule Lb2.LiveBoard do
 
   def handle_call(:events, _from, state) do
     {:reply, state.events, state}
+  end
+
+  defp scribe(change, board_id) do
+    name = {:via, Registry, {@registry, {:scribe, board_id}}}
+    GenServer.cast(name, change)
   end
 
   defp invoke_carefully({mod, fun, args}) do

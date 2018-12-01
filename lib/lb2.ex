@@ -4,6 +4,7 @@ defmodule Lb2 do
   """
   alias Lb2.Board.Board
   alias Lb2.LiveBoard
+  alias Lb2.LiveBoard.Scribe
 
   @registry Lb2.BoardRegistry
   @supervisor Lb2.BoardSupervisor
@@ -23,9 +24,13 @@ defmodule Lb2 do
   def start_live_board(id, opts \\ []) when is_integer(id) do
     supervisor = Keyword.get(opts, :supervisor, @supervisor)
     registry = Keyword.get(opts, :registry, @registry)
+
+    scribe_name = {:via, Registry, {registry, {:scribe, id}}}
+    scribe_child_spec = {Scribe, scribe_name}
+    DynamicSupervisor.start_child(supervisor, scribe_child_spec)
+
     name = {:via, Registry, {registry, id}}
     child_spec = {LiveBoard, {id, name}}
-
     DynamicSupervisor.start_child(supervisor, child_spec)
   end
 
@@ -34,9 +39,12 @@ defmodule Lb2 do
   def stop_live_board(id, opts \\ []) do
     supervisor = Keyword.get(opts, :supervisor, @supervisor)
     registry = Keyword.get(opts, :registry, @registry)
-    [{pid, nil}] = Registry.lookup(registry, id)
 
+    [{pid, nil}] = Registry.lookup(registry, id)
     DynamicSupervisor.terminate_child(supervisor, pid)
+
+    [{scribe_pid, nil}] = Registry.lookup(registry, {:scribe, id})
+    DynamicSupervisor.terminate_child(supervisor, scribe_pid)
   end
 
   @doc "Uses GenServer.call to act upon a LiveBoard"
