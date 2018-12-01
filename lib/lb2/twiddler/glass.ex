@@ -1,4 +1,4 @@
-defmodule Lb2.Glass do
+defmodule Lb2.Twiddler.Glass do
   @moduledoc "Provides lens-building functionality"
   import Focus
   alias Lb2.Board.Board
@@ -17,16 +17,16 @@ defmodule Lb2.Glass do
   def pile_by_id(%Board{columns: columns}, id) do
     Enum.each(Enum.with_index(columns), fn {col, col_idx} ->
       Enum.each(Enum.with_index(col.piles), fn
-          {%{id: ^id}, pile_idx} ->
-            throw(
-              Lens.make_lens(:columns)
-              ~> Lens.idx(col_idx)
-              ~> Lens.make_lens(:piles)
-              ~> Lens.idx(pile_idx)
-            )
+        {%{id: ^id}, pile_idx} ->
+          throw(
+            Lens.make_lens(:columns)
+            ~> Lens.idx(col_idx)
+            ~> Lens.make_lens(:piles)
+            ~> Lens.idx(pile_idx)
+          )
 
-          _ ->
-            nil
+        _ ->
+          nil
       end)
     end)
 
@@ -36,9 +36,6 @@ defmodule Lb2.Glass do
   end
 
   @spec card_by_id(Board.t(), integer) :: lens_or_error
-  # def card_by_id(%Changeset{} = cs, id),
-  #   do: card_by_id(Changeset.apply_changes(cs), id)
-
   def card_by_id(%Board{columns: columns}, id) do
     Enum.each(Enum.with_index(columns), fn {col, col_idx} ->
       Enum.each(Enum.with_index(col.piles), fn {pile, pile_idx} ->

@@ -3,9 +3,9 @@ defmodule Lb2.Twiddler do
   A context for board operations
   """
   alias Ecto.Changeset
-  alias Lb2.Board.{Board, Card, Column, Event, Util}
-  alias Lb2.Glass
+  alias Lb2.Board.{Board, Card, Column, Event}
   alias Lb2.Repo
+  alias Lb2.Twiddler.{Glass, Op}
   import Ecto.Query
   import Focus
 
@@ -13,12 +13,15 @@ defmodule Lb2.Twiddler do
 
   @spec act(Board.t(), action) ::
           {:ok, Board.t(), Changeset.t(), Event.t()} | {:error, String.t()}
-  # def act(board, {:set_column_title, args}) do
-  #   with [id, title] <- grab(args, ~w/id title/a),
-  #        {:ok, changeset} <- Util.column_set_title(changeset, id, title) do
-  #     {:ok, changeset, event("has changed a column title to #{title}.")}
-  #   end
-  # end
+  def act(board, {:set_column_title, args}) do
+    with [col_id, title] <- grab(args, ~w/id title/a),
+         {:ok, lens} <- Glass.column_by_id(board, col_id),
+         %Changeset{valid?: true} = cs <-
+           lens |> Focus.view(board) |> Column.changeset(%{title: title}) do
+      new_board = Focus.set(lens, board, Changeset.apply_changes(cs))
+      {:ok, new_board, cs, event("has changed a column title to #{title}.")}
+    end
+  end
 
   def act(board, {:update_card, args}) do
     with {:ok, id} <- Keyword.fetch(args, :id),
@@ -34,17 +37,22 @@ defmodule Lb2.Twiddler do
     with [col_id, id, new_pos] <- grab(args, ~w/col_id id new_pos/a),
          {:ok, col_lens} <- Glass.column_by_id(board, col_id) do
       column = Focus.view(col_lens, board)
-      {pile, piles} = Util.move_pile(column.piles, id, new_pos)
+      {pile, piles} = Op.move_items(column.piles, id, new_pos)
       # cs = Card.changeset(card, Enum.into(args, %{}))
-      cs = nil
       piles_lens = col_lens ~> Lens.make_lens(:piles)
       new_board = Focus.set(piles_lens, board, piles)
 
-      ev =
-        "has moved " <>
-          if length(pile.cards) > 1, do: "a pile.", else: "a card."
+      wat = if length(pile.cards) > 1, do: "a pile", else: "a card"
 
-      {:ok, new_board, cs, event(ev)}
+      {:ok, new_board, nil, event("has moved #{wat}.")}
+    end
+  end
+
+  def act(board, {:move_column, args}) do
+    with [id, new_pos] <- grab(args, ~w/id new_pos/a),
+         {col, new_cols} <- Op.move_items(board.columns, id, new_pos) do
+      new_board = %{board | columns: new_cols}
+      {:ok, new_board, nil, event("has moved the `#{col.title}` column.")}
     end
   end
 
@@ -111,31 +119,23 @@ defmodule Lb2.Twiddler do
 
   @spec grab(keyword, [atom]) :: [term] | {:error, String.t()}
   defp grab(args, fields) do
-    ret =
-      fields
-      |> Enum.reduce([], fn k, acc ->
-        case Keyword.fetch(args, k) do
-          {:ok, v} -> [v | acc]
-          :error -> throw(k)
-        end
-      end)
-      |> Enum.reverse()
-
-    {:ok, ret}
+    fields
+    |> Enum.reduce([], fn k, acc ->
+      case Keyword.fetch(args, k) do
+        {:ok, v} -> [v | acc]
+        :error -> throw(k)
+      end
+    end)
+    |> Enum.reverse()
   catch
     k -> {:error, "Missing argument #{k}"}
-  end
-
-  defp change(changeset, params) do
-    params = Util.recursive_struct_to_map(params)
-    Board.changeset(changeset, params)
   end
 
   defp event(msg) when is_binary(msg) do
     %Event{desc: msg}
   end
 
-  defp event(keyword) when is_list(keyword) do
-    struct(Event, keyword)
-  end
+  # defp event(msg, keyword) when is_binary(msg) and is_list(keyword) do
+  #   struct(Event, Keyword.merge(keyword, desc: msg))
+  # end
 end
