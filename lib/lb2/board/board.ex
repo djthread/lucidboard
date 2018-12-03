@@ -2,10 +2,11 @@ defmodule Lb2.Board.Board do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lb2.Board.Column
+  alias Lb2.Board.{Column, Settings}
 
   schema "boards" do
     field(:title, :string)
+    embeds_one(:settings, Settings)
     has_many(:columns, Column)
 
     timestamps()

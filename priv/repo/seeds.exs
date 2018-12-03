@@ -1,7 +1,7 @@
 alias Lb2.Repo
 alias Lb2.Board.{Board, Card, Column, Pile}
 
-%Board{
+Repo.insert! %Board{
   title: "My Test Board",
   columns: [
     %Column{title: "Col1", pos: 0},
@@ -28,4 +28,3 @@ alias Lb2.Board.{Board, Card, Column, Pile}
     }
   ]
 }
-|> Repo.insert!()
