@@ -4,7 +4,7 @@ defmodule Lucidboard.Repo.Migrations.Initial do
   def change do
     create table("boards") do
       add :title, :string, null: false
-      add :settings, :jsonb
+      add :settings, :jsonb, null: false, default: "{}"
 
       timestamps()
     end

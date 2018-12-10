@@ -20,11 +20,11 @@ defmodule Lucidboard.LiveBoardTest do
     %Board{columns: [%Column{title: from_live_board}]} =
       Lucidboard.call(board_id, :board)
 
-    # Ensure it's the new title and give the scribe long enough to persist
+    # Ensure it's the new title
     assert "the new title" == from_live_board
-    :timer.sleep(50)
 
-    # Fetch it from the database
+    # Give the scribe long enough to save and fetch it from the database
+    :timer.sleep(50)
     %Board{columns: [%Column{title: from_db}]} = Twiddler.by_id(board_id)
 
     # Ensure the new title has persisted
