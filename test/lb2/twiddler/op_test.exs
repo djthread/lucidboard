@@ -1,5 +1,5 @@
 defmodule Lb2.Twiddler.OpTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   import Lb2.BoardFixtures
   alias Lb2.Twiddler.Op
 

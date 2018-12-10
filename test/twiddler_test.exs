@@ -1,6 +1,5 @@
 defmodule Lb2.TwiddlerTest do
   use Lb2Web.ConnCase
-  # use ExUnit.Case, async: true
   alias Ecto.Changeset
   alias Lb2.Board.Card
   alias Lb2.Twiddler

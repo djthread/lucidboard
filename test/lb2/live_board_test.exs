@@ -3,25 +3,32 @@ defmodule Lb2.LiveBoardTest do
   alias Lb2.Twiddler
   alias Lb2.Board.{Board, Column}
 
-  test "db write" do
+  test "basic LiveBoard lifecycle" do
+    # Create a board record in the db
     {:ok, %Board{id: board_id, columns: [%Column{id: column_id}]}} =
       %Board{title: "Awesome", columns: [%Column{title: "foo", pos: 0}]}
       |> Twiddler.insert()
 
-    {:ok, pid} = Lb2.start_live_board(board_id)
+    # Start a liveboard based on it
+    {:ok, _pid} = Lb2.start_live_board(board_id)
 
-    action = {:set_column_title, id: column_id, title: "word"}
+    # Set the column title
+    action = {:set_column_title, id: column_id, title: "the new title"}
     Lb2.call(board_id, {:action, action})
 
-    %Board{id: new_board_id, columns: [%Column{title: from_live_board}]} =
+    # Get the board state from the liveboard
+    %Board{columns: [%Column{title: from_live_board}]} =
       Lb2.call(board_id, :board)
 
-    assert "word" == from_live_board
+    # Ensure it's the new title and give the scribe long enough to persist
+    assert "the new title" == from_live_board
+    :timer.sleep(50)
 
-    %Board{id: new_board_id, columns: [%Column{title: from_db}]} =
-      Twiddler.by_id(board_id)
+    # Fetch it from the database
+    %Board{columns: [%Column{title: from_db}]} = Twiddler.by_id(board_id)
 
-    assert "word" == from_db
+    # Ensure the new title has persisted
+    assert "the new title" == from_db
 
     :ok = Lb2.stop_live_board(board_id)
   end
