@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Lb2 docker-based dev environment starter
+# Lucidboard docker-based dev environment starter
 #
 #   1. Write secret files if they don't already exist
 #   2. docker-compose up -d (runs postgres and elixir containers)
@@ -28,8 +28,8 @@ To install dependencies and set up the database, run the following commanads:
 EOF
 fi
 
-docker-compose -p lb2_dev \
+docker-compose -p lucidboard_dev \
     -f "$DIR/../assets/dev-env/docker-compose.yml" \
     up -d
 
-docker exec -it lb2_dev_app fish
+docker exec -it lucidboard_dev_app fish

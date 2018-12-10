@@ -1,4 +1,4 @@
-defmodule Lb2.Repo.Migrations.Initial do
+defmodule Lucidboard.Repo.Migrations.Initial do
   use Ecto.Migration
 
   def change do

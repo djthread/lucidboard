@@ -1,4 +1,4 @@
-defmodule Lb2.DataCase do
+defmodule Lucidboard.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -17,20 +17,20 @@ defmodule Lb2.DataCase do
 
   using do
     quote do
-      alias Lb2.Repo
+      alias Lucidboard.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Lb2.DataCase
+      import Lucidboard.DataCase
     end
   end
 
   setup tags do
-    :ok = Sandbox.checkout(Lb2.Repo)
+    :ok = Sandbox.checkout(Lucidboard.Repo)
 
     unless tags[:async] do
-      Sandbox.mode(Lb2.Repo, {:shared, self()})
+      Sandbox.mode(Lucidboard.Repo, {:shared, self()})
     end
 
     :ok

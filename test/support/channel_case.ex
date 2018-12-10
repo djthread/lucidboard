@@ -1,4 +1,4 @@
-defmodule Lb2Web.ChannelCase do
+defmodule LucidboardWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -22,15 +22,15 @@ defmodule Lb2Web.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint Lb2Web.Endpoint
+      @endpoint LucidboardWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Sandbox.checkout(Lb2.Repo)
+    :ok = Sandbox.checkout(Lucidboard.Repo)
 
     unless tags[:async] do
-      Sandbox.mode(Lb2.Repo, {:shared, self()})
+      Sandbox.mode(Lucidboard.Repo, {:shared, self()})
     end
 
     :ok

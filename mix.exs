@@ -1,10 +1,10 @@
-defmodule Lb2.Mixfile do
+defmodule Lucidboard.Mixfile do
   @moduledoc false
   use Mix.Project
 
   def project do
     [
-      app: :lb2,
+      app: :lucidboard,
       version: "0.0.1",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -17,7 +17,7 @@ defmodule Lb2.Mixfile do
 
   def application do
     [
-      mod: {Lb2.Application, []},
+      mod: {Lucidboard.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

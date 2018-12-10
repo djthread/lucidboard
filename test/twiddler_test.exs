@@ -1,9 +1,9 @@
-defmodule Lb2.TwiddlerTest do
-  use Lb2Web.ConnCase
+defmodule Lucidboard.TwiddlerTest do
+  use LucidboardWeb.ConnCase
   alias Ecto.Changeset
-  alias Lb2.Board.Card
-  alias Lb2.Twiddler
-  import Lb2.BoardFixtures
+  alias Lucidboard.Board.Card
+  alias Lucidboard.Twiddler
+  import Lucidboard.BoardFixtures
   import Focus
 
   test "update card" do

@@ -26,10 +26,10 @@ To install dependencies and set up the database, run the following commands:
 EOF
 fi
 
-docker-compose -p lb2_dev \
+docker-compose -p lucidboard_dev \
     -f assets/dev-env/docker-compose.yml \
     run -d \
     -p 5432:5432 \
-    --name lb2_dev_db \
+    --name lucidboard_dev_db \
     db && \
     echo "Postgres started. Listening on localhost:5432."

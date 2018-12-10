@@ -6,7 +6,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
-config :lb2, Lb2Web.Endpoint,
+config :lucidboard, LucidboardWeb.Endpoint,
   http: [port: 8800],
   debug_errors: true,
   code_reloader: true,
@@ -37,13 +37,13 @@ config :lb2, Lb2Web.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :lb2, Lb2Web.Endpoint,
+config :lucidboard, LucidboardWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
-      ~r{lib/lb2_web/views/.*(ex)$},
-      ~r{lib/lb2_web/templates/.*(eex)$}
+      ~r{lib/lucidboard_web/views/.*(ex)$},
+      ~r{lib/lucidboard_web/templates/.*(eex)$}
     ]
   ]
 

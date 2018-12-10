@@ -1,10 +1,10 @@
-# Lb2
+# Lucidboard
 
 A kanban tool.
 
 **Status:** Just getting started.
 
-**CI:** https://circleci.com/gh/djthread/lb2
+**CI:** https://circleci.com/gh/djthread/lucidboard
 
 **Chat:** [Lucidboard on Telegram](http://t.me/lucidboard)
 
@@ -15,9 +15,10 @@ bin/dev
 ```
 
 The [script's comments](bin/dev) explain a bit more, but you'll get two
-docker containers -- a Postgres database (`lb2_dev_db`) and an Elixir
-development container (`lb2_dev_app`). The script will then run the fish shell
-inside the latter, dropping you into `/app` where the project files reside.
+docker containers -- a Postgres database (`lucidboard_dev_db`) and an Elixir
+development container (`lucidboard_dev_app`). The script will then run the
+fish shell inside the latter, dropping you into `/app` where the project
+files reside.
 
 When running this the first time, you'll need to install the dependencies and
 initialize the database. (You may also simply type `setup` since it is an alias

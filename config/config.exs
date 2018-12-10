@@ -6,16 +6,16 @@
 use Mix.Config
 
 # General application configuration
-config :lb2,
-  ecto_repos: [Lb2.Repo]
+config :lucidboard,
+  ecto_repos: [Lucidboard.Repo]
 
 # Configures the endpoint
-config :lb2, Lb2Web.Endpoint,
+config :lucidboard, LucidboardWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base:
     "ynHoNC75BVRedbPP06+hVh6fj9+J2vP+K51G0J9F7xeeqYXSMpHJ4cYT1N70Qqlw",
-  render_errors: [view: Lb2Web.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Lb2.PubSub, adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: LucidboardWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Lucidboard.PubSub, adapter: Phoenix.PubSub.PG2]
 
 config :phoenix, :json_library, Jason
 

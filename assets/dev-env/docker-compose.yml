@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   db:
-    container_name: lb2_dev_db
+    container_name: lucidboard_dev_db
     image: postgres
     volumes: [ "../db-docker-data:/var/lib/postgresql/data" ]
     ports: [ "5432:5432" ]
@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: verysecure123
 
   app:
-    container_name: lb2_dev_app
+    container_name: lucidboard_dev_app
     build: .
     image: elixir-dev
     tty: true

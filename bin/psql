@@ -5,4 +5,4 @@
 # Be sure and start postgres first with `db.sh`.
 #
 
-docker exec -it lb2_dev_db psql -U postgres
+docker exec -it lucidboard_dev_db psql -U postgres

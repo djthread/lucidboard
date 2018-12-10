@@ -1,5 +1,5 @@
-alias Lb2.Repo
-alias Lb2.Board.{Board, Card, Column, Pile}
+alias Lucidboard.Repo
+alias Lucidboard.Board.{Board, Card, Column, Pile}
 
 Repo.insert! %Board{
   title: "My Test Board",

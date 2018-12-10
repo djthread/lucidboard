@@ -1,4 +1,4 @@
-defmodule Lb2Web.ConnCase do
+defmodule LucidboardWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -20,18 +20,18 @@ defmodule Lb2Web.ConnCase do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
-      import Lb2Web.Router.Helpers
+      import LucidboardWeb.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint Lb2Web.Endpoint
+      @endpoint LucidboardWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Sandbox.checkout(Lb2.Repo)
+    :ok = Sandbox.checkout(Lucidboard.Repo)
 
     unless tags[:async] do
-      Sandbox.mode(Lb2.Repo, {:shared, self()})
+      Sandbox.mode(Lucidboard.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}
