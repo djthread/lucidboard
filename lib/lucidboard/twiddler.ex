@@ -12,24 +12,30 @@ defmodule Lucidboard.Twiddler do
   @type action :: {atom, keyword}
 
   @spec act(Board.t(), action) ::
-          {:ok, Board.t(), Changeset.t(), Event.t()} | {:error, String.t()}
+          {:ok, Board.t(), function, Event.t()} | {:error, String.t()}
   def act(board, {:set_column_title, args}) do
     with [col_id, title] <- grab(args, ~w/id title/a),
          {:ok, lens} <- Glass.column_by_id(board, col_id),
          %Changeset{valid?: true} = cs <-
            lens |> Focus.view(board) |> Column.changeset(%{title: title}) do
-      new_board = Focus.set(lens, board, Changeset.apply_changes(cs))
-      {:ok, new_board, cs, event("has changed a column title to #{title}.")}
+      {:ok, Focus.set(lens, board, Changeset.apply_changes(cs)),
+       fn -> Repo.update(cs) end,
+       event("has changed a column title to #{title}.")}
+    else
+      %Changeset{} = cs -> {:error, changeset_to_string(cs)}
+      :not_found -> {:error, "Column not found"}
     end
   end
 
   def act(board, {:update_card, args}) do
-    with {:ok, id} <- Keyword.fetch(args, :id),
-         {:ok, lens} <- Glass.card_by_id(board, id) do
-      card = Focus.view(lens, board)
-      cs = Card.changeset(card, Enum.into(args, %{}))
-      new_board = Focus.set(lens, board, Changeset.apply_changes(cs))
-      {:ok, new_board, cs, event("has changed card text.")}
+    with [id] <- grab(args, [:id]),
+         {:ok, lens} <- Glass.card_by_id(board, id),
+         %Changeset{valid?: true} = cs <-
+           lens |> Focus.view(board) |> Card.changeset(Enum.into(args, %{})) do
+      {:ok,
+       Focus.set(lens, board, Changeset.apply_changes(cs)),
+       fn -> Repo.update(cs) end,
+       event("has changed card text.")}
     end
   end
 
@@ -138,4 +144,11 @@ defmodule Lucidboard.Twiddler do
   # defp event(msg, keyword) when is_binary(msg) and is_list(keyword) do
   #   struct(Event, Keyword.merge(keyword, desc: msg))
   # end
+
+  defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do
+    errs
+    |> Enum.map(fn {k, err} -> "#{k}: #{err}" end)
+    |> Enum.join(", ")
+    |> (fn msg -> "Error: #{msg}" end).()
+  end
 end

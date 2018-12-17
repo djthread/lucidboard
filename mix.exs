@@ -38,7 +38,8 @@ defmodule Lucidboard.Mixfile do
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.0"},
       {:focus, "~> 0.3.5"},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false}
     ]
   end
 

@@ -1,7 +1,5 @@
 defmodule Lucidboard.TwiddlerTest do
   use LucidboardWeb.ConnCase
-  alias Ecto.Changeset
-  alias Lucidboard.Board.Card
   alias Lucidboard.Twiddler
   import Lucidboard.BoardFixtures
   import Focus
@@ -9,11 +7,8 @@ defmodule Lucidboard.TwiddlerTest do
   test "update card" do
     board = board_fixture()
 
-    {:ok, new_board, cs, _event} =
+    {:ok, new_board, _fun, _event} =
       Twiddler.act(board, {:update_card, id: 2, body: "OH YEAH"})
-
-    assert true == cs.valid?
-    assert %Card{body: "OH YEAH"} = Changeset.apply_changes(cs)
 
     card_lens =
       Lens.make_lens(:columns)

@@ -6,7 +6,6 @@ defmodule Lucidboard.LiveBoard.Scribe do
   user is not blocked by the operation.
   """
   use GenServer
-  alias Ecto.{Changeset, Multi}
   alias Lucidboard.Repo
   require Logger
 
@@ -18,47 +17,10 @@ defmodule Lucidboard.LiveBoard.Scribe do
   def init(nil), do: {:ok, nil}
 
   @impl true
-  def handle_cast(%Changeset{} = cs, state) do
-    case Repo.update(cs) do
-      {:ok, _struct} ->
-        nil
-
-      bad ->
-        Logger.error("""
-        Repo.update on changeset failed: #{inspect(cs)}: #{inspect(bad)}\
-        """)
-    end
-
-    {:noreply, state}
-  end
-
-  def handle_cast(%Multi{} = multi, state) do
-    case Repo.transaction(multi) do
-      {:ok, _res} -> nil
-      bad -> Logger.error("Bad transaction: #{inspect(bad)}")
-    end
-
-    {:noreply, state}
-  end
-
-  def handle_cast(fun, state) when is_function(fun) do
-    case Repo.transaction(fun) do
-      {:ok, _res} -> nil
-      bad -> Logger.error("Bad transaction: #{inspect(bad)}")
-    end
-
-    {:noreply, state}
-  end
-
-  def handle_cast(%{} = struct, _from, state) do
-    case Repo.insert(struct) do
-      {:ok, _struct} ->
-        nil
-
-      bad ->
-        Logger.error("""
-        Repo.insert failed on #{inspect(struct)}: #{inspect(bad)}\
-        """)
+  def handle_cast(tx_fn, state) when is_function(tx_fn) do
+    case Repo.transaction(tx_fn) do
+      {:ok, _struct} -> nil
+      bad -> Logger.error("Repo.update on changeset failed: #{inspect(bad)}")
     end
 
     {:noreply, state}
