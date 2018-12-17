@@ -32,10 +32,8 @@ defmodule Lucidboard.Twiddler do
          {:ok, lens} <- Glass.card_by_id(board, id),
          %Changeset{valid?: true} = cs <-
            lens |> Focus.view(board) |> Card.changeset(Enum.into(args, %{})) do
-      {:ok,
-       Focus.set(lens, board, Changeset.apply_changes(cs)),
-       fn -> Repo.update(cs) end,
-       event("has changed card text.")}
+      {:ok, Focus.set(lens, board, Changeset.apply_changes(cs)),
+       fn -> Repo.update(cs) end, event("has changed card text.")}
     end
   end
 
