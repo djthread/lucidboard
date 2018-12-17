@@ -1,5 +1,5 @@
 defmodule Lucidboard.TwiddlerTest do
-  use LucidboardWeb.BoardConnCase
+  use LucidboardWeb.BoardCase
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler
   import Focus
