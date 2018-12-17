@@ -5,9 +5,8 @@ defmodule Lucidboard.LiveBoard do
   use GenServer
   alias Lucidboard.Twiddler
   alias Lucidboard.Board.{Board, Event}
+  alias Lucidboard.LiveBoard.Scribe
   require Logger
-
-  @registry Lucidboard.BoardRegistry
 
   defmodule State do
     @moduledoc """
@@ -41,7 +40,7 @@ defmodule Lucidboard.LiveBoard do
     # case invoke_carefully({Twiddler, :act, [state.board, action]}) do
     case Twiddler.act(state.board, action) do
       {:ok, new_board, tx_fn, event} ->
-        scribe(tx_fn, new_board.id)
+        Scribe.write(new_board.id, tx_fn)
         new_state = %{state | board: new_board, events: [event | state.events]}
         {:reply, new_board, new_state}
 
@@ -64,11 +63,6 @@ defmodule Lucidboard.LiveBoard do
 
   def handle_call(:events, _from, state) do
     {:reply, state.events, state}
-  end
-
-  defp scribe(change, board_id) do
-    name = {:via, Registry, {@registry, {:scribe, board_id}}}
-    GenServer.cast(name, change)
   end
 
   # TODO - we should probably delete this. unnecessary/antipattern.

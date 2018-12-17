@@ -9,6 +9,15 @@ defmodule Lucidboard.LiveBoard.Scribe do
   alias Lucidboard.Repo
   require Logger
 
+  @registry Lucidboard.BoardRegistry
+
+  @doc "Cast a write operation to the scribe process"
+  @spec write(integer, function) :: :ok
+  def write(board_id, tx_fn) do
+    name = {:via, Registry, {@registry, {:scribe, board_id}}}
+    GenServer.cast(name, tx_fn)
+  end
+
   def start_link(name) do
     GenServer.start_link(__MODULE__, nil, name: name)
   end
