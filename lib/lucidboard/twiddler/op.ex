@@ -2,31 +2,36 @@ defmodule Lucidboard.Twiddler.Op do
   @moduledoc """
   Helper functions for manipulating board data
   """
-  alias Ecto.Changeset
-
-  @type ok_or_error :: {:ok, Changeset.t()} | {:error, String.t()}
 
   @doc """
   Moves an item by its id to a new position in a list
 
-    iex> Op.move_items([%{id: 1}, %{id: 2}], 2, 0)
-    {%{id: 2}, [%{id: 2}, %{id: 1}]}
+    iex> Op.move_item([%{id: 1, pos: 0}, %{id: 2, pos: 1}], 1, 0)
+    {%{id: 2, pos: 0}, [%{id: 2, pos: 0}, %{id: 1, pos: 1}]}
+    {%{id: 1, pos: 0}, [%{id: 1, pos: 1}, %{id: 2, pos: 2}]}
   """
-  @spec move_items(list, integer | binary, integer) :: {any, [any]} | :error
-  def move_items(items, id, new_pos)
-      when is_list(items) and is_integer(new_pos) and length(items) > new_pos do
-    items
-    |> Enum.with_index()
-    |> Enum.find(&(elem(&1, 0).id == id))
-    |> case do
-      {_item, idx} ->
-        {item, leftover} = List.pop_at(items, idx)
-        new_list = List.insert_at(leftover, new_pos, item)
+  @spec move_item([map], integer, integer) :: {any, [any]}
+  def move_item(items, pos, new_pos)
+      when is_list(items) and is_integer(pos) and is_integer(new_pos) and
+             pos >= 0 and new_pos >= 0 and length(items) > pos and
+             length(items) > new_pos do
+    # items
+    # |> Enum.with_index()
+    # |> Enum.find(&(elem(&1, 0).id == id))
+    # |> case do
+    #   {_item, idx} ->
+        {item, leftover} = List.pop_at(items, pos)
+
+        new_list =
+          leftover
+          |> List.insert_at(new_pos, item)
+          |> Enum.with_index()
+          |> Enum.map(fn {i, pos} -> Map.put(i, :pos, pos) end)
 
         {item, new_list}
 
-      nil ->
-        :error
-    end
+    #   nil ->
+    #     :error
+    # end
   end
 end
