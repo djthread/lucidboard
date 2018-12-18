@@ -6,8 +6,8 @@ defmodule Lucidboard.Twiddler do
   alias Lucidboard.Board.{Board, Card, Column, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.{Glass, Op}
+  alias Lucidboard.Twiddler.QueryBuilder, as: QB
   import Ecto.Query
-  import Focus
 
   @type action :: {atom, keyword}
 
@@ -37,26 +37,30 @@ defmodule Lucidboard.Twiddler do
     end
   end
 
-  def act(board, {:move_pile, args}) do
-    with [col_id, id, new_pos] <- grab(args, ~w/col_id id new_pos/a),
-         {:ok, col_lens} <- Glass.column_by_id(board, col_id) do
-      column = Focus.view(col_lens, board)
-      {pile, piles} = Op.move_items(column.piles, id, new_pos)
-      # cs = Card.changeset(card, Enum.into(args, %{}))
-      piles_lens = col_lens ~> Lens.make_lens(:piles)
-      new_board = Focus.set(piles_lens, board, piles)
+  # def act(board, {:move_pile, args}) do
+  #   with [col_id, id, new_pos] <- grab(args, ~w/col_id id new_pos/a),
+  #        {:ok, col_lens} <- Glass.column_by_id(board, col_id) do
+  #     column = Focus.view(col_lens, board)
+  #     {pile, piles} = Op.move_item(column.piles, id, new_pos)
+  #     # cs = Card.changeset(card, Enum.into(args, %{}))
+  #     piles_lens = col_lens ~> Lens.make_lens(:piles)
+  #     new_board = Focus.set(piles_lens, board, piles)
 
-      wat = if length(pile.cards) > 1, do: "a pile", else: "a card"
+  #     wat = if length(pile.cards) > 1, do: "a pile", else: "a card"
 
-      {:ok, new_board, nil, event("has moved #{wat}.")}
-    end
-  end
+  #     {:ok, new_board, nil, event("has moved #{wat}.")}
+  #   end
+  # end
 
   def act(board, {:move_column, args}) do
+    queryable = from(c in Column, where: c.board_id == ^board.id)
+
     with [id, new_pos] <- grab(args, ~w/id new_pos/a),
-         {col, new_cols} <- Op.move_items(board.columns, id, new_pos) do
+         pos <- Enum.find(board.columns, fn c -> c.id == id end).pos,
+         {col, new_cols} <- Op.move_item(board.columns, pos, new_pos),
+         tx_fn <- QB.move_item(queryable, id, pos, new_pos) do
       new_board = %{board | columns: new_cols}
-      {:ok, new_board, nil, event("has moved the `#{col.title}` column.")}
+      {:ok, new_board, tx_fn, event("has moved the `#{col.title}` column.")}
     end
   end
 
