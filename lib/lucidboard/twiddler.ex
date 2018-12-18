@@ -8,7 +8,7 @@ defmodule Lucidboard.Twiddler do
   alias Lucidboard.Twiddler.{Glass, Op}
   alias Lucidboard.Twiddler.QueryBuilder, as: QB
   import Ecto.Query
-  import Focus
+  # import Focus
 
   @type action :: {atom, keyword}
 

@@ -9,7 +9,7 @@ defmodule Lucidboard.Twiddler.QueryBuilder do
   Works for Columns, Piles, or Boards. To aid in building the transaction function, the first argument must be an `Ecto.Queryable.t()`. (Eg. `from(c in Column, where: c.board_id == ^board.id)`)
   """
   @spec move_item(Ecto.Queryable.t(), integer, integer, fun | nil) :: function
-  def move_item(queryable, old_pos, new_pos, base_fn \\ nil)do
+  def move_item(queryable, old_pos, new_pos, base_fn \\ nil) do
     fn ->
       if is_function(base_fn), do: base_fn.()
 
