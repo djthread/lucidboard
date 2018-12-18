@@ -59,7 +59,7 @@ defmodule Lucidboard.Twiddler do
     with [id, new_pos] <- grab(args, ~w/id new_pos/a),
          pos <- Enum.find(board.columns, fn c -> c.id == id end).pos,
          {col, new_cols} <- Op.move_item(board.columns, pos, new_pos),
-         tx_fn <- QB.move_item(queryable, pos, new_pos) do
+         tx_fn <- QB.move_item(queryable, id, pos, new_pos) do
       new_board = %{board | columns: new_cols}
       {:ok, new_board, tx_fn, event("has moved the `#{col.title}` column.")}
     end

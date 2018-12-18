@@ -22,6 +22,8 @@ defmodule Lucidboard.Twiddler.OpTest do
       Op.move_item(cards, 1, 3)
     end)
 
-    assert :error == Op.move_item(cards, 9, 0)
+    assert_raise(FunctionClauseError, fn ->
+      Op.move_item(cards, 9, 0)
+    end)
   end
 end
