@@ -8,7 +8,6 @@ config :lucidboard, LucidboardWeb.Endpoint,
 
 config :lucidboard, Lucidboard.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
-EOF
 
 # Print only warnings and errors during test
 config :logger, level: :warn
