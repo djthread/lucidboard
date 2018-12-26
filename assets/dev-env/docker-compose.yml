@@ -4,15 +4,14 @@ services:
   db:
     container_name: lucidboard_dev_db
     image: postgres
-    volumes: [ "../db-docker-data:/var/lib/postgresql/data" ]
+    volumes: [ "lucidboard_dev_db:/var/lib/postgresql/data" ]
     ports: [ "5432:5432" ]
     environment:
       POSTGRES_PASSWORD: verysecure123
 
   app:
-    container_name: lucidboard_dev_app
+    container_name: lucidboard_dev
     build: .
-    image: elixir-dev
     tty: true
     stdin_open: true
     depends_on: [ db ]
@@ -20,3 +19,6 @@ services:
     ports: [ "8800:8800" ]
     environment:
       PG_HOST: db
+
+volumes:
+  lucidboard_dev_db:

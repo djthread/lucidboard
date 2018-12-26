@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# Our wrapper for `docker-compose`
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+docker-compose -p lucidboard_dev -f "$DIR/../assets/dev-env/docker-compose.yml" $@

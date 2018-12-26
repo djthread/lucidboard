@@ -32,4 +32,4 @@ docker-compose -p lucidboard_dev \
     -f "$DIR/../assets/dev-env/docker-compose.yml" \
     up -d
 
-docker exec -it lucidboard_dev_app fish
+docker exec -it lucidboard_dev fish
