@@ -9,12 +9,12 @@ defmodule Lucidboard.Twiddler.Actions do
   alias Lucidboard.Twiddler.{Glass, Op, QueryBuilder}
   import Ecto.Query
 
-  @spec update_column(Board.t(), keyword) :: Twiddler.action_ok_or_error()
+  @spec update_column(Board.t(), map) :: Twiddler.action_ok_or_error()
   def update_column(board, args) do
     with [id] <- grab(args, [:id]),
          {:ok, lens} <- Glass.column_by_id(board, id),
          %Changeset{valid?: true} = cs <-
-           lens |> Focus.view(board) |> Column.changeset(Enum.into(args, %{})),
+           lens |> Focus.view(board) |> Column.changeset(args),
          new_col <- Changeset.apply_changes(cs) do
       {:ok, Focus.set(lens, board, new_col), fn -> Repo.update(cs) end,
        event("has updated the `#{new_col.title}` column.")}
@@ -23,18 +23,18 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec update_card(Board.t(), keyword) :: Twiddler.action_ok_or_error()
+  @spec update_card(Board.t(), map) :: Twiddler.action_ok_or_error()
   def update_card(board, args) do
     with [id] <- grab(args, [:id]),
          {:ok, lens} <- Glass.card_by_id(board, id),
          %Changeset{valid?: true} = cs <-
-           lens |> Focus.view(board) |> Card.changeset(Enum.into(args, %{})) do
+           lens |> Focus.view(board) |> Card.changeset(args) do
       {:ok, Focus.set(lens, board, Changeset.apply_changes(cs)),
        fn -> Repo.update(cs) end, event("has changed card text.")}
     end
   end
 
-  @spec move_column(Board.t(), keyword) :: Twiddler.action_ok_or_error()
+  @spec move_column(Board.t(), map) :: Twiddler.action_ok_or_error()
   def move_column(board, args) do
     queryable = from(c in Column, where: c.board_id == ^board.id)
 
@@ -47,7 +47,7 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec move_pile(Board.t(), keyword) :: Twiddler.action_ok_or_error()
+  @spec move_pile(Board.t(), map) :: Twiddler.action_ok_or_error()
   def move_pile(board, args) do
     with [id, col_id, new_pos] <- grab(args, ~w/id col_id new_pos/a),
          {:ok, col_lens} <- Glass.column_by_id(board, col_id),
@@ -62,13 +62,13 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec grab(keyword, [atom]) :: [term] | {:error, String.t()}
-  defp grab(args, fields) do
+  @spec grab(map, [atom]) :: [term] | {:error, String.t()}
+  defp grab(args, fields) when is_map(args) and is_list(fields) do
     fields
     |> Enum.reduce([], fn k, acc ->
-      case Keyword.fetch(args, k) do
-        {:ok, v} -> [v | acc]
-        :error -> throw(k)
+      case Map.get(args, to_string(k)) || Map.get(args, k) do
+        nil -> throw(k)
+        v -> [v | acc]
       end
     end)
     |> Enum.reverse()

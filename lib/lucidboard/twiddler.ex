@@ -8,13 +8,16 @@ defmodule Lucidboard.Twiddler do
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.Actions
 
-  @type action :: {atom, keyword}
+  @type action :: {atom, keyword | map}
   @type action_ok_or_error ::
           {:ok, Board.t(), function, Event.t()} | {:error, String.t()}
 
   @spec act(Board.t(), action) :: action_ok_or_error
-  def act(%Board{} = board, {action_name, args})
-      when is_atom(action_name) and is_list(args) do
+  def act(%Board{} = board, {action_name, args}) when is_list(args) do
+    act(board, {action_name, Enum.into(args, %{})})
+  end
+
+  def act(%Board{} = board, {action_name, args}) when is_atom(action_name) and is_map(args) do
     with true <- function_exported?(Actions, action_name, 2) || :no_action,
          {:ok, _, _, _} = res <- apply(Actions, action_name, [board, args]) do
       res
