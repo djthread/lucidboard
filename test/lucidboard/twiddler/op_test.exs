@@ -13,17 +13,13 @@ defmodule Lucidboard.Twiddler.OpTest do
     # Baseline
     assert ~w(fred wilma pebbles) == bodies.(cards)
 
-    {t1_card, t1_cards} = Op.move_item(cards, 0, 2)
+    {:ok, t1_card, t1_cards} = Op.move_item(cards, 0, 2)
     assert "fred" == t1_card.body
     assert ~w(wilma pebbles fred) == bodies.(t1_cards)
 
     # 2 is the max position since length(cards) == 3
-    assert_raise(FunctionClauseError, fn ->
-      Op.move_item(cards, 1, 3)
-    end)
+    assert {:error, _} = Op.move_item(cards, 1, 3)
 
-    assert_raise(FunctionClauseError, fn ->
-      Op.move_item(cards, 9, 0)
-    end)
+    assert {:error, _} = Op.move_item(cards, 9, 0)
   end
 end

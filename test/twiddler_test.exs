@@ -24,20 +24,20 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "set_column_title", %{board: board} do
+  test "update_column", %{board: board} do
     col_lens = Lens.make_lens(:columns) ~> Lens.idx(1)
     actual_col_id = Focus.view(col_lens, board).id
 
-    action = {:set_column_title, id: actual_col_id, title: "CHANGED IT"}
+    action = {:update_column, id: actual_col_id, title: "CHANGED IT"}
     {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
 
-    assert "has changed a column title to CHANGED IT." == event.desc
+    assert "has updated the `CHANGED IT` column." == event.desc
     assert "CHANGED IT" == Focus.view(col_lens, new_board).title
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "Move third column to the first position", %{board: board} do
+  test "move third column to the first position", %{board: board} do
     # Baseline
     ~w(Col1 Col2 Col3) = titles(board.columns)
 
@@ -50,11 +50,41 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "Move first column to the last position", %{board: board} do
+  test "move first column to the last position", %{board: board} do
     action = {:move_column, id: Enum.at(board.columns, 0).id, new_pos: 2}
     {:ok, new_board, tx_fn, _event} = Twiddler.act(board, action)
 
     assert ~w(Col2 Col3 Col1) == titles(new_board.columns)
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "of 4, move the last pile to be first", %{board: board} do
+    col_lens =
+      Lens.make_lens(:columns)
+      ~> Lens.idx(2)
+
+    pile_lens =
+      col_lens
+      ~> Lens.make_lens(:piles)
+      ~> Lens.idx(3)
+
+    col = Focus.view(col_lens, board)
+    pile = Focus.view(pile_lens, board)
+
+    assert ~w(whoa definitely cheese flapjacks) ==
+             col.piles |> first_card_body_of_each_pile()
+
+    action = {:move_pile, id: pile.id, col_id: col.id, new_pos: 0}
+    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
+
+    assert "has moved a pile." == event.desc
+
+    assert ~w(flapjacks whoa definitely cheese) ==
+             col_lens
+             |> Focus.view(new_board)
+             |> Map.fetch!(:piles)
+             |> first_card_body_of_each_pile()
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
@@ -70,5 +100,9 @@ defmodule Lucidboard.TwiddlerTest do
   # Given a list of columns, return a list of their titles
   defp titles(columns) do
     Enum.map(columns, & &1.title)
+  end
+
+  defp first_card_body_of_each_pile(piles) do
+    Enum.map(piles, fn p -> hd(p.cards).body end)
   end
 end

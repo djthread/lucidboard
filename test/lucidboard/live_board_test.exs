@@ -13,7 +13,7 @@ defmodule Lucidboard.LiveBoardTest do
     {:ok, _pid} = Lucidboard.start_live_board(board_id)
 
     # Set the column title
-    action = {:set_column_title, id: column_id, title: "the new title"}
+    action = {:update_column, id: column_id, title: "the new title"}
     Lucidboard.call(board_id, {:action, action})
 
     # Get the board state from the liveboard

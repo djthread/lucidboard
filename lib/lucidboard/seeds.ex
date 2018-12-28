@@ -26,7 +26,9 @@ defmodule Lucidboard.Seeds do
                 %Card{pos: 2, body: "neat"}
               ]
             },
-            %Pile{pos: 1, cards: [%Card{pos: 0, body: "definitely"}]}
+            %Pile{pos: 1, cards: [%Card{pos: 0, body: "definitely"}]},
+            %Pile{pos: 2, cards: [%Card{pos: 0, body: "cheese"}]},
+            %Pile{pos: 3, cards: [%Card{pos: 0, body: "flapjacks"}]}
           ]
         }
       ]
