@@ -37,7 +37,6 @@ defmodule Lucidboard.LiveBoard do
 
   @impl true
   def handle_call({:action, action}, _from, state) do
-    # case invoke_carefully({Twiddler, :act, [state.board, action]}) do
     case Twiddler.act(state.board, action) do
       {:ok, new_board, tx_fn, event} ->
         Scribe.write(new_board.id, tx_fn)
@@ -64,11 +63,4 @@ defmodule Lucidboard.LiveBoard do
   def handle_call(:events, _from, state) do
     {:reply, state.events, state}
   end
-
-  # TODO - we should probably delete this. unnecessary/antipattern.
-  # defp invoke_carefully({mod, fun, args}) do
-  #   apply(mod, fun, args)
-  # catch
-  #   type, error -> {:caught, type, error, __STACKTRACE__}
-  # end
 end

@@ -19,29 +19,20 @@ defmodule Lucidboard.Twiddler.QueryBuilder do
   in Column, where: c.board_id == ^board.id)`)
   """
   @spec move_item(Ecto.Queryable.t(), integer, integer, fun | nil) :: function
-  def move_item(queryable, id, old_pos, new_pos, base_fn \\ nil) do
-    fun =
+  def move_item(q, id, old_pos, new_pos, base_fn \\ nil) do
+    {queryable, pos_delta} =
       if old_pos < new_pos do
-        fn ->
-          from(i in queryable, where: i.pos > ^old_pos and i.pos <= ^new_pos)
-          |> Repo.update_all(inc: [pos: -1])
-
-          from(i in queryable, where: i.id == ^id)
-          |> Repo.update_all(set: [pos: new_pos])
-        end
+        qq = from(i in q, where: i.pos > ^old_pos and i.pos <= ^new_pos)
+        {qq, -1}
       else
-        fn ->
-          from(i in queryable, where: i.pos < ^old_pos and i.pos >= ^new_pos)
-          |> Repo.update_all(inc: [pos: 1])
-
-          from(i in queryable, where: i.id == ^id)
-          |> Repo.update_all(set: [pos: new_pos])
-        end
+        qq = from(i in q, where: i.pos < ^old_pos and i.pos >= ^new_pos)
+        {qq, 1}
       end
 
     fn ->
       if is_function(base_fn), do: base_fn.()
-      fun.()
+      Repo.update_all(queryable, inc: [pos: pos_delta])
+      Repo.update_all(from(i in q, where: i.id == ^id), set: [pos: new_pos])
     end
   end
 end
