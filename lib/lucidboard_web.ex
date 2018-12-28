@@ -20,9 +20,10 @@ defmodule LucidboardWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: LucidboardWeb
+
       import Plug.Conn
-      import LucidboardWeb.Router.Helpers
       import LucidboardWeb.Gettext
+      alias LucidboardWeb.Router.Helpers, as: Routes
     end
   end
 
@@ -33,14 +34,14 @@ defmodule LucidboardWeb do
         namespace: LucidboardWeb
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
+      import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import LucidboardWeb.Router.Helpers
       import LucidboardWeb.ErrorHelpers
       import LucidboardWeb.Gettext
+      alias LucidboardWeb.Router.Helpers, as: Routes
     end
   end
 
