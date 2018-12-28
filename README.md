@@ -42,8 +42,8 @@ imp
 Now you can visit [`localhost:8800`](http://localhost:8800) from your browser.
 
 To close down and remove the docker containers, run the following script.
-Don't worry - all your code and database data (in `assets/db-docker-data`)
-will remain intact for next time.
+Don't worry - all your code and database data will remain intact for next
+time.
 
 ```bash
 bin/down
@@ -51,7 +51,7 @@ bin/down
 
 ## Shell Aliases
 
-These [recommened few](assets/dev-env/config.fish) are imported to the fish
+These [recommended few](assets/dev-env/config.fish) are imported to the fish
 shell in the docker-based dev environment.
 
 | Alias   | Full Command          |
