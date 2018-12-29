@@ -3,6 +3,7 @@ version: '3.2'
 services:
   db:
     container_name: lucidboard_dev_db
+    restart: always
     image: postgres
     volumes: [ "lucidboard_dev_db:/var/lib/postgresql/data" ]
     ports: [ "5432:5432" ]
@@ -11,6 +12,7 @@ services:
 
   app:
     container_name: lucidboard_dev
+    restart: always
     build: .
     tty: true
     stdin_open: true
