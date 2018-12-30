@@ -30,6 +30,10 @@ cd assets; npm install; cd ..
 mix ecto.setup
 ```
 
+During `npm install`, Semantic-UI will ask some questions. Answer with `Skip
+install`, `Yes`, and then just press enter for the third question to take the
+default of `semantic/`.
+
 Finally, start the application with `imp`. This is an alias for `iex -S mix
 phx.server` which will run the app with Elixir's interactive repl, iex. This
 will allow you to test lines of Elixir code and interact with the running
@@ -49,6 +53,18 @@ time.
 ```bash
 bin/down
 ```
+
+## Working with Semantic-UI
+
+The following will be important if you would like to make changes to our
+Semantic-UI files.
+
+Changes to files in `assets/css` and `assets/js` will already trigger a live
+reload in your browser, but in order for the same to work for the files
+inside `assets/semantic`, you'll need to open a dedicated terminal in that
+directory and run `gulp watch`. Since Semantic's output files are being
+watched by Lucidboard's webpack configuration, live reloading should then
+work for these files as well.
 
 ## Shell Aliases
 

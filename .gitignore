@@ -26,6 +26,15 @@ npm-debug.log
 # variables.
 /config/*.secret.exs
 
+/assets/semantic/src/definitions/
+/assets/semantic/src/semantic.less
+/assets/semantic/src/theme.less
+/assets/semantic/src/themes/
+/assets/semantic/tasks/
+/assets/semantic/dist/*
+!/assets/semantic/dist/semantic.min.css
+!/assets/semantic/dist/semantic.min.js
+
 .elixir_ls
 .DS_Store
 /cover
