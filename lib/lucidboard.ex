@@ -17,7 +17,7 @@ defmodule Lucidboard do
     * With an `:id`
     * Without an `:id` - board will be inserted first.
   """
-  @spec start_live_board(integer | Board.t(), keyword) ::
+  @spec start_live_board(integer, keyword) ::
           DynamicSupervisor.on_start_child()
           | {:error, :no_board}
           | {:error, Ecto.Changeset.t()}

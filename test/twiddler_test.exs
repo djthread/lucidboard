@@ -60,14 +60,8 @@ defmodule Lucidboard.TwiddlerTest do
   end
 
   test "of 4, move the last pile to be first", %{board: board} do
-    col_lens =
-      Lens.make_lens(:columns)
-      ~> Lens.idx(2)
-
-    pile_lens =
-      col_lens
-      ~> Lens.make_lens(:piles)
-      ~> Lens.idx(3)
+    col_lens = Lens.make_lens(:columns) ~> Lens.idx(2)
+    pile_lens = col_lens ~> Lens.make_lens(:piles) ~> Lens.idx(3)
 
     col = Focus.view(col_lens, board)
     pile = Focus.view(pile_lens, board)
