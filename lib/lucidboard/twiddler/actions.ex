@@ -9,6 +9,15 @@ defmodule Lucidboard.Twiddler.Actions do
   alias Lucidboard.Twiddler.{Glass, Op, QueryBuilder}
   import Ecto.Query
 
+  @spec update_board(Board.t(), map) :: Twiddler.action_ok_or_error()
+  def update_board(board, args) do
+    with %Changeset{valid?: true} = cs <- Board.changeset(board, args),
+         new_board <- Changeset.apply_changes(cs) do
+      {:ok, new_board, fn -> Repo.update(cs) end,
+       event("has updated the board settings.")}
+    end
+  end
+
   @spec update_column(Board.t(), map) :: Twiddler.action_ok_or_error()
   def update_column(board, args) do
     with [id] <- grab(args, [:id]),

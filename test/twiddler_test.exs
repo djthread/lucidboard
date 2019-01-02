@@ -4,6 +4,29 @@ defmodule Lucidboard.TwiddlerTest do
   alias Lucidboard.Twiddler
   import Focus
 
+  test "update_board", %{board: board} do
+    action = {:update_board, title: "CHANGED IT"}
+    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
+
+    assert "has updated the board settings." == event.desc
+    assert "CHANGED IT" == new_board.title
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "update_column", %{board: board} do
+    col_lens = Lens.make_lens(:columns) ~> Lens.idx(1)
+    actual_col_id = Focus.view(col_lens, board).id
+
+    action = {:update_column, id: actual_col_id, title: "CHANGED IT"}
+    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
+
+    assert "has updated the `CHANGED IT` column." == event.desc
+    assert "CHANGED IT" == Focus.view(col_lens, new_board).title
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
   test "update card", %{board: board} do
     card_lens =
       Lens.make_lens(:columns)
@@ -20,19 +43,6 @@ defmodule Lucidboard.TwiddlerTest do
 
     assert "has changed card text." == event.desc
     assert "OH YEAH" == Focus.view(card_lens, new_board).body
-
-    execute_tx_and_assert_board_matches(tx_fn, new_board)
-  end
-
-  test "update_column", %{board: board} do
-    col_lens = Lens.make_lens(:columns) ~> Lens.idx(1)
-    actual_col_id = Focus.view(col_lens, board).id
-
-    action = {:update_column, id: actual_col_id, title: "CHANGED IT"}
-    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
-
-    assert "has updated the `CHANGED IT` column." == event.desc
-    assert "CHANGED IT" == Focus.view(col_lens, new_board).title
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
