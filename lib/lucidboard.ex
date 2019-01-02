@@ -2,7 +2,6 @@ defmodule Lucidboard do
   @moduledoc """
   Exposes high-level Lucidboard functionality
   """
-  alias Lucidboard.Board.Board
   alias Lucidboard.LiveBoard
   alias Lucidboard.LiveBoard.Scribe
 

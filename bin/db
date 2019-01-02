@@ -8,7 +8,7 @@
 # Steps:
 #
 #   1. Write secret files if they don't already exist
-#   2. Start postgres, volume-mounted to `assets/db-docker-data`
+#   2. Start postgres
 #
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
@@ -29,7 +29,7 @@ fi
 docker-compose -p lucidboard_dev \
     -f assets/dev-env/docker-compose.yml \
     run -d \
-    -p 5432:5432 \
     --name lucidboard_dev_db \
+    -p 5432:5432 \
     db && \
     echo "Postgres started. Listening on localhost:5432."
