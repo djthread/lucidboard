@@ -8,6 +8,8 @@ defmodule Lucidboard.Pile do
     field(:pos, :integer)
     has_many(:cards, Card)
     belongs_to(:column, Column)
+
+    timestamps()
   end
 
   @doc false

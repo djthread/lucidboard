@@ -17,7 +17,8 @@ defmodule Lucidboard.Twiddler do
     act(board, {action_name, Enum.into(args, %{})})
   end
 
-  def act(%Board{} = board, {action_name, args}) when is_atom(action_name) and is_map(args) do
+  def act(%Board{} = board, {action_name, args})
+      when is_atom(action_name) and is_map(args) do
     with true <- function_exported?(Actions, action_name, 2) || :no_action,
          {:ok, _, _, _} = res <- apply(Actions, action_name, [board, args]) do
       res
@@ -73,9 +74,11 @@ defmodule Lucidboard.Twiddler do
   def insert(%Board{} = board), do: Repo.insert(board)
 
   defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do
-    errs
-    |> Enum.map(fn {k, err} -> "#{k}: #{err}" end)
-    |> Enum.join(", ")
-    |> (fn msg -> "Error: #{msg}" end).()
+    msg =
+      errs
+      |> Enum.map(fn {k, err} -> "#{k}: #{err}" end)
+      |> Enum.join(", ")
+
+    "Error: #{msg}"
   end
 end
