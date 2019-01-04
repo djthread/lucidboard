@@ -1,4 +1,4 @@
-defmodule Lucidboard.Board.Settings do
+defmodule Lucidboard.Settings do
   @moduledoc "Schema for a board settings"
   use Ecto.Schema
   import Ecto.Changeset

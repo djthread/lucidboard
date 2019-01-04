@@ -1,7 +1,7 @@
 defmodule Lucidboard.Twiddler.Glass do
   @moduledoc "Provides lens-building functionality"
   import Focus
-  alias Lucidboard.Board.Board
+  alias Lucidboard.Board
 
   @type lens_or_not_found :: {:ok, Lens.t()} | :not_found
 

@@ -1,7 +1,6 @@
 defmodule Lucidboard.BoardFixtures do
   @moduledoc "Some board data for unit tests"
-
-  alias Lucidboard.Board.{Board, Card, Column, Pile}
+  alias Lucidboard.{Board, Card, Column, Pile}
 
   def cards_fixture do
     [

@@ -4,7 +4,7 @@ defmodule Lucidboard.Twiddler do
   """
   import Ecto.Query
   alias Ecto.Changeset
-  alias Lucidboard.Board.{Board, Event}
+  alias Lucidboard.{Board, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.Actions
 

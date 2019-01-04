@@ -1,4 +1,4 @@
-defmodule Lucidboard.Board.Event do
+defmodule Lucidboard.Event do
   @moduledoc """
   Something that has occurred on a Lucidboard
 

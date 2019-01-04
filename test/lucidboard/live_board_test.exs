@@ -1,7 +1,8 @@
 defmodule Lucidboard.LiveBoardTest do
+  @moduledoc false
   use LucidboardWeb.ConnCase
   alias Lucidboard.Twiddler
-  alias Lucidboard.Board.{Board, Column}
+  alias Lucidboard.{Board, Column}
 
   test "basic LiveBoard lifecycle" do
     # Create a board record in the db

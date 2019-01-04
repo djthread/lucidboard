@@ -16,7 +16,7 @@
 #   deflenses(cards: [])
 # end
 
-defimpl Lensable, for: Lucidboard.Board.Board do
+defimpl Lensable, for: Lucidboard.Board do
   def getter(s, x), do: Map.get(s, x, {:error, {:lens, :bad_path}})
   def setter({:error, {:lens, :bad_path}} = e), do: e
 
@@ -25,7 +25,7 @@ defimpl Lensable, for: Lucidboard.Board.Board do
   end
 end
 
-defimpl Lensable, for: Lucidboard.Board.Column do
+defimpl Lensable, for: Lucidboard.Column do
   def getter(s, x), do: Map.get(s, x, {:error, {:lens, :bad_path}})
   def setter({:error, {:lens, :bad_path}} = e), do: e
 
@@ -34,7 +34,7 @@ defimpl Lensable, for: Lucidboard.Board.Column do
   end
 end
 
-defimpl Lensable, for: Lucidboard.Board.Pile do
+defimpl Lensable, for: Lucidboard.Pile do
   def getter(s, x), do: Map.get(s, x, {:error, {:lens, :bad_path}})
   def setter({:error, {:lens, :bad_path}} = e), do: e
 
@@ -43,7 +43,7 @@ defimpl Lensable, for: Lucidboard.Board.Pile do
   end
 end
 
-defimpl Lensable, for: Lucidboard.Board.Card do
+defimpl Lensable, for: Lucidboard.Card do
   def getter(s, x), do: Map.get(s, x, {:error, {:lens, :bad_path}})
   def setter({:error, {:lens, :bad_path}} = e), do: e
 

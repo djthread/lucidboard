@@ -1,6 +1,7 @@
 defmodule LucidboardTest do
+  @moduledoc false
   use LucidboardWeb.ConnCase
-  alias Lucidboard.Board.Board
+  alias Lucidboard.Board
   alias Lucidboard.Twiddler
 
   test "Dynamic supervisor functions" do

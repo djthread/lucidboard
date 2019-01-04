@@ -3,7 +3,7 @@ defmodule Lucidboard.Twiddler.Actions do
   Core logic responsible for handling different lucidboard changes.
   """
   alias Ecto.Changeset
-  alias Lucidboard.Board.{Board, Card, Column, Event, Pile}
+  alias Lucidboard.{Board, Card, Column, Event, Pile}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler
   alias Lucidboard.Twiddler.{Glass, Op, QueryBuilder}
@@ -42,6 +42,11 @@ defmodule Lucidboard.Twiddler.Actions do
        fn -> Repo.update(cs) end, event("has changed card text.")}
     end
   end
+
+  # @spec add_and_lock_card(Board.t(), map) :: Twiddler.action_ok_or_error()
+  # def add_and_lock_card(board, args) do
+
+  # end
 
   @spec move_column(Board.t(), map) :: Twiddler.action_ok_or_error()
   def move_column(board, args) do

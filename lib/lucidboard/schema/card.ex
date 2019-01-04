@@ -1,12 +1,13 @@
-defmodule Lucidboard.Board.Card do
+defmodule Lucidboard.Card do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lucidboard.Board.Pile
+  alias Lucidboard.Pile
 
   schema "cards" do
     field(:pos, :integer)
     field(:body, :string)
+    # field(:locked_by, User)
     belongs_to(:pile, Pile)
   end
 

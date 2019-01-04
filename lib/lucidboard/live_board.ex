@@ -4,7 +4,7 @@ defmodule Lucidboard.LiveBoard do
   """
   use GenServer
   alias Lucidboard.Twiddler
-  alias Lucidboard.Board.{Board, Event}
+  alias Lucidboard.{Board, Event}
   alias Lucidboard.LiveBoard.Scribe
   require Logger
 

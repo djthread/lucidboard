@@ -1,6 +1,6 @@
 defmodule Lucidboard.Seeds do
   @moduledoc "Some database seed data"
-  alias Lucidboard.Board.{Board, Card, Column, Pile}
+  alias Lucidboard.{Board, Card, Column, Pile}
 
   def board do
     %Board{

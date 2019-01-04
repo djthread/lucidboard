@@ -1,8 +1,8 @@
-defmodule Lucidboard.Board.Column do
+defmodule Lucidboard.Column do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lucidboard.Board.{Board, Pile}
+  alias Lucidboard.{Board, Pile}
 
   schema "columns" do
     field(:title, :string)
