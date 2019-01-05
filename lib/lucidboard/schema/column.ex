@@ -4,6 +4,8 @@ defmodule Lucidboard.Column do
   import Ecto.Changeset
   alias Lucidboard.{Board, Pile}
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+
   schema "columns" do
     field(:title, :string)
     field(:pos, :integer)

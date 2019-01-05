@@ -4,13 +4,15 @@ defmodule Lucidboard.Card do
   import Ecto.Changeset
   alias Lucidboard.{CardSettings, Pile, User}
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+
   schema "cards" do
     field(:pos, :integer)
     field(:body, :string)
     field(:locked, :boolean)
     # field(:locked_by, User)
     embeds_one(:settings, CardSettings)
-    belongs_to(:pile, Pile)
+    belongs_to(:pile, Pile, type: :binary_id)
     belongs_to(:user, User)
 
     timestamps()

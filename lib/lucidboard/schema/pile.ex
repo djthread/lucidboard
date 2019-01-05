@@ -4,10 +4,12 @@ defmodule Lucidboard.Pile do
   import Ecto.Changeset
   alias Lucidboard.{Card, Column}
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+
   schema "piles" do
     field(:pos, :integer)
     has_many(:cards, Card)
-    belongs_to(:column, Column)
+    belongs_to(:column, Column, type: :binary_id)
 
     timestamps()
   end

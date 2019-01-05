@@ -12,13 +12,14 @@ defmodule Lucidboard.Repo.Migrations.Initial do
 
     create table("boards") do
       add(:title, :string, null: false)
-      add(:user_id, references(:users))
       add(:settings, :jsonb, null: false, default: "{}")
+      add(:user_id, references(:users))
 
       timestamps()
     end
 
-    create table("columns") do
+    create table("columns", primary_key: false) do
+      add(:id, :uuid, primary_key: true)
       add(:title, :string, null: false)
       add(:pos, :integer, null: false)
       add(:board_id, references(:boards))
@@ -26,20 +27,22 @@ defmodule Lucidboard.Repo.Migrations.Initial do
       timestamps()
     end
 
-    create table("piles") do
-      add(:column_id, references(:columns))
+    create table("piles", primary_key: false) do
+      add(:id, :uuid, primary_key: true)
       add(:pos, :integer, null: false)
+      add(:column_id, references(:columns, type: :uuid))
 
       timestamps()
     end
 
-    create table("cards") do
-      add(:pile_id, references(:piles))
-      add(:user_id, references(:users))
+    create table("cards", primary_key: false) do
+      add(:id, :uuid, primary_key: true)
       add(:pos, :integer, null: false)
       add(:body, :string, null: false)
-      add(:settings, :jsonb, null: false, default: "{}")
       add(:locked, :boolean, default: false)
+      add(:settings, :jsonb, null: false, default: "{}")
+      add(:pile_id, references(:piles, type: :uuid))
+      add(:user_id, references(:users))
 
       timestamps()
     end
