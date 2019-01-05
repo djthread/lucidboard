@@ -7,19 +7,16 @@ defmodule Lucidboard.LiveBoard do
   the start and stop functions to manage LiveBoard processes and the call
   function to interact with a running one.
   """
-  alias Lucidboard.LiveBoard.{Agent, Scribe}
-
-  @registry Lucidboard.BoardRegistry
-  @supervisor Lucidboard.BoardSupervisor
+  alias Lucidboard.LiveBoard.{Agent, BoardRegistry, BoardSupervisor, Scribe}
 
   @spec registry_child_spec :: Supervisor.child_spec()
   def registry_child_spec do
-    {Registry, keys: :unique, name: @registry}
+    {Registry, keys: :unique, name: BoardRegistry}
   end
 
   @spec dynamic_supervisor_child_spec :: Supervisor.child_spec()
   def dynamic_supervisor_child_spec do
-    {DynamicSupervisor, name: @supervisor, strategy: :one_for_one}
+    {DynamicSupervisor, name: BoardSupervisor, strategy: :one_for_one}
   end
 
   @doc """
@@ -35,8 +32,8 @@ defmodule Lucidboard.LiveBoard do
           | {:error, :no_board}
           | {:error, Ecto.Changeset.t()}
   def start(id, opts \\ []) when is_integer(id) do
-    supervisor = Keyword.get(opts, :supervisor, @supervisor)
-    registry = Keyword.get(opts, :registry, @registry)
+    supervisor = Keyword.get(opts, :supervisor, BoardSupervisor)
+    registry = Keyword.get(opts, :registry, BoardRegistry)
 
     scribe_name = {:via, Registry, {registry, {:scribe, id}}}
     scribe_child_spec = {Scribe, scribe_name}
@@ -50,8 +47,8 @@ defmodule Lucidboard.LiveBoard do
   @doc "Stops a LiveBoard process by its board id"
   @spec stop(integer) :: :ok | {:error, :not_found}
   def stop(id, opts \\ []) do
-    supervisor = Keyword.get(opts, :supervisor, @supervisor)
-    registry = Keyword.get(opts, :registry, @registry)
+    supervisor = Keyword.get(opts, :supervisor, BoardSupervisor)
+    registry = Keyword.get(opts, :registry, BoardRegistry)
 
     [{agent_pid, nil}] = Registry.lookup(registry, {:agent, id})
     DynamicSupervisor.terminate_child(supervisor, agent_pid)
@@ -60,11 +57,18 @@ defmodule Lucidboard.LiveBoard do
     DynamicSupervisor.terminate_child(supervisor, scribe_pid)
   end
 
-  @doc "Uses GenServer.call to act upon a LiveBoard"
+  @doc "Uses GenServer.call to act upon a LiveBoard Agent"
   def call(board_id, msg, opts \\ []) do
-    registry = Keyword.get(opts, :registry, @registry)
-    name = {:via, Registry, {registry, {:agent, board_id}}}
-
-    GenServer.call(name, msg)
+    board_id
+    |> via_agent(Keyword.get(opts, :registry, BoardRegistry))
+    |> GenServer.call(msg)
   end
+
+  @doc "Returns the via tuple for accessing the Agent process."
+  def via_agent(board_id, registry \\ BoardRegistry),
+    do: {:via, Registry, {registry, {:agent, board_id}}}
+
+  @doc "Returns the via tuple for accessing the Scribe process."
+  def via_scribe(board_id, registry \\ BoardRegistry),
+    do: {:via, Registry, {registry, {:scribe, board_id}}}
 end

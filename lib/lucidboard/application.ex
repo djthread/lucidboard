@@ -2,6 +2,7 @@ defmodule Lucidboard.Application do
   @moduledoc false
   use Application
   alias Lucidboard.LiveBoard
+  alias LucidboardWeb.Endpoint
 
   def start(_type, _args) do
     import Supervisor.Spec
@@ -20,7 +21,7 @@ defmodule Lucidboard.Application do
   end
 
   def config_change(changed, _new, removed) do
-    LucidboardWeb.Endpoint.config_change(changed, removed)
+    Endpoint.config_change(changed, removed)
     :ok
   end
 

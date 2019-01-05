@@ -6,16 +6,15 @@ defmodule Lucidboard.LiveBoard.Scribe do
   user is not blocked by the operation.
   """
   use GenServer
-  alias Lucidboard.Repo
+  alias Lucidboard.{LiveBoard, Repo}
   require Logger
-
-  @registry Lucidboard.BoardRegistry
 
   @doc "Cast a write operation to the scribe process"
   @spec write(integer, function) :: :ok
   def write(board_id, tx_fn) do
-    name = {:via, Registry, {@registry, {:scribe, board_id}}}
-    GenServer.cast(name, tx_fn)
+    board_id
+    |> LiveBoard.via_scribe()
+    |> GenServer.cast(tx_fn)
   end
 
   def start_link(name) do
