@@ -36,6 +36,7 @@ defmodule Lucidboard.Twiddler.Glass do
     lens -> {:ok, lens}
   end
 
+  # credo:disable-for-lines:10 Credo.Check.Refactor.Nesting
   @spec card_by_id(Board.t(), integer) :: lens_or_not_found
   def card_by_id(%Board{columns: columns}, id) do
     Enum.each(Enum.with_index(columns), fn {col, col_idx} ->
