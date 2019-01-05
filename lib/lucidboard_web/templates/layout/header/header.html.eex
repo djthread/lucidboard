@@ -1,0 +1,43 @@
+<header>
+  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+
+    <div class="navbar-brand">
+      <a class="navbar-item is-size-4" href="/">
+        <%= fas("bolt") %>
+        <span>Lucidboard</span>
+      </a>
+      <a role="button" class="navbar-burger burger" aria-label="menu"
+         aria-expanded="false" data-target="navbarLucidboard">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarLucidboard" class="navbar-menu">
+      <div class="navbar-start">
+        <%= render("header/navbar_menu.html", assigns) %>
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="field is-grouped">
+
+            <p class="control">
+              <%= if @user do %>
+                <%= render("header_user_menu.html", conn: @conn, user: @user) %>
+              <% else %>
+                <a class="button" href="<%= Routes.user_path(@conn, :signin) %>">
+                  <%= fas("sign-in-alt") %>
+                  <span>Sign In</span>
+                </a>
+              <% end %>
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+</header>

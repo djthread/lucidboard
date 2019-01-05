@@ -20,10 +20,11 @@ defmodule LucidboardWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: LucidboardWeb
-
       import Plug.Conn
       import LucidboardWeb.Gettext
       alias LucidboardWeb.Router.Helpers, as: Routes
+
+      action_fallback(LucidboardWeb.FallbackController)
     end
   end
 
@@ -31,6 +32,7 @@ defmodule LucidboardWeb do
     quote do
       use Phoenix.View,
         root: "lib/lucidboard_web/templates",
+        pattern: "**/*",
         namespace: LucidboardWeb
 
       # Import convenience functions from controllers
@@ -41,6 +43,7 @@ defmodule LucidboardWeb do
 
       import LucidboardWeb.ErrorHelpers
       import LucidboardWeb.Gettext
+      import LucidboardWeb.ViewHelper
       alias LucidboardWeb.Router.Helpers, as: Routes
     end
   end

@@ -1,3 +1,3 @@
-alias Lucidboard.{Repo, Seeds}
+alias Lucidboard.Seeds
 
-Repo.insert!(Seeds.board())
+Seeds.insert!()
