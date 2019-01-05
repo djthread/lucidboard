@@ -2,6 +2,7 @@ defmodule Lucidboard.Card do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
+  alias Ecto.UUID
   alias Lucidboard.{CardSettings, Pile, User}
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -20,7 +21,14 @@ defmodule Lucidboard.Card do
 
   @spec new(keyword) :: Card.t()
   def new(fields \\ []) do
-    defaults = [pos: 0, body: "", locked: false, settings: CardSettings.new()]
+    defaults = [
+      id: UUID.generate(),
+      pos: 0,
+      body: "",
+      locked: false,
+      settings: CardSettings.new()
+    ]
+
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
