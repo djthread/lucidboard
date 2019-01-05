@@ -49,7 +49,7 @@ defmodule Lucidboard.Twiddler.Op do
   end
 
   @doc "Add a new pile at the end of the column with one locked card."
-  @spec add_locked_card(Column.t(), integer) :: {:ok, Column.t()}
+  @spec add_locked_card(Column.t(), integer) :: {:ok, Column.t(), Column.t()}
   def add_locked_card(%{piles: piles} = column, user_id) do
     pile_uuid = UUID.generate()
     new_card = Card.new(pile_id: pile_uuid, user_id: user_id, locked: true)
@@ -64,10 +64,14 @@ defmodule Lucidboard.Twiddler.Op do
 
     built_col = %{column | piles: List.insert_at(piles, -1, new_pile)}
 
-    loaded_pile = %{new_pile | cards: [Ecto.put_meta(new_card, state: :loaded)]}
-    loaded_piles = List.insert_at(piles, -1, Ecto.put_meta(loaded_pile, state: :loaded))
+    loaded_pile = %{new_pile | cards: [mark_loaded(new_card)]}
+    loaded_piles = List.insert_at(piles, -1, mark_loaded(loaded_pile))
     loaded_col = %{column | piles: loaded_piles}
 
     {:ok, built_col, loaded_col}
+  end
+
+  defp mark_loaded(item) do
+    Ecto.put_meta(item, state: :loaded)
   end
 end
