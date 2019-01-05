@@ -52,18 +52,22 @@ defmodule Lucidboard.Twiddler.Op do
   @spec add_locked_card(Column.t(), integer) :: {:ok, Column.t()}
   def add_locked_card(%{piles: piles} = column, user_id) do
     pile_uuid = UUID.generate()
+    new_card = Card.new(pile_id: pile_uuid, user_id: user_id, locked: true)
 
-    new_pile = Pile.new(
-      id: pile_uuid,
-      column_id: column.id,
-      pos: if(0 == length(piles), do: 0, else: List.last(piles).pos + 1),
-      cards: [Card.new(pile_id: pile_uuid, user_id: user_id, locked: true)]
-    )
+    new_pile =
+      Pile.new(
+        id: pile_uuid,
+        column_id: column.id,
+        pos: if(0 == length(piles), do: 0, else: List.last(piles).pos + 1),
+        cards: [new_card]
+      )
 
-    {:ok, %{column | piles: List.insert_at(piles, -1, new_pile)}}
-  end
+    built_col = %{column | piles: List.insert_at(piles, -1, new_pile)}
 
-  def mark_metadata_as_loaded(board) do
-    #fml
+    loaded_pile = %{new_pile | cards: [Ecto.put_meta(new_card, state: :loaded)]}
+    loaded_piles = List.insert_at(piles, -1, Ecto.put_meta(loaded_pile, state: :loaded))
+    loaded_col = %{column | piles: loaded_piles}
+
+    {:ok, built_col, loaded_col}
   end
 end
