@@ -5,7 +5,7 @@ defmodule Lucidboard.Card do
   alias Ecto.UUID
   alias Lucidboard.{CardSettings, Pile, User}
 
-  @primary_key {:id, :binary_id, autogenerate: true}
+  @primary_key {:id, :binary_id, autogenerate: false}
 
   schema "cards" do
     field(:pos, :integer)
@@ -16,7 +16,7 @@ defmodule Lucidboard.Card do
     belongs_to(:pile, Pile, type: :binary_id)
     belongs_to(:user, User)
 
-    timestamps()
+    timestamps(autogenerate: false)
   end
 
   @spec new(keyword) :: Card.t()

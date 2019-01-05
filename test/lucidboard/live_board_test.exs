@@ -7,7 +7,7 @@ defmodule Lucidboard.LiveBoardTest do
   test "basic LiveBoard lifecycle" do
     # Create a board record in the db
     {:ok, %Board{id: board_id, columns: [%Column{id: column_id}]}} =
-      %Board{title: "Awesome", columns: [%Column{title: "foo", pos: 0}]}
+      Board.new(title: "Awesome", columns: [Column.new(title: "foo", pos: 0)])
       |> Twiddler.insert()
 
     # Start a liveboard based on it

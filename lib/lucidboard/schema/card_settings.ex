@@ -2,6 +2,9 @@ defmodule Lucidboard.CardSettings do
   @moduledoc "Schema for a card's settings"
   use Ecto.Schema
   import Ecto.Changeset
+  alias Ecto.UUID
+
+  @primary_key {:id, :binary_id, autogenerate: false}
 
   embedded_schema do
     field(:color, :string)
@@ -9,7 +12,7 @@ defmodule Lucidboard.CardSettings do
 
   @spec new(keyword) :: CardSettings.t()
   def new(fields \\ []) do
-    defaults = [color: "none"]
+    defaults = [id: UUID.generate(), color: "none"]
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 

@@ -10,6 +10,7 @@ defmodule Lucidboard.Twiddler.Op do
     iex> Op.move_item([%{id: 1, pos: 0}, %{id: 2, pos: 1}], 1, 0)
     {:ok, %{id: 2, pos: 0}, [%{id: 2, pos: 0}, %{id: 1, pos: 1}]}
   """
+  alias Ecto.UUID
   alias Lucidboard.{Card, Column, Pile}
 
   @spec move_item([struct], integer, integer) ::
@@ -50,11 +51,14 @@ defmodule Lucidboard.Twiddler.Op do
   @doc "Add a new pile at the end of the column with one locked card."
   @spec add_locked_card(Column.t(), integer) :: {:ok, Column.t()}
   def add_locked_card(%{piles: piles} = column, user_id) do
-    new_pile = %Pile{
+    pile_uuid = UUID.generate()
+
+    new_pile = Pile.new(
+      id: pile_uuid,
       column_id: column.id,
       pos: if(0 == length(piles), do: 0, else: List.last(piles).pos + 1),
-      cards: [Card.new(user_id: user_id, locked: true)],
-    }
+      cards: [Card.new(pile_id: pile_uuid, user_id: user_id, locked: true)]
+    )
 
     {:ok, %{column | piles: List.insert_at(piles, -1, new_pile)}}
   end

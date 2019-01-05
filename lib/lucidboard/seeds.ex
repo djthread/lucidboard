@@ -6,36 +6,36 @@ defmodule Lucidboard.Seeds do
   end
 
   def board do
-    %Board{
+    Board.new(
       title: "My Test Board",
       user: User.new(name: "bob"),
       columns: [
-        %Column{title: "Col1", pos: 0},
-        %Column{
+        Column.new(title: "Col1", pos: 0),
+        Column.new(
           title: "Col2",
           pos: 1,
           piles: [
-            %Pile{pos: 0, cards: [%Card{pos: 0, body: "hi"}]}
+            Pile.new(pos: 0, cards: [Card.new(pos: 0, body: "hi")])
           ]
-        },
-        %Column{
+        ),
+        Column.new(
           title: "Col3",
           pos: 2,
           piles: [
-            %Pile{
+            Pile.new(
               pos: 0,
               cards: [
-                %Card{pos: 0, body: "whoa"},
-                %Card{pos: 1, body: "srs?"},
-                %Card{pos: 2, body: "neat"}
+                Card.new(pos: 0, body: "whoa"),
+                Card.new(pos: 1, body: "srs?"),
+                Card.new(pos: 2, body: "neat")
               ]
-            },
-            %Pile{pos: 1, cards: [%Card{pos: 0, body: "definitely"}]},
-            %Pile{pos: 2, cards: [%Card{pos: 0, body: "cheese"}]},
-            %Pile{pos: 3, cards: [%Card{pos: 0, body: "flapjacks"}]}
+            ),
+            Pile.new(pos: 1, cards: [Card.new(pos: 0, body: "definitely")]),
+            Pile.new(pos: 2, cards: [Card.new(pos: 0, body: "cheese")]),
+            Pile.new(pos: 3, cards: [Card.new(pos: 0, body: "flapjacks")])
           ]
-        }
+        )
       ]
-    }
+    )
   end
 end

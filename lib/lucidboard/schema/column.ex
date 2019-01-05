@@ -5,7 +5,7 @@ defmodule Lucidboard.Column do
   alias Ecto.UUID
   alias Lucidboard.{Board, Pile}
 
-  @primary_key {:id, :binary_id, autogenerate: true}
+  @primary_key {:id, :binary_id, autogenerate: false}
 
   schema "columns" do
     field(:title, :string)
