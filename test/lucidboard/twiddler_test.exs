@@ -109,7 +109,6 @@ defmodule Lucidboard.TwiddlerTest do
 
     assert "has created a card." == event.desc
 
-
     assert %Card{
              body: "",
              locked: true,

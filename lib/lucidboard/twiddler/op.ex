@@ -58,7 +58,7 @@ defmodule Lucidboard.Twiddler.Op do
       Pile.new(
         id: pile_uuid,
         column_id: column.id,
-        pos: if(0 == length(piles), do: 0, else: List.last(piles).pos + 1),
+        pos: if(piles == [], do: 0, else: List.last(piles).pos + 1),
         cards: [new_card]
       )
 
