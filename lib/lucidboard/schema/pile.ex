@@ -11,8 +11,6 @@ defmodule Lucidboard.Pile do
     field(:pos, :integer)
     has_many(:cards, Card)
     belongs_to(:column, Column, type: :binary_id)
-
-    timestamps()
   end
 
   @spec new(keyword) :: Pile.t()

@@ -12,8 +12,6 @@ defmodule Lucidboard.Column do
     field(:pos, :integer)
     has_many(:piles, Pile)
     belongs_to(:board, Board)
-
-    timestamps()
   end
 
   @spec new(keyword) :: Column.t()

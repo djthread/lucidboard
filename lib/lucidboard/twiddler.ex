@@ -20,8 +20,10 @@ defmodule Lucidboard.Twiddler do
   def act(%Board{} = board, {action_name, args})
       when is_atom(action_name) and is_map(args) do
     with true <- function_exported?(Actions, action_name, 2) || :no_action,
-         {:ok, _, _, _} = res <- apply(Actions, action_name, [board, args]) do
-      res
+         {:ok, new_board, tx_fn, event} = res <-
+           apply(Actions, action_name, [board, args]) do
+      fixed_board = Op.mark_metadata_as_loaded(new_board)
+      {:ok, fixed_board, tx_fn, event}
     else
       :no_action ->
         IO.puts("Action not implemented: #{inspect(action_name)}")

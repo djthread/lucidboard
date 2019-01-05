@@ -62,4 +62,8 @@ defmodule Lucidboard.Twiddler.Op do
 
     {:ok, %{column | piles: List.insert_at(piles, -1, new_pile)}}
   end
+
+  def mark_metadata_as_loaded(board) do
+    #fml
+  end
 end

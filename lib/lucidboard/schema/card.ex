@@ -15,8 +15,6 @@ defmodule Lucidboard.Card do
     embeds_one(:settings, CardSettings)
     belongs_to(:pile, Pile, type: :binary_id)
     belongs_to(:user, User)
-
-    timestamps(autogenerate: false)
   end
 
   @spec new(keyword) :: Card.t()

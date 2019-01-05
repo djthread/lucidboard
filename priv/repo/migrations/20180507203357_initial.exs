@@ -23,16 +23,12 @@ defmodule Lucidboard.Repo.Migrations.Initial do
       add(:title, :string, null: false)
       add(:pos, :integer, null: false)
       add(:board_id, references(:boards))
-
-      timestamps()
     end
 
     create table("piles", primary_key: false) do
       add(:id, :uuid, primary_key: true)
       add(:pos, :integer, null: false)
       add(:column_id, references(:columns, type: :uuid))
-
-      timestamps()
     end
 
     create table("cards", primary_key: false) do
@@ -43,8 +39,6 @@ defmodule Lucidboard.Repo.Migrations.Initial do
       add(:settings, :jsonb, null: false, default: "{}")
       add(:pile_id, references(:piles, type: :uuid))
       add(:user_id, references(:users))
-
-      timestamps()
     end
   end
 end
