@@ -1,6 +1,7 @@
 defmodule Lucidboard.Application do
   @moduledoc false
   use Application
+  alias Lucidboard.LiveBoard
 
   def start(_type, _args) do
     import Supervisor.Spec
@@ -9,10 +10,9 @@ defmodule Lucidboard.Application do
 
     children = [
       supervisor(Lucidboard.Repo, []),
-      {Registry, keys: :unique, name: Lucidboard.BoardRegistry},
-      {DynamicSupervisor,
-       name: Lucidboard.BoardSupervisor, strategy: :one_for_one},
-      supervisor(LucidboardWeb.Endpoint, [])
+      supervisor(LucidboardWeb.Endpoint, []),
+      LiveBoard.registry_child_spec(),
+      LiveBoard.dynamic_supervisor_child_spec(),
     ]
 
     opts = [strategy: :one_for_one, name: Lucidboard.Supervisor]

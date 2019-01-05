@@ -1,8 +1,7 @@
 defmodule Lucidboard.LiveBoardTest do
   @moduledoc false
   use LucidboardWeb.ConnCase
-  alias Lucidboard.Twiddler
-  alias Lucidboard.{Board, Column}
+  alias Lucidboard.{Board, Column, LiveBoard, Twiddler}
 
   test "basic LiveBoard lifecycle" do
     # Create a board record in the db
@@ -11,15 +10,16 @@ defmodule Lucidboard.LiveBoardTest do
       |> Twiddler.insert()
 
     # Start a liveboard based on it
-    {:ok, _pid} = Lucidboard.start_live_board(board_id)
+    {:ok, pid} = LiveBoard.start(board_id)
+    assert is_pid(pid)
 
     # Set the column title
     action = {:update_column, id: column_id, title: "the new title"}
-    Lucidboard.call(board_id, {:action, action})
+    LiveBoard.call(board_id, {:action, action})
 
     # Get the board state from the liveboard
     %Board{columns: [%Column{title: from_live_board}]} =
-      Lucidboard.call(board_id, :board)
+      LiveBoard.call(board_id, :board)
 
     # Ensure it's the new title
     assert "the new title" == from_live_board
@@ -31,6 +31,6 @@ defmodule Lucidboard.LiveBoardTest do
     # Ensure the new title has persisted
     assert "the new title" == from_db
 
-    :ok = Lucidboard.stop_live_board(board_id)
+    :ok = LiveBoard.stop(board_id)
   end
 end

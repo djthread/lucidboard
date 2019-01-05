@@ -1,66 +1,70 @@
 defmodule Lucidboard.LiveBoard do
   @moduledoc """
-  GenServer for a live board
+  Facade functions for a system that manages Lucidboard states.
+
+  To use, install the child specs returned from `&registry_child_spec/0` and
+  `&dynamic_supervisor_child_spec/0` into your supervision tree. Then, use
+  the start and stop functions to manage LiveBoard processes and the call
+  function to interact with a running one.
   """
-  use GenServer
-  alias Lucidboard.Twiddler
-  alias Lucidboard.{Board, Event}
-  alias Lucidboard.LiveBoard.Scribe
-  require Logger
+  alias Lucidboard.LiveBoard.{Agent, Scribe}
 
-  defmodule State do
-    @moduledoc """
-    The state of a live board
+  @registry Lucidboard.BoardRegistry
+  @supervisor Lucidboard.BoardSupervisor
 
-    * `:board` - The current state as `%Board{}`
-    * `:events` - List of events that have occurred
-    """
-    defstruct board: nil, changeset: nil, events: []
-
-    @type t :: %__MODULE__{
-            board: Board.t(),
-            events: [Event.t()]
-          }
+  @spec registry_child_spec :: Supervisor.child_spec()
+  def registry_child_spec do
+    {Registry, keys: :unique, name: @registry}
   end
 
-  def start_link({board_id, name}) do
-    GenServer.start_link(__MODULE__, board_id, name: name)
+  @spec dynamic_supervisor_child_spec :: Supervisor.child_spec()
+  def dynamic_supervisor_child_spec do
+    {DynamicSupervisor, name: @supervisor, strategy: :one_for_one}
   end
 
-  @impl true
-  def init(board_id) do
-    case Twiddler.by_id(board_id) do
-      %Board{} = board -> {:ok, %State{board: board}}
-      nil -> {:stop, "Board id #{board_id} not found!"}
-    end
+  @doc """
+  Starts a LiveBoard
+
+  * Pass a board id to load from the db
+  * Pass a `%Board{}` either
+    * With an `:id`
+    * Without an `:id` - board will be inserted first.
+  """
+  @spec start(integer, keyword) ::
+          DynamicSupervisor.on_start_child()
+          | {:error, :no_board}
+          | {:error, Ecto.Changeset.t()}
+  def start(id, opts \\ []) when is_integer(id) do
+    supervisor = Keyword.get(opts, :supervisor, @supervisor)
+    registry = Keyword.get(opts, :registry, @registry)
+
+    scribe_name = {:via, Registry, {registry, {:scribe, id}}}
+    scribe_child_spec = {Scribe, scribe_name}
+    DynamicSupervisor.start_child(supervisor, scribe_child_spec)
+
+    name = {:via, Registry, {registry, {:agent, id}}}
+    child_spec = {Agent, {id, name}}
+    DynamicSupervisor.start_child(supervisor, child_spec)
   end
 
-  @impl true
-  def handle_call({:action, action}, _from, state) do
-    case Twiddler.act(state.board, action) do
-      {:ok, new_board, tx_fn, event} ->
-        Scribe.write(new_board.id, tx_fn)
-        new_state = %{state | board: new_board, events: [event | state.events]}
-        {:reply, new_board, new_state}
+  @doc "Stops a LiveBoard process by its board id"
+  @spec stop(integer) :: :ok | {:error, :not_found}
+  def stop(id, opts \\ []) do
+    supervisor = Keyword.get(opts, :supervisor, @supervisor)
+    registry = Keyword.get(opts, :registry, @registry)
 
-      {:error, bad} ->
-        {:reply, bad, state}
+    [{agent_pid, nil}] = Registry.lookup(registry, {:agent, id})
+    DynamicSupervisor.terminate_child(supervisor, agent_pid)
 
-      # {:caught, type, error, stacktrace} ->
-      #   Logger.error("""
-      #   Error executing action #{inspect(action)}: \
-      #   #{Exception.format(type, error, stacktrace)}\
-      #   """)
-
-      #   {:reply, :error, state}
-    end
+    [{scribe_pid, nil}] = Registry.lookup(registry, {:scribe, id})
+    DynamicSupervisor.terminate_child(supervisor, scribe_pid)
   end
 
-  def handle_call(:board, _from, state) do
-    {:reply, state.board, state}
-  end
+  @doc "Uses GenServer.call to act upon a LiveBoard"
+  def call(board_id, msg, opts \\ []) do
+    registry = Keyword.get(opts, :registry, @registry)
+    name = {:via, Registry, {registry, {:agent, board_id}}}
 
-  def handle_call(:events, _from, state) do
-    {:reply, state.events, state}
+    GenServer.call(name, msg)
   end
 end
