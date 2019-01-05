@@ -43,10 +43,17 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  # @spec add_and_lock_card(Board.t(), map) :: Twiddler.action_ok_or_error()
-  # def add_and_lock_card(board, args) do
-
-  # end
+  @spec add_and_lock_card(Board.t(), map) :: Twiddler.action_ok_or_error()
+  def add_and_lock_card(board, args) do
+    with [col_id, user_id] <- grab(args, [:col_id, :user_id]),
+         {:ok, col_lens} <- Glass.column_by_id(board, col_id),
+         {:ok, new_col} <-
+           Op.add_locked_card(Focus.view(col_lens, board), user_id) do
+      tx_fn = fn -> new_col.piles |> List.last() |> Repo.insert() end
+      new_board = Focus.set(col_lens, board, new_col)
+      {:ok, new_board, tx_fn, event("has created a card.")}
+    end
+  end
 
   @spec move_column(Board.t(), map) :: Twiddler.action_ok_or_error()
   def move_column(board, args) do

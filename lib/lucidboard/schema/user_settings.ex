@@ -7,6 +7,12 @@ defmodule Lucidboard.UserSettings do
     field(:theme, :string)
   end
 
+  @spec new(keyword) :: UserSettings.t()
+  def new(fields \\ []) do
+    defaults = [theme: "default"]
+    struct(__MODULE__, Keyword.merge(defaults, fields))
+  end
+
   @doc false
   def changeset(settings, attrs) do
     settings

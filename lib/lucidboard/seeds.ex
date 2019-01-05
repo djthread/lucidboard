@@ -1,10 +1,14 @@
 defmodule Lucidboard.Seeds do
   @moduledoc "Some database seed data"
-  alias Lucidboard.{Board, Card, Column, Pile}
+  alias Lucidboard.{Board, Card, Column, Pile, User}
+
+  def user do
+  end
 
   def board do
     %Board{
       title: "My Test Board",
+      user: User.new(name: "bob"),
       columns: [
         %Column{title: "Col1", pos: 0},
         %Column{

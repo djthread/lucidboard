@@ -1,6 +1,7 @@
 defmodule Lucidboard.TwiddlerTest do
+  @moduledoc false
   use LucidboardWeb.BoardCase
-  alias Lucidboard.Repo
+  alias Lucidboard.{Card, CardSettings, Column, Pile, Repo}
   alias Lucidboard.Twiddler
   import Focus
 
@@ -69,7 +70,7 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "of 4, move the last pile to be first", %{board: board} do
+  test "move the last pile to be first (of 4)", %{board: board} do
     col_lens = Lens.make_lens(:columns) ~> Lens.idx(2)
     pile_lens = col_lens ~> Lens.make_lens(:piles) ~> Lens.idx(3)
 
@@ -89,6 +90,32 @@ defmodule Lucidboard.TwiddlerTest do
              |> Focus.view(new_board)
              |> Map.fetch!(:piles)
              |> first_card_body_of_each_pile()
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "add locked card", %{board: %{user_id: user_id} = board} do
+    col_lens = Lens.make_lens(:columns) ~> Lens.idx(1)
+
+    col = Focus.view(col_lens, board)
+
+    assert 1 == length(col.piles)
+
+    action = {:add_and_lock_card, col_id: col.id, user_id: user_id}
+    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
+
+    %Column{piles: [_original_pile, %Pile{cards: [%Card{} = new_card]}]} =
+      Focus.view(col_lens, new_board)
+
+    assert "has created a card." == event.desc
+
+    assert %Card{
+             body: "",
+             locked: true,
+             pos: 0,
+             settings: %CardSettings{},
+             user_id: ^user_id
+           } = new_card
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end

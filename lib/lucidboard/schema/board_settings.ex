@@ -7,6 +7,12 @@ defmodule Lucidboard.BoardSettings do
     field(:anonymous_cards, :boolean)
   end
 
+  @spec new(keyword) :: BoardSettings.t()
+  def new(fields \\ []) do
+    defaults = [anonymous_cards: false]
+    struct(__MODULE__, Keyword.merge(defaults, fields))
+  end
+
   @doc false
   def changeset(settings, attrs) do
     settings

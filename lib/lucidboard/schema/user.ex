@@ -2,16 +2,19 @@ defmodule Lucidboard.User do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lucidboard.{Pile, UserSettings}
+  alias Lucidboard.UserSettings
 
   schema "users" do
-    field(:pos, :integer)
-    field(:body, :string)
-    # field(:locked_by, User)
+    field(:name)
     embeds_one(:settings, UserSettings)
-    belongs_to(:pile, Pile)
 
     timestamps()
+  end
+
+  @spec new(keyword) :: User.t()
+  def new(fields \\ []) do
+    defaults = [settings: UserSettings.new()]
+    struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
   @doc false

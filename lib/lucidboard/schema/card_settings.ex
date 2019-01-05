@@ -7,6 +7,12 @@ defmodule Lucidboard.CardSettings do
     field(:color, :string)
   end
 
+  @spec new(keyword) :: CardSettings.t()
+  def new(fields \\ []) do
+    defaults = [color: "none"]
+    struct(__MODULE__, Keyword.merge(defaults, fields))
+  end
+
   @doc false
   def changeset(settings, attrs) do
     settings
