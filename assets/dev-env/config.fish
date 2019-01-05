@@ -3,6 +3,8 @@ alias im "iex -S mix"
 alias mdg "mix deps.get"
 alias mdu "mix deps.update --all"
 alias mt "mix test"
+alias mtw "mix test.watch"
+alias ml "mix lint"
 alias mer "mix ecto.reset"
 
 function setup

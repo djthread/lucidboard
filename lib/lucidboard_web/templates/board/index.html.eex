@@ -1,0 +1,16 @@
+<h1><%= @board.title %></h1>
+
+<%= for col <- @board.columns do %>
+    <h2><%= col.title %></h2>
+    <ul>
+    <%= for pile <- col.piles do %>
+        <li><em>I M A Pile</em>
+        <ul>
+        <%= for card <- pile.cards do %>
+            <li><%= card.body %></li>
+        <% end %>
+        </ul>
+        </li>
+    <% end %>
+    </ul>
+<% end %>

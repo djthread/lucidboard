@@ -33,7 +33,8 @@ mix ecto.setup
 Finally, start the application with `imp`. This is an alias for `iex -S mix
 phx.server` which will run the app with Elixir's interactive repl, iex. This
 will allow you to test lines of Elixir code and interact with the running
-application.
+application. `imp` is the only command you'll need next time, now that things
+are installed.
 
 ```bash
 imp
@@ -61,6 +62,8 @@ shell in the docker-based dev environment.
 | `mdg`   | iex mix deps.get      |
 | `mdu`   | mix deps.update --all |
 | `mt`    | mix test              |
+| `mtw`   | mix test.watch        |
+| `ml`    | mix lint              |
 | `mer`   | mix ecto.reset        |
 | `setup` | mix deps.get<br>cd assets; npm install; cd ..<br> mix ecto.setup | 
 

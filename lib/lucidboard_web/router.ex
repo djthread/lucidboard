@@ -17,6 +17,10 @@ defmodule LucidboardWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    scope "/board/:id" do
+      get "/", BoardController, :index
+    end
   end
 
   # Other scopes may use custom stacks.
