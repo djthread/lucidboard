@@ -1,0 +1,16 @@
+<h1>Lucidboards</h1>
+
+<ul>
+<%= for board <- @boards do %>
+    <li>
+        <a href="<%= Routes.board_path(@conn, :index, board.id) %>">
+            <%= board.title %>
+        </a>
+        (<%= board.user.name %>) - <%= board.updated_at %>
+    </li>
+<% end %>
+</ul>
+
+<%= if @boards == [] do %>
+    <em>No Lucidboards!</em>
+<% end %>

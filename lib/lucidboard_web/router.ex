@@ -16,7 +16,10 @@ defmodule LucidboardWeb.Router do
   scope "/", LucidboardWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    # This should eventually be something else, but for now..
+    get "/", DashboardController, :index
+
+    get "/boards", DashboardController, :index
 
     scope "/board/:id" do
       get "/", BoardController, :index

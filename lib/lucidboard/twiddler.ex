@@ -68,6 +68,18 @@ defmodule Lucidboard.Twiddler do
     %{board | columns: cols}
   end
 
+  @doc "Get a list of board records"
+  @spec boards :: [Board.t()]
+  def boards do
+    Repo.all(
+      from(b in Board,
+        left_join: u in assoc(b, :user),
+        order_by: [desc: b.updated_at],
+        preload: :user
+      )
+    )
+  end
+
   @doc "Insert a board record"
   @spec insert(Board.t() | Ecto.Changeset.t(Board.t())) ::
           {:ok, Board.t()} | {:error, Ecto.Changeset.t(Board.t())}
