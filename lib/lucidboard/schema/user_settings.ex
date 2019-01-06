@@ -3,6 +3,8 @@ defmodule Lucidboard.UserSettings do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key false
+
   embedded_schema do
     field(:theme, :string)
   end

@@ -2,9 +2,8 @@ defmodule Lucidboard.BoardSettings do
   @moduledoc "Schema for a board's settings"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Ecto.UUID
 
-  @primary_key {:id, :binary_id, autogenerate: false}
+  @primary_key false
 
   embedded_schema do
     field(:anonymous_cards, :boolean)
@@ -12,7 +11,7 @@ defmodule Lucidboard.BoardSettings do
 
   @spec new(keyword) :: BoardSettings.t()
   def new(fields \\ []) do
-    defaults = [id: UUID.generate(), anonymous_cards: false]
+    defaults = [anonymous_cards: false]
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
