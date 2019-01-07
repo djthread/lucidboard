@@ -6,7 +6,7 @@ A kanban tool.
 
 **CI:** https://circleci.com/gh/djthread/lucidboard
 
-**Chat:** [Lucidboard on Telegram](http://t.me/lucidboard)
+**Chat:** [Lucidboard on Gitter](https://gitter.im/lucidboard/community)
 
 To start your Phoenix development environment:
 
