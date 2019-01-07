@@ -5,4 +5,4 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-docker-compose -p lucidboard_dev -f "$DIR/../assets/dev-env/docker-compose.yml" down
+docker-compose -p lucidboard_dev -f "$DIR/../assets/docker/dev/docker-compose.yml" down

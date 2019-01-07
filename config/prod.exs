@@ -10,9 +10,19 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :lucidboard, LucidboardWeb.Endpoint,
-  http: [:inet6, port: System.get_env("PORT") || 8080]
+  http: [:inet6, port: System.get_env("PORT") || 8080],
   url: [host: "example.com", port: 8080],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  server: true
+
+config :lucidboard, Lucidboard.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("PG_USER") || "postgres",
+  password: System.get_env("PG_PASS") || "verysecure123",
+  database: System.get_env("PG_DB") || "lucidboard_prod",
+  hostname: System.get_env("PG_HOST") || "db",
+  port: System.get_env("PG_PORT") || 5432,
+  pool_size: 10
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -68,4 +78,4 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs which should be versioned
 # separately.
-import_config "prod.secret.exs"
+# import_config "prod.secret.exs"

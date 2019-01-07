@@ -27,7 +27,7 @@ EOF
 fi
 
 docker-compose -p lucidboard_dev \
-    -f assets/dev-env/docker-compose.yml \
+    -f assets/docker/dev/docker-compose.yml \
     run -d \
     --name lucidboard_dev_db \
     -p 5432:5432 \

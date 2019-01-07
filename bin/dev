@@ -29,7 +29,7 @@ EOF
 fi
 
 docker-compose -p lucidboard_dev \
-    -f "$DIR/../assets/dev-env/docker-compose.yml" \
+    -f "$DIR/../assets/docker/dev/docker-compose.yml" \
     up -d
 
 docker exec -it lucidboard_dev fish

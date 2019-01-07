@@ -52,8 +52,8 @@ bin/down
 
 ## Shell Aliases
 
-These [recommended few](assets/dev-env/config.fish) are imported to the fish
-shell in the docker-based dev environment.
+These [recommended few](assets/docker/dev/config.fish) are imported to the
+fish shell in the docker-based dev environment.
 
 | Alias   | Full Command          |
 | ------- | --------------------- |
