@@ -13,6 +13,14 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
+if [ "$1" == "--ql" ]; then
+    ARGS="${@:2}"
+    export QL_MODE=1
+else
+    ARGS="$@"
+    export QL_MODE=0
+fi
+
 if "$DIR/maybe_create_secret_files"; then
     cat << EOF
 Elixir development environment initialized!
@@ -30,6 +38,6 @@ fi
 
 docker-compose -p lucidboard_dev \
     -f "$DIR/../assets/docker/dev/docker-compose.yml" \
-    up -d
+    up $ARGS -d
 
 docker exec -it lucidboard_dev fish

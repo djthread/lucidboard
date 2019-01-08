@@ -1,5 +1,8 @@
 FROM elixir:latest
 
+COPY setup_security.sh /
+RUN /setup_security.sh
+
 RUN apt-get update
 RUN apt-get install --yes build-essential inotify-tools postgresql-client fish
 

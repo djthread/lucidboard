@@ -14,6 +14,9 @@ To start your Phoenix development environment:
 bin/dev
 ```
 
+Note: If you are on the Quicken Loans network, you'll want to invoke this
+script with `bin/dev --ql` or you will get errors around HTTPS authentication.
+
 The [script's comments](bin/dev) explain a bit more, but you'll get two
 docker containers -- a Postgres database (`lucidboard_dev_db`) and an Elixir
 development container (`lucidboard_dev_app`). The script will then run the
