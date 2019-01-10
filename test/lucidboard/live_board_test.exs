@@ -1,12 +1,17 @@
 defmodule Lucidboard.LiveBoardTest do
   @moduledoc false
-  use LucidboardWeb.ConnCase
+  use LucidboardWeb.ConnCase, async: false
   alias Lucidboard.{Board, Column, LiveBoard, Twiddler}
 
   test "basic LiveBoard lifecycle" do
     # Create a board record in the db
     {:ok, %Board{id: board_id, columns: [%Column{id: column_id}]}} =
-      Board.new(title: "Awesome", columns: [Column.new(title: "foo", pos: 0)])
+      [
+        user_id: 1,
+        title: "Awesome",
+        columns: [Column.new(title: "foo", pos: 0)]
+      ]
+      |> Board.new()
       |> Twiddler.insert()
 
     # Start a liveboard based on it

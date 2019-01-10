@@ -1,6 +1,10 @@
 defmodule Lucidboard.Twiddler.Op do
   @moduledoc """
   Helper functions for manipulating `%Board{}` data.
+
+  Some functions return both "built" and "loaded"-tagged structs. The built
+  structs are intended to be saved to the db while the loaded ones are
+  intended to be injected into the running board state.
   """
 
   @doc """
@@ -11,7 +15,7 @@ defmodule Lucidboard.Twiddler.Op do
     {:ok, %{id: 2, pos: 0}, [%{id: 2, pos: 0}, %{id: 1, pos: 1}]}
   """
   alias Ecto.UUID
-  alias Lucidboard.{Card, Column, Pile}
+  alias Lucidboard.{Card, Column, Like, Pile, User}
 
   @spec move_item([struct], integer, integer) ::
           {:ok, any, [any]} | {:error, String.t()}
@@ -50,7 +54,7 @@ defmodule Lucidboard.Twiddler.Op do
 
   @doc "Add a new pile at the end of the column with one locked card."
   @spec add_locked_card(Column.t(), integer) :: {:ok, Column.t(), Column.t()}
-  def add_locked_card(%{piles: piles} = column, user_id) do
+  def add_locked_card(%Column{piles: piles} = column, user_id) do
     pile_uuid = UUID.generate()
     new_card = Card.new(pile_id: pile_uuid, user_id: user_id, locked: true)
 
@@ -71,6 +75,40 @@ defmodule Lucidboard.Twiddler.Op do
     {:ok, built_col, loaded_col}
   end
 
+  @doc "Create a like"
+  def like(%Card{id: card_id} = card, %User{id: user_id}) do
+    built_like = Like.new(card_id: card_id, user_id: user_id)
+    new_likes = [mark_loaded(built_like) | card.likes]
+    new_card = sort_likes(%{card | likes: new_likes})
+
+    {:ok, built_like, new_card}
+  end
+
+  @doc "Remove a like"
+  def unlike(%Card{likes: likes} = card, %User{id: user_id}) do
+    case Enum.find_index(likes, fn l -> l.user_id == user_id end) do
+      nil ->
+        {:error, :not_found}
+
+      idx ->
+        like_to_delete = Enum.at(likes, idx)
+        new_card = %{card | likes: List.delete_at(likes, idx)}
+        {:ok, like_to_delete, new_card}
+    end
+  end
+
+  @doc "Our arbitrary logic for sorting likes on a card"
+  def sort_likes(%Card{likes: likes} = card) do
+    new_likes = Enum.sort(likes, &(&1.id < &2.id))
+    %{card | likes: new_likes}
+  end
+
+  # This is important to mark the metadata on our schema structs so they seem
+  # to have been already saved and loaded from the database. Without it, our
+  # in-memory board state will no align to the same data if it was fetched from
+  # the database. We rely on unit tests to ensure our in-memory board is
+  # actually the same as the db state (after the transaction function is
+  # executed).
   defp mark_loaded(item) do
     Ecto.put_meta(item, state: :loaded)
   end

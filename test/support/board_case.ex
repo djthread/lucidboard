@@ -5,7 +5,8 @@ defmodule LucidboardWeb.BoardCase do
   """
   use ExUnit.CaseTemplate
   alias Ecto.Adapters.SQL.Sandbox
-  alias Lucidboard.{Repo, Seeds, Twiddler}
+  alias Ecto.UUID
+  alias Lucidboard.{Repo, Seeds, Twiddler, User}
 
   using do
     quote do
@@ -20,9 +21,11 @@ defmodule LucidboardWeb.BoardCase do
       Sandbox.mode(Repo, {:shared, self()})
     end
 
-    %{id: board_id} = Repo.insert!(Seeds.board())
+    user = Repo.insert!(User.new(name: "jeff-#{UUID.generate()}"))
+
+    %{id: board_id} = Repo.insert!(Seeds.board(user))
     board = Twiddler.by_id(board_id)
 
-    {:ok, board: board}
+    {:ok, user: user, board: board}
   end
 end

@@ -1,6 +1,12 @@
 defmodule Lucidboard.Seeds do
   @moduledoc "Some database seed data"
+  import Ecto.Query
   alias Lucidboard.{Board, Card, Column, Pile, Repo, User}
+
+  def get_user do
+      Repo.one(from(u in User, where: u.name == "bob")) ||
+        Repo.insert!(User.new(name: "bob"))
+  end
 
   def insert! do
     user = Repo.insert!(User.new(name: "bob"))
@@ -10,18 +16,23 @@ defmodule Lucidboard.Seeds do
   end
 
   def board(user \\ nil) do
-    user = user || User.new(name: "bob")
+    user = user || get_user()
 
     Board.new(
       title: "My Test Board",
-      user: user,
+      user_id: user.id,
       columns: [
         Column.new(title: "Col1", pos: 0),
         Column.new(
           title: "Col2",
           pos: 1,
           piles: [
-            Pile.new(pos: 0, cards: [Card.new(pos: 0, body: "hi")])
+            Pile.new(
+              pos: 0,
+              cards: [
+                new_card(uid, [pos: 0, body: "hi"], [user.id])
+              ]
+            )
           ]
         ),
         Column.new(
@@ -31,14 +42,17 @@ defmodule Lucidboard.Seeds do
             Pile.new(
               pos: 0,
               cards: [
-                Card.new(pos: 0, body: "whoa"),
-                Card.new(pos: 1, body: "srs?"),
-                Card.new(pos: 2, body: "neat")
+                new_card(uid, pos: 0, body: "whoa"),
+                new_card(uid, pos: 1, body: "srs?"),
+                new_card(uid, pos: 2, body: "neat")
               ]
             ),
-            Pile.new(pos: 1, cards: [Card.new(pos: 0, body: "definitely")]),
-            Pile.new(pos: 2, cards: [Card.new(pos: 0, body: "cheese")]),
-            Pile.new(pos: 3, cards: [Card.new(pos: 0, body: "flapjacks")])
+            Pile.new(
+              pos: 1,
+              cards: [new_card(uid, pos: 0, body: "definitely")]
+            ),
+            Pile.new(pos: 2, cards: [new_card(uid, pos: 0, body: "cheese")]),
+            Pile.new(pos: 3, cards: [new_card(uid, pos: 0, body: "flapjacks")])
           ]
         )
       ]
@@ -118,5 +132,13 @@ defmodule Lucidboard.Seeds do
         )
       ]
     )
+  end
+
+  defp new_card(user_id, fields, like_uids \\ []) do
+    base_card = Card.new([user_id: user_id] ++ fields)
+
+    Enum.reduce(like_uids, base_card, fn uid, card ->
+      %{card | likes: [Like.new(user_id: uid, card_id: card.id) | card.likes]}
+    end)
   end
 end

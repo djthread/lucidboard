@@ -6,7 +6,7 @@ defmodule Lucidboard.Twiddler do
   alias Ecto.Changeset
   alias Lucidboard.{Board, Event}
   alias Lucidboard.Repo
-  alias Lucidboard.Twiddler.Actions
+  alias Lucidboard.Twiddler.{Actions, Op}
 
   @type action :: {atom, keyword | map}
   @type action_ok_or_error ::
@@ -42,7 +42,12 @@ defmodule Lucidboard.Twiddler do
           left_join: columns in assoc(board, :columns),
           left_join: piles in assoc(columns, :piles),
           left_join: cards in assoc(piles, :cards),
-          preload: [columns: {columns, piles: {piles, cards: cards}}]
+          left_join: likes in assoc(cards, :likes),
+          preload: [
+            columns:
+              {columns,
+               piles: {piles, cards: {cards, likes: likes}}}
+          ]
         )
       )
 
@@ -56,7 +61,11 @@ defmodule Lucidboard.Twiddler do
       Enum.reduce(board.columns, [], fn col, acc_cols ->
         piles =
           Enum.reduce(col.piles, [], fn pile, acc_piles ->
-            cards = Enum.sort(pile.cards, &(&1.pos < &2.pos))
+            cards =
+              pile.cards
+              |> Enum.map(&Op.sort_likes/1)
+              |> Enum.sort(&(&1.pos < &2.pos))
+
             [%{pile | cards: cards} | acc_piles]
           end)
 
