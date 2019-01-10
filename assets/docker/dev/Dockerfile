@@ -1,5 +1,8 @@
 FROM elixir:latest
 
+ARG QL_MODE
+ENV QL_MODE=$QL_MODE
+
 COPY setup_security.sh /
 RUN /setup_security.sh
 

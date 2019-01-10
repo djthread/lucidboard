@@ -1,11 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 if [ "$QL_MODE" != "1" ]; then
-    echo "off"
     exit
 fi
 
-echo "QL_MODE is 1 - Adding QL Certificate as Trusted..."
+echo "Adding QL Certificate as Trusted..."
 
 CERT_FILE=Quicken_Loans_Root_CA.crt
 CERT=https://git.rockfin.com/raw/SKluck/docker-images/master/.shared/certificates/$CERT_FILE

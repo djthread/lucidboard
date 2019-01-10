@@ -13,7 +13,9 @@ services:
   app:
     container_name: lucidboard_dev
     restart: always
-    build: .
+    build:
+      context: .
+      args: { QL_MODE: "${QL_MODE}" }
     tty: true
     stdin_open: true
     depends_on: [ db ]
