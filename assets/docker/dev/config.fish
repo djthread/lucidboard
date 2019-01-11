@@ -1,3 +1,7 @@
+if [ "$QL_MODE" -a "$QL_MODE" -eq "1" ]
+    set -x HEX_UNSAFE_HTTPS 1
+end
+
 alias imp "iex -S mix phx.server"
 alias im "iex -S mix"
 alias mdg "mix deps.get"
