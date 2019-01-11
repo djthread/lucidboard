@@ -2,11 +2,15 @@
 
 A kanban tool.
 
-**Status:** Just getting started.
+**Status:** Lots of board manipulation logic is built; starting to experiment
+with frontend things. Hoping [Phoenix
+LiveView](https://dockyard.com/blog/2018/12/12/phoenix-liveview-interactive-real-time-apps-no-need-to-write-javascript)
+comes soon.
 
 **CI:** https://circleci.com/gh/djthread/lucidboard
 
-**Chat:** [Lucidboard on Gitter](https://gitter.im/lucidboard/community)
+**Chat:** [Lucidboard on
+Zulip](https://z.impulsedetroit.net/#narrow/stream/16-lucidboard)
 
 To start your Phoenix development environment:
 
@@ -14,7 +18,7 @@ To start your Phoenix development environment:
 bin/dev
 ```
 
-Note: If you are on the Quicken Loans network, you'll want to invoke this
+**Note:** If you are on the Quicken Loans network, you'll want to invoke this
 script with `bin/dev --ql` or you will get errors around HTTPS authentication.
 
 The [script's comments](bin/dev) explain a bit more, but you'll get two
