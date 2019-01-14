@@ -25,7 +25,7 @@ defmodule Lucidboard.MixProject do
   def application do
     [
       mod: {Lucidboard.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :oauth2]
     ]
   end
 
@@ -50,6 +50,9 @@ defmodule Lucidboard.MixProject do
       {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
       {:distillery, "~> 2.0"},
+      {:oauth2, "~> 0.9"}
+      ##{:comeonin, "~> 4.0"},
+      ##{:guardian, github: "ueberauth/guardian", tag: "v1.1.1", override: true}
     ]
   end
 

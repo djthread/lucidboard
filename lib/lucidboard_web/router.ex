@@ -26,6 +26,13 @@ defmodule LucidboardWeb.Router do
     end
   end
 
+  scope "/auth", LucidboardWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :index
+    get "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
+  end
   # Other scopes may use custom stacks.
   # scope "/api", LucidboardWeb do
   #   pipe_through :api
