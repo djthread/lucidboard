@@ -7,9 +7,6 @@ FROM elixir:1.7.4-alpine AS builder
 ARG QL_MODE
 ENV QL_MODE=$QL_MODE
 
-COPY assets/docker/setup_security.sh /
-RUN /setup_security.sh
-
 # The following are build arguments used to change variable parts of the image.
 # The name of your application/release (required)
 ARG APP_NAME
@@ -40,9 +37,13 @@ RUN apk update && \
     nodejs \
     yarn \
     git \
+    curl \
     build-base && \
   mix local.rebar --force && \
   mix local.hex --force
+
+COPY assets/ops/setup_security.sh /
+RUN /setup_security.sh
 
 # This copies our app source code into the build container
 COPY . .
