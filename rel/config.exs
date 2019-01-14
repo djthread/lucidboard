@@ -48,8 +48,17 @@ end
 
 release :lucidboard do
   set version: current_version(:lucidboard)
-  set applications: [
-    :runtime_tools
-  ]
-end
+  set applications: [:runtime_tools]
 
+  set(
+    config_providers: [
+      {
+        Toml.Provider,
+        path: "${RELEASE_ROOT_DIR}/config.toml",
+        transforms: [ConfigTransformer]
+      }
+    ]
+  )
+
+  set(overlays: [{:copy, "rel/config/config.toml", "config.toml"}])
+end

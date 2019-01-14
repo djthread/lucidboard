@@ -4,6 +4,12 @@ ARG ALPINE_VERSION=3.8
 
 FROM elixir:1.7.4-alpine AS builder
 
+ARG QL_MODE
+ENV QL_MODE=$QL_MODE
+
+COPY assets/docker/setup_security.sh /
+RUN /setup_security.sh
+
 # The following are build arguments used to change variable parts of the image.
 # The name of your application/release (required)
 ARG APP_NAME
@@ -21,7 +27,8 @@ ARG PHOENIX_SUBDIR=.
 ENV SKIP_PHOENIX=${SKIP_PHOENIX} \
     APP_NAME=${APP_NAME} \
     APP_VSN=${APP_VSN} \
-    MIX_ENV=${MIX_ENV}
+    MIX_ENV=${MIX_ENV} \
+    HEX_UNSAFE_HTTPS=${QL_MODE}
 
 # By convention, /opt is typically used for applications
 WORKDIR /opt/app

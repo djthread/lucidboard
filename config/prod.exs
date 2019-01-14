@@ -11,7 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :lucidboard, LucidboardWeb.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 8080],
-  url: [host: "example.com", port: 8080],
+  url: [host: "localhost", port: 8080],
   cache_static_manifest: "priv/static/cache_manifest.json",
   server: true
 
