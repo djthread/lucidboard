@@ -15,7 +15,6 @@ jobs:
       - image: circleci/postgres:10.1-alpine
         environment:
           POSTGRES_USER: postgres
-          POSTGRES_DB: lucidboard_test
           POSTGRES_PASSWORD: verysecure123
 
     working_directory: ~/repo
