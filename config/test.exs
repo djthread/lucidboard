@@ -12,4 +12,10 @@ config :lucidboard, Lucidboard.Repo,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-import_config "test.secret.exs"
+config :lucidboard, Lucidboard.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("PG_USER") || "postgres",
+  password: System.get_env("PG_PASS") || "verysecure123",
+  database: System.get_env("PG_DB") || "lucidboard_test",
+  hostname: System.get_env("PG_HOST") || "localhost",
+  pool_size: 10
