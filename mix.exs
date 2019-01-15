@@ -52,7 +52,6 @@ defmodule Lucidboard.MixProject do
       {:distillery, "~> 2.0"},
       {:toml_transformer,
        git: "https://github.com/djthread/toml_transformer.git",
-       branch: "stable",
        app: false}
     ]
   end
