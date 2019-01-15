@@ -22,6 +22,6 @@ RUN apt-get install nodejs
 WORKDIR /app
 EXPOSE 8800
 
-COPY config.fish /root/.config/fish/config.fish
+COPY assets/ops/config.fish /root/.config/fish/config.fish
 
 ENTRYPOINT fish

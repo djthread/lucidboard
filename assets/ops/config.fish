@@ -1,4 +1,6 @@
-if [ "$QL_MODE" -a "$QL_MODE" -eq "1" ]
+# This first condition ensures the echo doesn't happen twice.
+# I have no idea why this file is being executed twice!!
+if [ ! "$HEX_UNSAFE_HTTPS" -a "$QL_MODE" -eq "1" ]
     echo "Disabling SSL authentication in Hex for operation on the QL network."
     set -x HEX_UNSAFE_HTTPS 1
 end
