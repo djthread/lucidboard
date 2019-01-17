@@ -7,7 +7,7 @@ with frontend things. Hoping [Phoenix
 LiveView](https://dockyard.com/blog/2018/12/12/phoenix-liveview-interactive-real-time-apps-no-need-to-write-javascript)
 comes soon.
 
-**CI:** https://circleci.com/gh/djthread/lucidboard
+**CI:** [Lucidboard on CircleCI](https://circleci.com/gh/djthread/lucidboard) [![CircleCI](https://circleci.com/gh/djthread/lucidboard.svg?style=svg)](https://circleci.com/gh/djthread/lucidboard)
 
 **Chat:** [Lucidboard on
 Zulip](https://z.impulsedetroit.net/#narrow/stream/16-lucidboard)
