@@ -1,7 +1,7 @@
 defmodule Lucidboard.Seeds do
   @moduledoc "Some database seed data"
   import Ecto.Query
-  alias Lucidboard.{Board, Card, Column, Pile, Repo, User}
+  alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
 
   def get_user do
       Repo.one(from(u in User, where: u.name == "bob")) ||
@@ -16,7 +16,7 @@ defmodule Lucidboard.Seeds do
   end
 
   def board(user \\ nil) do
-    user = user || get_user()
+    %User{id: uid} = user = user || get_user()
 
     Board.new(
       title: "My Test Board",
@@ -60,7 +60,7 @@ defmodule Lucidboard.Seeds do
   end
 
   def board2(user \\ nil) do
-    user = user || User.new(name: "bob")
+    %User{id: uid} = user = user || get_user()
 
     Board.new(
       title: "Another Example Board About Nothing",
@@ -72,16 +72,17 @@ defmodule Lucidboard.Seeds do
           piles: [
             Pile.new(
               pos: 0,
-              cards: [Card.new(pos: 0, body: "Diversionary tactics")]
+              cards: [new_card(uid, pos: 0, body: "Diversionary tactics")]
             ),
             Pile.new(
               pos: 1,
-              cards: [Card.new(pos: 1, body: "Bitcoin")]
+              cards: [new_card(uid, pos: 1, body: "Bitcoin")]
             ),
             Pile.new(
               pos: 2,
               cards: [
-                Card.new(
+                new_card(
+                  uid,
                   pos: 1,
                   body: """
                   This board is just an example, so we need to cover a range of
@@ -99,11 +100,11 @@ defmodule Lucidboard.Seeds do
           piles: [
             Pile.new(
               pos: 0,
-              cards: [Card.new(pos: 0, body: "The wall")]
+              cards: [new_card(uid, pos: 0, body: "The wall")]
             ),
             Pile.new(
               pos: 0,
-              cards: [Card.new(pos: 0, body: "that whole free market thing")]
+              cards: [new_card(uid, pos: 0, body: "that whole free market thing")]
             ),
           ]
         ),
@@ -114,20 +115,20 @@ defmodule Lucidboard.Seeds do
             Pile.new(
               pos: 0,
               cards: [
-                Card.new(pos: 0, body: "political entertainment"),
-                Card.new(pos: 1, body: "like seriously"),
-                Card.new(pos: 2, body: "like you've got to be kidding")
+                new_card(uid, pos: 0, body: "political entertainment"),
+                new_card(uid, pos: 1, body: "like seriously"),
+                new_card(uid, pos: 2, body: "like you've got to be kidding")
               ]
             ),
             Pile.new(
               pos: 1,
               cards: [
-                Card.new(pos: 0, body: "Supercalifragilisticexpialidocious")
+                new_card(uid, pos: 0, body: "Supercalifragilisticexpialidocious")
               ]
             ),
-            Pile.new(pos: 2, cards: [Card.new(pos: 0, body: "orange juice")]),
-            Pile.new(pos: 3, cards: [Card.new(pos: 0, body: "bandanas")]),
-            Pile.new(pos: 4, cards: [Card.new(pos: 0, body: "lucidboard?")])
+            Pile.new(pos: 2, cards: [new_card(uid, pos: 0, body: "orange juice")]),
+            Pile.new(pos: 3, cards: [new_card(uid, pos: 0, body: "bandanas")]),
+            Pile.new(pos: 4, cards: [new_card(uid, pos: 0, body: "lucidboard?")])
           ]
         )
       ]
