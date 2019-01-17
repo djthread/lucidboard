@@ -4,8 +4,8 @@ defmodule Lucidboard.Seeds do
   alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
 
   def get_user do
-      Repo.one(from(u in User, where: u.name == "bob")) ||
-        Repo.insert!(User.new(name: "bob"))
+    Repo.one(from(u in User, where: u.name == "bob")) ||
+      Repo.insert!(User.new(name: "bob"))
   end
 
   def insert!(user \\ nil) do
@@ -104,8 +104,10 @@ defmodule Lucidboard.Seeds do
             ),
             Pile.new(
               pos: 0,
-              cards: [new_card(uid, pos: 0, body: "that whole free market thing")]
-            ),
+              cards: [
+                new_card(uid, pos: 0, body: "that whole free market thing")
+              ]
+            )
           ]
         ),
         Column.new(
@@ -126,9 +128,15 @@ defmodule Lucidboard.Seeds do
                 new_card(uid, pos: 0, body: "Supercalifragilisticexpialidocious")
               ]
             ),
-            Pile.new(pos: 2, cards: [new_card(uid, pos: 0, body: "orange juice")]),
+            Pile.new(
+              pos: 2,
+              cards: [new_card(uid, pos: 0, body: "orange juice")]
+            ),
             Pile.new(pos: 3, cards: [new_card(uid, pos: 0, body: "bandanas")]),
-            Pile.new(pos: 4, cards: [new_card(uid, pos: 0, body: "lucidboard?")])
+            Pile.new(
+              pos: 4,
+              cards: [new_card(uid, pos: 0, body: "lucidboard?")]
+            )
           ]
         )
       ]
