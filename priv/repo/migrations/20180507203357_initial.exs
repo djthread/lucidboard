@@ -10,6 +10,8 @@ defmodule Lucidboard.Repo.Migrations.Initial do
       timestamps()
     end
 
+    create unique_index(:users, [:name])
+
     create table("boards") do
       add(:title, :string, null: false)
       add(:settings, :jsonb, null: false, default: "{}")

@@ -6,7 +6,7 @@ defmodule Lucidboard.User do
 
   schema "users" do
     field(:name)
-    embeds_one(:settings, UserSettings)
+    embeds_one(:settings, UserSettings, on_replace: :delete)
 
     timestamps()
   end
@@ -20,7 +20,7 @@ defmodule Lucidboard.User do
   @doc false
   def changeset(card, attrs) do
     card
-    |> cast(attrs, [:body])
-    |> validate_required([:body])
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
   end
 end

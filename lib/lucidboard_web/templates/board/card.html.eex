@@ -1,0 +1,24 @@
+<div class="card">
+  <!--
+  <header class="card-header">
+    <p class="card-header-title">
+      Component
+    </p>
+    <a href="#" class="card-header-icon" aria-label="more options">
+      <span class="icon">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+    </a>
+  </header>
+  -->
+  <div class="card-content">
+    <div class="content is-size-<%= card_body_size_by_copy(@card.body) %>">
+      <%= @card.body %>
+    </div>
+  </div>
+  <footer class="card-footer">
+    <a href="#" class="card-footer-item"><%= fas("heart") %>&nbsp;7</a>
+    <a href="#" class="card-footer-item"><%= fas("expand") %></a>
+    <a href="#" class="card-footer-item"><%= fas("ellipsis-v") %></a>
+</footer>
+</div>

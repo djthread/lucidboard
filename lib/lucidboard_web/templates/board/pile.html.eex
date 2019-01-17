@@ -1,0 +1,17 @@
+<% card = render(BoardView, "card.html", card: hd(@pile.cards)) %>
+
+<%= if length(@pile.cards) == 1 do %>
+  <div class="cardspacer">
+    <%= card %>
+  </div>
+<% else %>
+  <div class="card pile cardspacer">
+    <%= card %>
+    <footer class="card-footer">
+      <span class="card-footer-item has-text-grey">of <%= length(@pile.cards) %></span>
+      <span class="card-footer-item has-text-grey"><%= fas("heart") %> 10</span>
+      <a href="#" class="card-footer-item"><%= fas("angle-left") %></a>
+      <a href="#" class="card-footer-item"><%= fas("angle-right") %></a>
+    </footer>
+  </div>
+<% end %>

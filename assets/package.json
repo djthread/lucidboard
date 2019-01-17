@@ -6,17 +6,23 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "bulma": "^0.7.2",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@fortawesome/fontawesome-free": "^5.6.3",
     "babel-loader": "^8.0.0",
+    "bulmaswatch": "^0.7.2",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",
+    "file-loader": "^3.0.1",
     "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
+    "sass-loader": "^7.1.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "4.4.0",
     "webpack-cli": "^2.0.10"
