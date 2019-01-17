@@ -2,7 +2,7 @@
 # This should match the version of Alpine that the `elixir:1.7.4-alpine` image uses
 ARG ALPINE_VERSION=3.8
 
-FROM elixir:1.7.4-alpine AS builder
+FROM elixir:1.8.0-alpine AS builder
 
 ARG QL_MODE
 ENV QL_MODE=$QL_MODE

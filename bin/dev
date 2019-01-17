@@ -35,7 +35,8 @@ To install dependencies and set up the database, run the following commanads:
 EOF
 fi
 
-docker-compose -p lucidboard_dev \
-    -f "$DIR/../dev.docker-compose.yml" \
+docker-compose \
+    -p lucidboard_dev \
+    -f "$DIR/../assets/ops/dev/docker-compose.yml" \
     up $ARGS -d && \
   docker exec -it lucidboard_dev fish

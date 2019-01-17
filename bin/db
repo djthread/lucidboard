@@ -26,8 +26,9 @@ To install dependencies and set up the database, run the following commands:
 EOF
 fi
 
-docker-compose -p lucidboard_dev \
-    -f dev.docker-compose.yml \
+docker-compose \
+    -p lucidboard_dev \
+    -f "$DIR/../assets/ops/dev/docker-compose.yml" \
     run -d \
     --name lucidboard_dev_db \
     -p 5432:5432 \

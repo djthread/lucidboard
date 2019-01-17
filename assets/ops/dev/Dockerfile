@@ -3,11 +3,11 @@ FROM elixir:latest
 ARG QL_MODE
 ENV QL_MODE=$QL_MODE
 
-COPY assets/ops/setup_security.sh /
+COPY setup_security.sh /
 RUN /setup_security.sh
 
 RUN apt-get update
-RUN apt-get install --yes build-essential inotify-tools postgresql-client fish
+RUN apt-get install --yes build-essential inotify-tools postgresql-client fish vim
 
 # Install Phoenix packages
 RUN mix local.hex --force
@@ -22,6 +22,6 @@ RUN apt-get install nodejs
 WORKDIR /app
 EXPOSE 8800
 
-COPY assets/ops/config.fish /root/.config/fish/config.fish
+COPY config.fish /root/.config/fish/config.fish
 
 ENTRYPOINT fish

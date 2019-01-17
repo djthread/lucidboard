@@ -14,13 +14,13 @@ services:
     container_name: lucidboard_dev
     restart: always
     build:
-      context: .
-      dockerfile: dev.Dockerfile
+      context: ..
+      dockerfile: dev/Dockerfile
       args: { QL_MODE: "${QL_MODE}" }
     tty: true
     stdin_open: true
     depends_on: [ db ]
-    volumes: [ ".:/app" ]
+    volumes: [ "../../..:/app" ]
     ports: [ "8800:8800" ]
     environment:
       PG_HOST: db
