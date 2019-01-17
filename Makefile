@@ -10,6 +10,7 @@ help:
 
 build: ## Build the Docker image
 	docker build --build-arg APP_NAME=$(APP_NAME) \
+		-f assets/ops/release/Dockerfile \
 		--build-arg APP_VSN=$(APP_VSN) \
 		--build-arg QL_MODE=$(QL_MODE) \
 		-t $(APP_NAME):$(APP_VSN)-$(BUILD) \

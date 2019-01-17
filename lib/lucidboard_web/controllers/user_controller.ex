@@ -25,7 +25,7 @@ defmodule LucidboardWeb.UserController do
            conn.assigns.user
            |> User.changeset(%{"settings" => params})
            |> Changeset.cast_embed(:settings),
-         {:ok, new_user} <- Repo.update(u_cs) |> IO.inspect() do
+         {:ok, new_user} <- Repo.update(u_cs) do
       conn
       |> assign(:user, new_user)
       |> put_flash(:info, "Your settings have been saved.")
