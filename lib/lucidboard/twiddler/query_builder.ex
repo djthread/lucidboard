@@ -8,7 +8,7 @@ defmodule Lucidboard.Twiddler.QueryBuilder do
   `&Repo.transaction/l` for execution.
   """
   import Ecto.Query
-  alias Lucidboard.Repo
+  alias Lucidboard.{Repo}
 
   @doc """
   Return a function that will move item with id `id` and position `old_pos`

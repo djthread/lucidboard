@@ -29,14 +29,7 @@ defmodule Lucidboard.TwiddlerTest do
   end
 
   test "update card", %{board: board} do
-    card_lens =
-      Lens.make_lens(:columns)
-      ~> Lens.idx(2)
-      ~> Lens.make_lens(:piles)
-      ~> Lens.idx(0)
-      ~> Lens.make_lens(:cards)
-      ~> Lens.idx(0)
-
+    card_lens = a_card_lens()
     actual_card_id = Focus.view(card_lens, board).id
 
     {:ok, new_board, tx_fn, event} =
@@ -96,7 +89,6 @@ defmodule Lucidboard.TwiddlerTest do
 
   test "add locked card", %{board: %{user_id: user_id} = board} do
     col_lens = Lens.make_lens(:columns) ~> Lens.idx(1)
-
     col = Focus.view(col_lens, board)
 
     assert 1 == length(col.piles)
@@ -114,10 +106,40 @@ defmodule Lucidboard.TwiddlerTest do
              locked: true,
              pos: 0,
              settings: %CardSettings{},
-             user_id: ^user_id
+             user_id: ^user_id,
+             likes: []
            } = new_card
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "like", %{user: user, board: board} do
+    card_lens = a_card_lens()
+    card = Focus.view(card_lens, board)
+
+    assert 0 == Card.like_count(card)
+
+    # Like once
+    action = {:like, id: card.id, user: user}
+    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
+
+    assert "liked a card." == event.desc
+    assert 1 == card_lens |> Focus.view(new_board) |> Card.like_count()
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+
+    # Like a second time
+    action2 = {:like, id: card.id, user: user}
+    {:ok, new_board2, tx_fn2, _event2} = Twiddler.act(new_board, action2)
+
+    assert 2 == card_lens |> Focus.view(new_board2) |> Card.like_count()
+    execute_tx_and_assert_board_matches(tx_fn2, new_board2)
+
+    # Remove a like
+    action3 = {:unlike, id: card.id, user: user}
+    {:ok, new_board3, tx_fn3, _event3} = Twiddler.act(new_board2, action3)
+
+    assert 1 == card_lens |> Focus.view(new_board3) |> Card.like_count()
+    execute_tx_and_assert_board_matches(tx_fn3, new_board3)
   end
 
   # Execute the given transaction function and assert that the given board
@@ -131,6 +153,15 @@ defmodule Lucidboard.TwiddlerTest do
   # Given a list of columns, return a list of their titles
   defp titles(columns) do
     Enum.map(columns, & &1.title)
+  end
+
+  defp a_card_lens do
+    Lens.make_lens(:columns)
+    ~> Lens.idx(2)
+    ~> Lens.make_lens(:piles)
+    ~> Lens.idx(0)
+    ~> Lens.make_lens(:cards)
+    ~> Lens.idx(0)
   end
 
   defp first_card_body_of_each_pile(piles) do

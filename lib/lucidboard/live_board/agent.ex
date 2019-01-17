@@ -4,7 +4,7 @@ defmodule Lucidboard.LiveBoard.Agent do
   """
   use GenServer
   alias Lucidboard.Twiddler
-  alias Lucidboard.{Board, Event}
+  alias Lucidboard.{Board, Event, User}
   alias Lucidboard.LiveBoard.Scribe
   require Logger
 
@@ -58,6 +58,10 @@ defmodule Lucidboard.LiveBoard.Agent do
 
   def handle_call(:board, _from, state) do
     {:reply, state.board, state}
+  end
+
+  def handle_call({:likes_left_for, %User{id: _user_id}}, _from, state) do
+    {:reply, :tbi, state}
   end
 
   def handle_call(:events, _from, state) do

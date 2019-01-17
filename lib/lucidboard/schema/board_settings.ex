@@ -3,21 +3,24 @@ defmodule Lucidboard.BoardSettings do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @default_votes_per_user 3
+
   @primary_key false
 
   embedded_schema do
-    field(:anonymous_cards, :boolean)
+    field(:votes_per_user, :integer)
+    # field(:anonymous_cards, :boolean)
   end
 
   @spec new(keyword) :: BoardSettings.t()
   def new(fields \\ []) do
-    defaults = [anonymous_cards: false]
+    defaults = [votes_per_user: @default_votes_per_user]
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
   @doc false
   def changeset(settings, attrs) do
     settings
-    |> cast(attrs, [:anonymous_cards])
+    |> cast(attrs, [:votes_per_user])
   end
 end

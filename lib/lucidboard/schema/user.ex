@@ -2,11 +2,12 @@ defmodule Lucidboard.User do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lucidboard.UserSettings
+  alias Lucidboard.{Card, Like, UserSettings}
 
   schema "users" do
     field(:name)
     embeds_one(:settings, UserSettings, on_replace: :delete)
+    many_to_many :cards_liked, Card, join_through: Like
 
     timestamps()
   end
@@ -17,10 +18,10 @@ defmodule Lucidboard.User do
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
-  @doc false
   def changeset(card, attrs) do
     card
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end

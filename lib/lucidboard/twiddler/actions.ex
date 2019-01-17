@@ -83,6 +83,30 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  @spec like(Board.t(), map) :: Twiddler.action_ok_or_error()
+  def like(board, args) do
+    with [id, user] <- grab(args, ~w/id user/a),
+         {:ok, card_lens} <- Glass.card_by_id(board, id) do
+      card = Focus.view(card_lens, board)
+      {:ok, built_like, new_card} = Op.like(card, user)
+      tx_fn = fn -> Repo.insert!(built_like) end
+      new_board = Focus.set(card_lens, board, new_card)
+      {:ok, new_board, tx_fn, event("liked a card.")}
+    end
+  end
+
+  @spec unlike(Board.t(), map) :: Twiddler.action_ok_or_error()
+  def unlike(board, args) do
+    with [id, user] <- grab(args, ~w/id user/a),
+         {:ok, card_lens} <- Glass.card_by_id(board, id) do
+      card = Focus.view(card_lens, board)
+      {:ok, like_to_delete, new_card} = Op.unlike(card, user)
+      tx_fn = fn -> Repo.delete!(like_to_delete) end
+      new_board = Focus.set(card_lens, board, new_card)
+      {:ok, new_board, tx_fn, event("liked a card.")}
+    end
+  end
+
   @spec grab(map, [atom]) :: [term] | {:error, String.t()}
   defp grab(args, fields) when is_map(args) and is_list(fields) do
     fields

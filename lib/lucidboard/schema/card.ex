@@ -3,7 +3,7 @@ defmodule Lucidboard.Card do
   use Ecto.Schema
   import Ecto.Changeset
   alias Ecto.UUID
-  alias Lucidboard.{CardSettings, Pile, User}
+  alias Lucidboard.{CardSettings, Like, Pile, User}
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -15,6 +15,8 @@ defmodule Lucidboard.Card do
     embeds_one(:settings, CardSettings)
     belongs_to(:pile, Pile, type: :binary_id)
     belongs_to(:user, User)
+    # many_to_many(:users_liked, User, join_through: Like)
+    has_many(:likes, Like)
   end
 
   @spec new(keyword) :: Card.t()
@@ -24,16 +26,22 @@ defmodule Lucidboard.Card do
       pos: 0,
       body: "",
       locked: false,
-      settings: CardSettings.new()
+      settings: CardSettings.new(),
+      likes: []
     ]
 
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
-  @doc false
   def changeset(card, attrs) do
     card
     |> cast(attrs, [:body])
     |> validate_required([:body])
+    # |> cast_assoc(:users_liked)
+  end
+
+  @doc "Get the number of likes on a card"
+  def like_count(%__MODULE__{likes: likes}) do
+    length(likes)
   end
 end
