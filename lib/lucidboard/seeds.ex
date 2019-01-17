@@ -8,8 +8,8 @@ defmodule Lucidboard.Seeds do
         Repo.insert!(User.new(name: "bob"))
   end
 
-  def insert! do
-    user = Repo.insert!(User.new(name: "bob"))
+  def insert!(user \\ nil) do
+    user = user || get_user()
 
     Repo.insert!(board(user))
     Repo.insert!(board2(user))
