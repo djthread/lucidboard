@@ -20,3 +20,22 @@ function setup
     mix ecto.setup; and \
     echo "You may now start the dev server with `imp`."
 end
+
+alias gff "git pull --rebase origin $argv"
+alias ga "git add $argv"
+alias gp "git push $argv"
+alias gl "git log $argv"
+alias gs "git status --ignore-submodules $argv"
+alias gsu "git submodule $argv"
+alias gsu-init-recursive-update "gsu update --init --recursive"
+alias gd "git diff $argv"
+alias gm "git commit -m $argv"
+alias gb "git branch $argv"
+alias gbr "git branch -r $argv"
+alias gc "git checkout $argv"
+alias gre "git rebase $argv"
+alias gf "git fetch -p $argv"
+alias grm "git rm $argv"
+alias gmv "git mv $argv"
+alias grv "git remote -v $argv"
+alias gca "git commit --amend"
