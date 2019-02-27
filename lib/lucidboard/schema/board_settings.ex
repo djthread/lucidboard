@@ -4,8 +4,8 @@ defmodule Lucidboard.BoardSettings do
   import Ecto.Changeset
 
   @default_votes_per_user 3
-
   @primary_key false
+  @derive {Jason.Encoder, only: ~w(votes_per_user)a}
 
   embedded_schema do
     field(:votes_per_user, :integer)

@@ -107,18 +107,26 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  # Ex. Given `%{a: 1}` and `[:a, :b?]`, return `[1, nil]`. The trailing `?`
+  # indicates that the field is required. Without it, an error will be returned
+  # if the key is not found in args.
   @spec grab(map, [atom]) :: [term] | {:error, String.t()}
   defp grab(args, fields) when is_map(args) and is_list(fields) do
+    args = Enum.into(args, %{}, fn {k, v} -> {to_string(k), v} end)
+
     fields
     |> Enum.reduce([], fn k, acc ->
-      case Map.get(args, to_string(k)) || Map.get(args, k) do
-        nil -> throw(k)
-        v -> [v | acc]
-      end
+      key = String.trim_trailing(to_string(k), "?")
+      val = Map.get(args, key)
+      optional? = key != k
+
+      if is_nil(val) and not optional?,
+        do: throw(key),
+        else: [val | acc]
     end)
     |> Enum.reverse()
   catch
-    k -> {:error, "Missing argument #{k}"}
+    k -> {:error, "Missing required argument #{k}"}
   end
 
   defp event(msg) when is_binary(msg) do

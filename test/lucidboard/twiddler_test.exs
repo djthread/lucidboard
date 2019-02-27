@@ -63,7 +63,7 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "move the last pile to be first (of 4)", %{board: board} do
+  test "move the last (4th) pile to be first", %{board: board} do
     col_lens = Lens.make_lens(:columns) ~> Lens.idx(2)
     pile_lens = col_lens ~> Lens.make_lens(:piles) ~> Lens.idx(3)
 
@@ -85,6 +85,19 @@ defmodule Lucidboard.TwiddlerTest do
              |> first_card_body_of_each_pile()
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "move a card from 3-card pile to an existing pile", %{board: board} do
+    card_lens = a_card_lens()
+
+    target_pile_lens = Lens.make_lens(:columns) ~> Lens.idx(1) ~> Lens.make_lens(:piles) ~> Lens.idx(0)
+
+    card = Focus.view(board, card_lens)
+    target_pile = Focus.view(board, target_pile_lens)
+
+    action = {:move_card, id: card.id, pile_id: target_pile.id}
+
+    IO.inspect(action)
   end
 
   test "add locked card", %{board: %{user_id: user_id} = board} do

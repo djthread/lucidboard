@@ -4,6 +4,7 @@ defmodule Lucidboard.CardSettings do
   import Ecto.Changeset
 
   @primary_key false
+  @derive {Jason.Encoder, only: ~w(color)a}
 
   embedded_schema do
     field(:color, :string)

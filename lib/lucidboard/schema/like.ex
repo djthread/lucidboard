@@ -7,6 +7,7 @@ defmodule Lucidboard.Like do
 
   @fields [:user_id, :card_id]
   @primary_key {:id, :binary_id, autogenerate: false}
+  @derive {Jason.Encoder, only: ~w(id)a}
 
   schema "likes" do
     belongs_to :card, Card, type: :binary_id

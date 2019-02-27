@@ -4,6 +4,8 @@ defmodule Lucidboard.Board do
   import Ecto.Changeset
   alias Lucidboard.{BoardSettings, Column, User}
 
+  @derive {Jason.Encoder, only: ~w(id title settings columns)a}
+
   schema "boards" do
     field(:title, :string)
     embeds_one(:settings, BoardSettings)

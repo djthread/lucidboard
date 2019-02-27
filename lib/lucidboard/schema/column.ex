@@ -6,6 +6,7 @@ defmodule Lucidboard.Column do
   alias Lucidboard.{Board, Pile}
 
   @primary_key {:id, :binary_id, autogenerate: false}
+  @derive {Jason.Encoder, only: ~w(id title pos piles)a}
 
   schema "columns" do
     field(:title, :string)

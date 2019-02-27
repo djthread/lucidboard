@@ -6,6 +6,7 @@ defmodule Lucidboard.Card do
   alias Lucidboard.{CardSettings, Like, Pile, User}
 
   @primary_key {:id, :binary_id, autogenerate: false}
+  @derive {Jason.Encoder, only: ~w(id pos body locked settings likes)a}
 
   schema "cards" do
     field(:pos, :integer)
