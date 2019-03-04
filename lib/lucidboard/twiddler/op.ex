@@ -8,13 +8,13 @@ defmodule Lucidboard.Twiddler.Op do
   """
   import Ecto.Query
   alias Ecto.UUID
-  alias Lucidboard.{Board, Card, Column, Like, Pile, User}
+  alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
   alias Lucidboard.LiveBoard.Scribe
-  alias Lucidboard.Twiddler.{Glass, QueryBuilder}
+  alias Lucidboard.Twiddler.Glass
 
   def remove_item(items, pos) do
     {item, leftover} = List.pop_at(items, pos)
-    {:ok, item, renumber_positions(leftover)}
+    renumber_positions(leftover)
   end
 
   @doc """
@@ -49,10 +49,16 @@ defmodule Lucidboard.Twiddler.Op do
      """}
   end
 
-  @doc "Remove a card from the board, cleaning up an empty pile if needed"
-  @spec zap_card(Board.t(), Glass.path()) ::
+  @doc """
+  Remove a card from the board, cleaning up an empty pile if needed.
+
+  Note that the tx_fn does not delete the card record. This allows the card
+  to be moved to another location before our tx_fn is executed, thus moving
+  the card.
+  """
+  @spec cut_card(Board.t(), Glass.path()) ::
           {:ok, Board.t(), Card.t(), Scribe.tx_fn()}
-  def zap_card(board, card_path) do
+  def cut_card(board, card_path) do
     pile_lens = Glass.pile_lens_by_path(card_path)
 
     col = Focus.view(board, Glass.col_lens_by_path(card_path))
@@ -70,23 +76,40 @@ defmodule Lucidboard.Twiddler.Op do
       new_columns = List.replace_at(board.columns, col_pos, new_col)
       new_board = Map.put(board, :columns, new_columns)
 
-      q = from(p in Pile, where: p.column_id == ^col.id)
-      tx_fn = QueryBuilder.remove_item(q, pile.id, pile_pos)
+      tx_fn = fn ->
+        q = from(p in Pile, where: p.column_id == ^col.id and p.pos > ^pile_pos)
+        Repo.update_all(q, inc: [pos: -1])
+        Repo.delete_all(from(i in q, where: i.id == ^pile.id))
+      end
 
       {:ok, new_board, card, tx_fn}
     else
       new_board = Focus.set(board, pile_lens, new_pile)
-      q = from(c in Card, where: c.pile_id == ^pile.id)
-      tx_fn = QueryBuilder.remove_item(q, card.id, card_pos)
+      q = from(c in Card, where: c.pile_id == ^pile.id and c.pos > ^card_pos)
+      tx_fn = fn -> Repo.update_all(q, inc: [pos: -1]) end
 
       {:ok, new_board, card, tx_fn}
     end
   end
 
-  @doc "Add a card to the top of a pile"
+  @doc "Add a card (already existing in the db) to the top of a pile"
   @spec add_card_to_pile(Board.t(), Card.t(), Lens.t()) ::
           {:ok, Board.t(), Scribe.tx_fn()}
   def add_card_to_pile(board, card, pile_lens) do
+    pile = Focus.view(pile_lens, board)
+    new_card = Map.put(card, :pile_id, pile.id)
+    new_cards = renumber_positions([new_card | pile.cards])
+    new_pile = Map.put(pile, :cards, new_cards)
+    new_board = Focus.set(pile_lens, board, new_pile)
+
+    tx_fn = fn ->
+      q = from(c in Card, where: c.pile_id == ^pile.id)
+      Repo.update_all(q, inc: [pos: 1])
+      q = from(c in Card, where: c.id == ^card.id)
+      Repo.update_all(q, set: [pile_id: pile.id, pos: 0])
+    end
+
+    {:ok, new_board, tx_fn}
   end
 
   @spec find_pos_by_id([struct], integer) ::

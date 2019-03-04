@@ -87,11 +87,12 @@ defmodule Lucidboard.Twiddler.Actions do
   def move_card_to_pile(board, args) do
     with [id, pile_id] <- grab(args, ~w(id pile_id)a),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
-        #  {:ok, card_lens} <- Glass.card_by_path(card_path),
-         {:ok, board, card, zap_fn} <- Op.zap_card(board, card_path),
+         #  {:ok, card_lens} <- Glass.card_by_path(card_path),
+         {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
          {:ok, pile_lens} <- Glass.pile_by_id(board, pile_id),
-         {:ok, new_board, add_fn} <- Op.add_card_to_pile(board, card, pile_lens) do
-      {:ok, new_board, [zap_fn, add_fn], event("has moved a card.")}
+         {:ok, new_board2, add_fn} <-
+           Op.add_card_to_pile(new_board, card, pile_lens) do
+      {:ok, new_board2, [add_fn, cut_fn], event("has moved a card.")}
     end
   end
 

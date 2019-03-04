@@ -1,7 +1,8 @@
 defmodule Lucidboard.TwiddlerTest do
   @moduledoc false
   use LucidboardWeb.BoardCase
-  alias Lucidboard.{Card, CardSettings, Column, Pile, Repo}
+  alias Lucidboard.{Card, CardSettings, Column, Pile}
+  alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler
   import Focus
 
@@ -90,14 +91,25 @@ defmodule Lucidboard.TwiddlerTest do
   test "move a card from 3-card pile to an existing pile", %{board: board} do
     card_lens = a_card_lens()
 
-    target_pile_lens = Lens.make_lens(:columns) ~> Lens.idx(1) ~> Lens.make_lens(:piles) ~> Lens.idx(0)
+    target_pile_lens =
+      Lens.make_lens(:columns)
+      ~> Lens.idx(1)
+      ~> Lens.make_lens(:piles)
+      ~> Lens.idx(0)
 
     card = Focus.view(board, card_lens)
     target_pile = Focus.view(board, target_pile_lens)
 
-    action = {:move_card, id: card.id, pile_id: target_pile.id}
+    action = {:move_card_to_pile, id: card.id, pile_id: target_pile.id}
+    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
 
-    IO.inspect(action)
+    new_pile = Focus.view(target_pile_lens, new_board)
+    assert 2 == length(new_pile.cards)
+    assert "whoa" == card.body
+    assert "whoa" == hd(new_pile.cards).body
+    assert "has moved a card." == event.desc
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
   test "add locked card", %{board: %{user_id: user_id} = board} do
@@ -158,7 +170,7 @@ defmodule Lucidboard.TwiddlerTest do
   # Execute the given transaction function and assert that the given board
   # state matches what was persisted to the database.
   defp execute_tx_and_assert_board_matches(tx_fn, live_board) do
-    if tx_fn, do: {:ok, _} = Repo.transaction(tx_fn)
+    if tx_fn, do: {:ok, _} = Scribe.execute_tx_fn(tx_fn)
     %{} = db_board = Twiddler.by_id(live_board.id)
     assert db_board == live_board
   end
