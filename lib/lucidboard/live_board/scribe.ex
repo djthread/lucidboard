@@ -9,8 +9,10 @@ defmodule Lucidboard.LiveBoard.Scribe do
   alias Lucidboard.{LiveBoard, Repo}
   require Logger
 
+  @type tx_fn :: fun | [fun]
+
   @doc "Cast a write operation to the scribe process"
-  @spec write(integer, function) :: :ok
+  @spec write(integer, tx_fn) :: :ok
   def write(board_id, tx_fn) do
     board_id
     |> LiveBoard.via_scribe()
@@ -25,12 +27,22 @@ defmodule Lucidboard.LiveBoard.Scribe do
   def init(nil), do: {:ok, nil}
 
   @impl true
-  def handle_cast(tx_fn, state) when is_function(tx_fn) do
-    case Repo.transaction(tx_fn) do
+  def handle_cast(tx_fn, state) do
+    case execute_tx_fn(tx_fn) do
       {:ok, _struct} -> nil
       bad -> Logger.error("Repo.update on changeset failed: #{inspect(bad)}")
     end
 
     {:noreply, state}
+  end
+
+  defp execute_tx_fn(functions) when is_list(functions) do
+    execute_tx_fn(fn ->
+      Enum.each(functions, fn fun -> fun.() end)
+    end)
+  end
+
+  defp execute_tx_fn(fun) do
+    Repo.transaction(fun)
   end
 end

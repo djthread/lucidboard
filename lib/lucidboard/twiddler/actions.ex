@@ -68,6 +68,7 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  # TODO: Allow moving a pile to a different column
   @spec move_pile(Board.t(), map) :: Twiddler.action_ok_or_error()
   def move_pile(board, args) do
     with [id, col_id, new_pos] <- grab(args, ~w/id col_id new_pos/a),
@@ -80,6 +81,17 @@ defmodule Lucidboard.Twiddler.Actions do
       new_board = Focus.set(col_lens, board, %{col | piles: new_piles})
       what = if pile.cards == 1, do: "card", else: "pile"
       {:ok, new_board, tx_fn, event("has moved a #{what}.")}
+    end
+  end
+
+  def move_card_to_pile(board, args) do
+    with [id, pile_id] <- grab(args, ~w(id pile_id)a),
+         {:ok, card_path} <- Glass.card_path_by_id(board, id),
+        #  {:ok, card_lens} <- Glass.card_by_path(card_path),
+         {:ok, board, card, zap_fn} <- Op.zap_card(board, card_path),
+         {:ok, pile_lens} <- Glass.pile_by_id(board, pile_id),
+         {:ok, new_board, add_fn} <- Op.add_card_to_pile(board, card, pile_lens) do
+      {:ok, new_board, [zap_fn, add_fn], event("has moved a card.")}
     end
   end
 
@@ -116,7 +128,8 @@ defmodule Lucidboard.Twiddler.Actions do
 
     fields
     |> Enum.reduce([], fn k, acc ->
-      key = String.trim_trailing(to_string(k), "?")
+      k = to_string(k)
+      key = String.trim_trailing(k, "?")
       val = Map.get(args, key)
       optional? = key != k
 
