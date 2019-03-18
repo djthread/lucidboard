@@ -1,24 +1,25 @@
-<h1 class="title">User Settings</h1>
+<div class="o-CenteredColumn">
+  <h1 class="title">User Settings</h1>
 
-<div class="card">
-<div class="card-content">
-<%= form_for @conn, Routes.user_path(@conn, :update_settings), fn f -> %>
-
-  <div class="field">
-    <label class="label">Theme</label>
-    <div class="control">
-      <div class="select">
-        <%= select(f, :theme, @themes, selected: @user.settings.theme) %>
+  <div class="card">
+    <div class="card-content">
+    <%= form_for @conn, Routes.user_path(@conn, :update_settings), fn f -> %>
+      <div class="field">
+        <label class="label">Theme</label>
+        <div class="control">
+          <div class="select">
+            <%= select(f, :theme, @themes, selected: @user.settings.theme) %>
+          </div>
+        </div>
       </div>
+
+      <div class="field">
+        <div class="control">
+          <button class="button is-primary">Update</button>
+        </div>
+      </div>
+
+    <% end %>
     </div>
   </div>
-
-  <div class="field">
-    <div class="control">
-      <button class="button is-link">Update</button>
-    </div>
-  </div>
-
-<% end %>
-</div>
 </div>

@@ -20,7 +20,7 @@
     <a href="#" class="card-footer-item"><%= fas("heart") %>&nbsp;7</a>
     <a href="#" class="card-footer-item" data-modal="trigger"><%= fas("edit") %></a>
   </footer>
-  <div class="modal is-active">
+  <div class="modal">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
