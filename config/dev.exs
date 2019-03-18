@@ -53,7 +53,8 @@ config :lucidboard, LucidboardWeb.Endpoint,
       ~r{priv/gettext/.*(po)$},
       ~r{lib/lucidboard_web/views/.*(ex)$},
       ~r{lib/lucidboard_web/templates/.*(eex)$},
-      ~r{lib/lucidboard_web/controllers/.*(ex)$}
+      ~r{lib/lucidboard_web/controllers/.*(ex)$},
+      ~r{lib/demo_web/live/.*(ex)$}
     ]
   ]
 

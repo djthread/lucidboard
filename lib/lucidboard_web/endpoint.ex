@@ -1,9 +1,11 @@
 defmodule LucidboardWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :lucidboard
 
-  socket "/socket", LucidboardWeb.UserSocket,
-    websocket: true,
-    longpoll: false
+  socket "/live", Phoenix.LiveView.Socket
+
+  # socket "/socket", LucidboardWeb.UserSocket,
+  #   websocket: true,
+  #   longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
   #
