@@ -50,6 +50,7 @@ defmodule Lucidboard.MixProject do
       {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
       {:distillery, "~> 2.0"},
+      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:toml_transformer,
        git: "https://github.com/djthread/toml_transformer.git",
        app: false}

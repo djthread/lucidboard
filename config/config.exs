@@ -15,7 +15,10 @@ config :lucidboard, LucidboardWeb.Endpoint,
   secret_key_base:
     "ynHoNC75BVRedbPP06+hVh6fj9+J2vP+K51G0J9F7xeeqYXSMpHJ4cYT1N70Qqlw",
   render_errors: [view: LucidboardWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Lucidboard.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Lucidboard.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [
+    signing_salt: "OcXvrFwwOpyqvo+oCIbpdeEdOKmvt3zs"
+  ]
 
 config :lucidboard, :templates, %{
   "Retrospective" => %{

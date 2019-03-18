@@ -44,6 +44,7 @@ defmodule LucidboardWeb do
       import LucidboardWeb.ErrorHelpers
       import LucidboardWeb.Gettext
       import LucidboardWeb.ViewHelper
+      import Phoenix.LiveView, only: [live_render: 2, live_render: 3]
       alias LucidboardWeb.Router.Helpers, as: Routes
     end
   end
@@ -53,6 +54,7 @@ defmodule LucidboardWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 
