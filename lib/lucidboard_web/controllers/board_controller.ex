@@ -1,4 +1,4 @@
-defmodule LucidboardWeb.BoardController do
+defmodule LucidboardWeb.BoardControllerBYE do
   use LucidboardWeb, :controller
   alias Lucidboard.{Board, Column, Twiddler}
   alias LucidboardWeb.Router.Helpers, as: Routes

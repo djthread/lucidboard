@@ -14,7 +14,10 @@
           </span>
         </div>
         <div class="column">
-          <a href="#" class="button is-link icon-padder is-pulled-right">
+          <a href="#"
+            phx-click="add_card"
+            phx-value="<%= column.id %>"
+            class="button is-link icon-padder is-pulled-right">
             <%= fas("plus") %><span>Add Card</span>
           </a>
         </div>

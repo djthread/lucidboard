@@ -33,9 +33,11 @@ defmodule LucidboardWeb.Router do
     get("/create-board", BoardController, :create_form)
     post("/create-board", BoardController, :create)
 
-    scope "/boards/:id" do
-      get("/", BoardController, :index)
-    end
+    live "/boards/:id", BoardLive
+
+    # scope "/boards/:id" do
+    #   get("/", BoardController, :index)
+    # end
   end
 
   # Other scopes may use custom stacks.
