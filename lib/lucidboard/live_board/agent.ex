@@ -6,7 +6,10 @@ defmodule Lucidboard.LiveBoard.Agent do
   alias Lucidboard.Twiddler
   alias Lucidboard.{Board, Event, User}
   alias Lucidboard.LiveBoard.Scribe
+  alias Phoenix.PubSub
   require Logger
+
+  @pubsub Lucidboard.PubSub
 
   defmodule State do
     @moduledoc """
@@ -39,6 +42,12 @@ defmodule Lucidboard.LiveBoard.Agent do
   def handle_call({:action, action}, _from, state) do
     case Twiddler.act(state.board, action) do
       {:ok, new_board, tx_fn, event} ->
+        PubSub.broadcast(
+          @pubsub,
+          "board:#{new_board.id}",
+          {:board_update, new_board}
+        )
+
         Scribe.write(new_board.id, tx_fn)
         new_state = %{state | board: new_board, events: [event | state.events]}
         {:reply, new_board, new_state}
@@ -46,13 +55,13 @@ defmodule Lucidboard.LiveBoard.Agent do
       {:error, bad} ->
         {:reply, bad, state}
 
-      # {:caught, type, error, stacktrace} ->
-      #   Logger.error("""
-      #   Error executing action #{inspect(action)}: \
-      #   #{Exception.format(type, error, stacktrace)}\
-      #   """)
+        # {:caught, type, error, stacktrace} ->
+        #   Logger.error("""
+        #   Error executing action #{inspect(action)}: \
+        #   #{Exception.format(type, error, stacktrace)}\
+        #   """)
 
-      #   {:reply, :error, state}
+        #   {:reply, :error, state}
     end
   end
 
