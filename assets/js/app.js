@@ -17,3 +17,10 @@ import hamburger from "./hamburger"
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
+
+var modalTrigger = document.querySelector('[data-modal="trigger"]');
+var modal = document.querySelector('.modal');
+
+modalTrigger.addEventListener('click', function() {
+  modal.classList.add('is-active');
+});

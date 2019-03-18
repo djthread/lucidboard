@@ -23,9 +23,9 @@ config :lucidboard, :templates, %{
   }
 }
 
-config :lucidboard, :default_theme, "spacelab"
+config :lucidboard, :default_theme, "solar"
 
-config :lucidboard, :themes, ~w(spacelab cyborg slate pulse)
+config :lucidboard, :themes, ~w(solar minty journal darkly)
 
 config :phoenix, :json_library, Jason
 

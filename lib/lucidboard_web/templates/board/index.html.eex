@@ -1,24 +1,21 @@
-<h1 class="title"><%= @board.title %></h1>
+<div class="o-CenteredColumn o-CenteredColumn--wide">
+  <h1 class="title"><%= @board.title %></h1>
 
-<div class="columns">
-  <%= for column <- @board.columns do %>
-    <div class="column">
-      <h2 class="subtitle"><%= column.title %></h2>
-      <%= for pile <- column.piles do %>
-        <%= render(BoardView, "pile.html", pile: pile) %>
-      <% end %>
-      <div class="columns">
-        <div class="column">
-          <span class="has-text-grey-light">
-            <%= show_card_count(column) %>
-          </span>
-        </div>
-        <div class="column">
-          <a href="#" class="button is-link icon-padder is-pulled-right">
-            <%= fas("plus") %><span>Add Card</span>
-          </a>
-        </div>
+  <div class="columns is-desktop">
+    <%= for column <- @board.columns do %>
+      <div class="column">
+        <h2 class="subtitle"><%= column.title %></h2>
+        <%= for pile <- column.piles do %>
+          <%= render(BoardView, "pile.html", pile: pile) %>
+        <% end %>
+
+        <p class="has-text-grey-light u-Mbm">
+          <%= show_card_count(column) %>
+        </p>
+        <a href="#" class="is-link icon-padder">
+          <%= fas("plus") %><span>Add Card</span>
+        </a>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

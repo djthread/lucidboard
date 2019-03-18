@@ -1,13 +1,15 @@
+@import "../settings/settings";
+
 @font-face {
   font-family: "Arsenal";
   src: url(/fonts/Arsenal-Regular.ttf) format("truetype");
 }
 
-@import "../node_modules/bulmaswatch/slate/variables";
+@import "../../node_modules/bulmaswatch/minty/variables";
 $family-primary: "Arsenal";
 $family-heading: "Arsenal";
 @import "bulma";
-@import "../node_modules/bulmaswatch/slate/overrides";
+@import "../../node_modules/bulmaswatch/minty/overrides";
 
 main { padding-top: 2em; }
 .cardspacer { margin-bottom: 1em; }

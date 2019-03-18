@@ -1,0 +1,32 @@
+.c-Card:hover {
+    background-color: $light;
+}
+
+.c-Card__label {
+    border-radius: 3px;
+    box-sizing: border-box;
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+    margin: 0 4px 4px 0;
+    min-width: 40px;
+    padding: 0 12px;
+    width: auto;
+}
+
+.c-Card__label--green {
+    background-color: $green;
+}
+
+.c-Card__label--blue {
+    background-color: $blue;
+}
+
+.c-Card__label--red {
+    background-color: $red;
+}
+
+.c-Card__label--orange {
+    background-color: $orange;
+}
+

@@ -1,15 +1,13 @@
-<div style="max-width: 40em; margin: 0 auto;">
+<div class="o-CenteredColumn">
+  <a href="<%= Routes.board_path(@conn, :create) %>"
+    class="button is-primary is-outlined is-pulled-right">
+    <%= fas("plus") %><span>Create Board</span>
+  </a>
 
-<a href="<%= Routes.board_path(@conn, :create) %>"
-   class="button is-primary is-pulled-right">
-  <%= fas("plus") %><span>Create Board</span>
-</a>
+  <h2 class="title">All Lucidboards</h2>
 
-<h2 class="title">All Lucidboards</h2>
-
-<%= for board <- @boards do %>
-  <a href="<%= Routes.board_path(@conn, :index, board.id) %>">
-    <div class="card cardspacer">
+  <%= for board <- @boards do %>
+    <a class="card is-block c-Card u-Mbm" href="<%= Routes.board_path(@conn, :index, board.id) %>">
       <div class="card-content">
         <div class="content">
           <h3 class="subtitle is-marginless">
@@ -22,10 +20,10 @@
       <%# <footer class="card-footer">
         <a href="#" class="card-footer-item">Settings</a>
       </footer> %>
-    </div>
-  </a>
-<% end %>
+    </a>
+  <% end %>
 
-<%= if @boards == [] do %>
-  <em>No Lucidboards!</em>
-<% end %>
+  <%= if @boards == [] do %>
+    <em>No Lucidboards!</em>
+  <% end %>
+</div>
