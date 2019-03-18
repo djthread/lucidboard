@@ -20,6 +20,9 @@ config :lucidboard, LucidboardWeb.Endpoint,
     signing_salt: "OcXvrFwwOpyqvo+oCIbpdeEdOKmvt3zs"
   ]
 
+config :phoenix,
+  template_engines: [leex: Phoenix.LiveView.Engine]
+
 config :lucidboard, :templates, %{
   "Retrospective" => %{
     columns: ["What Went Well", "What Didn't Go Well", "Propouts"]
