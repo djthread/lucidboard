@@ -34,7 +34,6 @@ defmodule LucidboardWeb.BoardLive do
   def handle_event("add_card", col_id, socket) do
     action = {:add_and_lock_card, col_id: col_id, user_id: 1}
     LiveBoard.call(socket.assigns.board.id, {:action, action})
-
     {:noreply, socket}
   end
 
