@@ -34,7 +34,7 @@ defmodule Lucidboard.Card do
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
-  def changeset(card, attrs) do
+  def changeset(card, attrs \\ %{}) do
     card
     |> cast(attrs, [:body])
     |> validate_required([:body])

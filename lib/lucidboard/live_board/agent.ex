@@ -50,10 +50,10 @@ defmodule Lucidboard.LiveBoard.Agent do
 
         ret =
           if Keyword.get(opts, :return_board, false),
-            do: %{},
-            else: %{board: new_board}
+            do: %{meta | board: new_board},
+            else: meta
 
-        {:reply, {:ok, %{ret | meta: meta}}, new_state}
+        {:reply, {:ok, ret}, new_state}
 
       {:error, message} ->
         {:reply, {:error, message}, state}

@@ -1,9 +1,9 @@
 <%
   {user_locked_card_id, locked_card_ids} =
-    locked_cards(user_id(@socket.assigns), board_id(@socket.assigns), @socket)
+    locked_cards(@user.id, @board.id, @socket.id)
 %>
 <div class="o-CenteredColumn o-CenteredColumn--wide">
-  <h1 class="title"><%= @board.title %></h1>
+  <h1 class="title"><%= @board.title %> - <%= @socket.id %></h1>
 
   <div class="columns is-desktop">
     <%= for column <- @board.columns do %>
@@ -13,9 +13,11 @@
           <%= render(
             LucidboardWeb.BoardView,
             "pile.html",
-            pile: pile,
-            locked_card_id: user_locked_card_id,
-            locked_card_ids: locked_card_ids
+            Map.merge(assigns, %{
+              pile: pile, 
+              locked_card_id: user_locked_card_id,
+              locked_card_ids: locked_card_ids,
+            })
           ) %>
         <% end %>
 
