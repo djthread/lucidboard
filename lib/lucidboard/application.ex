@@ -10,10 +10,11 @@ defmodule Lucidboard.Application do
     IO.puts(banner())
 
     children = [
+      supervisor(Endpoint, []),
       supervisor(Lucidboard.Repo, []),
-      supervisor(LucidboardWeb.Endpoint, []),
       LiveBoard.registry_child_spec(),
       LiveBoard.dynamic_supervisor_child_spec(),
+      Lucidboard.Presence
     ]
 
     opts = [strategy: :one_for_one, name: Lucidboard.Supervisor]
