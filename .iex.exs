@@ -7,7 +7,9 @@ alias Lucidboard.{
   Card,
   Event,
   Like,
+  LiveBoard,
   Pile,
+  Presence,
   User,
   UserSettings,
   CardSettings
@@ -16,10 +18,3 @@ alias Lucidboard.{
 alias Lucidboard.LiveBoard, as: Liveboard
 alias Lucidboard.Repo, as: Repo
 alias Lucidboard.Twiddler, as: Twiddler
-
-
-defmodule L do
-  def go do
-    Lucidboard.LiveBoard.start 1
-  end
-end
