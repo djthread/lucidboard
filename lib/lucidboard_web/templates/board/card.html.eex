@@ -11,10 +11,14 @@
     </a>
   </header>
   -->
-  <div class="card-content">
-    <p class="content is-size-<%= card_body_size_by_copy(@card.body) %>">
-      <%= @card.body %>
-    </p>
+  <div phx-click="inline-edit" class="card-content">
+    <%= if @locked? do %>
+hi im locked
+    <% else %>
+      <p class="content is-size-<%= card_body_size_by_copy(@card.body) %>">
+        <%= @card.body %>
+      </p>
+    <% end %>
   </div>
   <footer class="card-footer">
     <a href="#" class="card-footer-item"><%= fas("heart") %>&nbsp;7</a>

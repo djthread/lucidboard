@@ -1,12 +1,22 @@
-<% card = render(BoardView, "card.html", card: hd(@pile.cards)) %>
+<% 
+  card = hd(@pile.cards)
+
+  rendered_card = render(
+    LucidboardWeb.BoardView,
+    "card.html",
+    card: card,
+    locked_by_user?: @locked_card_id == card.id,
+    locked?: card.id in @locked_card_ids
+  )
+%>
 
 <%= if length(@pile.cards) == 1 do %>
   <div class="u-Mbm">
-    <%= card %>
+    <%= rendered_card %>
   </div>
 <% else %>
   <div class="card pile u-Mbm">
-    <%= card %>
+    <%= rendered_card %>
     <footer class="card-footer">
       <span class="card-footer-item has-text-grey">of <%= length(@pile.cards) %></span>
       <span class="card-footer-item has-text-grey"><%= fas("heart") %> 10</span>

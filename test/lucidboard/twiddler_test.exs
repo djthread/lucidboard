@@ -156,7 +156,6 @@ defmodule Lucidboard.TwiddlerTest do
 
     assert %Card{
              body: "",
-             locked: true,
              pos: 0,
              settings: %CardSettings{},
              user_id: ^user_id,

@@ -36,16 +36,27 @@ defmodule Lucidboard.LiveBoard.Agent do
   end
 
   @impl true
-  def handle_call({:action, action}, _from, state) do
+  def handle_call({:action, action}, from, state) do
+    handle_call({:action, action, []}, from, state)
+  end
+
+  @impl true
+  def handle_call({:action, action, opts}, _from, state) when is_list(opts) do
     case Twiddler.act(state.board, action) do
-      {:ok, new_board, tx_fn, event} ->
+      {:ok, new_board, tx_fn, meta, event} ->
         Lucidboard.broadcast("board:#{new_board.id}", {:board, new_board})
         Scribe.write(new_board.id, tx_fn)
         new_state = %{state | board: new_board, events: [event | state.events]}
-        {:reply, new_board, new_state}
 
-      {:error, bad} ->
-        {:reply, bad, state}
+        ret =
+          if Keyword.get(opts, :return_board, false),
+            do: %{},
+            else: %{board: new_board}
+
+        {:reply, {:ok, %{ret | meta: meta}}, new_state}
+
+      {:error, message} ->
+        {:reply, {:error, message}, state}
 
         # {:caught, type, error, stacktrace} ->
         #   Logger.error("""

@@ -40,7 +40,6 @@ defmodule Lucidboard.Repo.Migrations.Initial do
       add(:id, :uuid, primary_key: true)
       add(:pos, :integer, null: false)
       add(:body, :string, null: false)
-      add(:locked, :boolean, null: false, default: false)
       add(:settings, :jsonb, null: false, default: "{}")
 
       add(:pile_id, references(:piles, type: :uuid, on_delete: :delete_all),

@@ -8,6 +8,7 @@ defmodule Lucidboard.Twiddler.Op do
   """
   import Ecto.Query
   alias Ecto.UUID
+  # alias Lucidboard.{Card, Column, Like, Pile, Twiddler, User}
   alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
   alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler.Glass
@@ -170,7 +171,8 @@ defmodule Lucidboard.Twiddler.Op do
   end
 
   @doc "Add a new pile at the end of the column with one locked card."
-  @spec add_locked_card(Column.t(), integer) :: {:ok, Column.t(), Column.t()}
+  @spec add_locked_card(Column.t(), integer) ::
+          {:ok, Column.t(), Column.t(), Twiddler.meta()}
   def add_locked_card(%Column{piles: piles} = column, user_id) do
     pile_uuid = UUID.generate()
     new_card = Card.new(pile_id: pile_uuid, user_id: user_id, locked: true)
@@ -189,7 +191,7 @@ defmodule Lucidboard.Twiddler.Op do
     loaded_piles = List.insert_at(piles, -1, mark_loaded(loaded_pile))
     loaded_col = %{column | piles: loaded_piles}
 
-    {:ok, built_col, loaded_col}
+    {:ok, built_col, loaded_col, %{card: new_card}}
   end
 
   @doc "Create a like"
