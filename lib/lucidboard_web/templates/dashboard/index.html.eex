@@ -8,7 +8,7 @@
 <h2 class="title">All Lucidboards</h2>
 
 <%= for board <- @boards do %>
-  <a href="<%= Routes.board_path(@conn, :index, board.id) %>">
+  <a href="<%= Routes.live_path(@conn, BoardLive, board.id) %>">
     <div class="card cardspacer">
       <div class="card-content">
         <div class="content">
