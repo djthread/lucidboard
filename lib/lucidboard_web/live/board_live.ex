@@ -3,9 +3,6 @@ defmodule LucidboardWeb.BoardLive do
   use Phoenix.LiveView
   alias Lucidboard.{LiveBoard, Twiddler}
   alias LucidboardWeb.BoardView
-  alias Phoenix.PubSub
-
-  @pubsub Lucidboard.PubSub
 
   def render(assigns) do
     BoardView.render("index.html", assigns)
@@ -17,20 +14,20 @@ defmodule LucidboardWeb.BoardLive do
         {:stop, put_flash(socket, :error, "Board not found")}
 
       board ->
-        PubSub.subscribe(@pubsub, "board:#{board_id}")
+        Lucidboard.subscribe("board:#{board_id}")
         {:ok, assign(socket, :board, board)}
     end
   end
 
   def handle_event("add_card", col_id, socket) do
     action = {:add_and_lock_card, col_id: col_id, user_id: 1}
-    _board = LiveBoard.call(socket.assigns.board.id, {:action, action})
+    LiveBoard.call(socket.assigns.board.id, {:action, action})
 
     {:noreply, socket}
-    # {:noreply, assign(socket, :board, board)}
   end
 
-  def handle_info({:board_update, board}, socket) do
+  @doc "Handle message indicating that the board has been updated"
+  def handle_info({:board, board}, socket) do
     {:noreply, assign(socket, :board, board)}
   end
 end

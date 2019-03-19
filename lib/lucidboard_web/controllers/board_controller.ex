@@ -1,6 +1,7 @@
 defmodule LucidboardWeb.BoardController do
   use LucidboardWeb, :controller
   alias Lucidboard.{Board, Column, Twiddler}
+  alias LucidboardWeb.BoardLive
   alias LucidboardWeb.Router.Helpers, as: Routes
 
   @templates Application.get_env(:lucidboard, :templates)
@@ -31,7 +32,7 @@ defmodule LucidboardWeb.BoardController do
     board = Board.new(title: title, columns: columns, user: conn.assigns[:user])
 
     with {:ok, %Board{id: id}} <- Twiddler.insert(board) do
-      {:see_other, Routes.board_path(conn, :index, id)}
+      {:see_other, Routes.live_path(conn, BoardLive, id)}
     end
   end
 end
