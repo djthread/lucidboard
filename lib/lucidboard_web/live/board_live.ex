@@ -1,7 +1,9 @@
 defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
   use Phoenix.LiveView
+  alias Ecto.Changeset
   alias Lucidboard.{Card, LiveBoard, Presence, Seeds, Twiddler}
+  alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.BoardView
   # alias Phoenix.Socket
   alias Phoenix.LiveView.Socket
@@ -48,12 +50,7 @@ defmodule LucidboardWeb.BoardLive do
     socket =
       case LiveBoard.call(board_id, {:action, action}) do
         {:ok, %{card: new_card}} ->
-          Presence.update(self(), topic(socket), @user_id, fn m ->
-            Map.put(m, :locked_card_id, new_card.id)
-          end)
-
-          socket
-          |> assign(:card_changeset, Card.changeset(new_card))
+          presence_lock_card(socket, new_card)
 
         {:error, message} ->
           put_flash(socket, :error, message)
@@ -62,14 +59,29 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
-  def handle_event("inline-edit", val, socket) do
-    IO.inspect {:inline_edit, val}
+  def handle_event("inline_edit", card_id, socket) do
+    {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
+    {:noreply, presence_lock_card(socket, card)}
+  end
+
+  def handle_event("card_save", form_data, socket) do
+    socket =
+      case Card.changeset(socket.assigns.card, form_data["card"]) do
+        %{valid?: true} = changeset ->
+          card = Changeset.apply_changes(changeset)
+          action = {:update_card, %{id: card.id, body: card.body}}
+          {:ok, _} = LiveBoard.call(socket.assigns.board.id, {:action, action})
+          finish_card_edit(socket)
+
+        invalid_changeset ->
+          assign(socket, card_changeset: invalid_changeset)
+      end
+
     {:noreply, socket}
   end
 
-  def handle_event("card_save", v, socket) do
-    IO.inspect {:v, v}
-    {:noreply, socket}
+  def handle_event("card_cancel", _, socket) do
+    {:noreply, finish_card_edit(socket)}
   end
 
   def handle_info({:board, board}, socket) do
@@ -79,6 +91,32 @@ defmodule LucidboardWeb.BoardLive do
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do
     id = socket.assigns.board.id
     {:noreply, assign(socket, :online_users, Presence.list("board:#{id}"))}
+  end
+
+  defp finish_card_edit(socket) do
+    assigns = Map.drop(socket.assigns, [:card, :card_changeset])
+
+    Presence.update(
+      self(),
+      topic(socket),
+      @user_id,
+      &Map.drop(&1, [:locked_card_id])
+    )
+
+    Map.put(socket, :assigns, assigns)
+  end
+
+  defp presence_lock_card(socket, card) do
+    Presence.update(
+      self(),
+      topic(socket),
+      @user_id,
+      &Map.put(&1, :locked_card_id, card.id)
+    )
+
+    socket
+    |> assign(:card, card)
+    |> assign(:card_changeset, Card.changeset(card))
   end
 
   def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"

@@ -11,13 +11,15 @@
     </a>
   </header>
   -->
-  <div phx-click="inline-edit" class="card-content">
+  <div class="card-content">
     <%= cond do %>
     <% @locked_by_user? -> %>
       <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
-      <textarea></textarea>
+      <%= textarea f, :body %>
+      <%= error_tag f, :body %>
       <div>
-      <button type="submit">Save</button>
+        <%= submit "Save", phx_disable_with: "Saving..." %>
+        <%= submit "Cancel", phx_click: :card_cancel %>
       </div>
       <% end %>
 
@@ -25,7 +27,9 @@
       [ card is locked ]
 
     <% true -> %>
-      <p class="content is-size-<%= card_body_size_by_copy(@card.body) %>">
+      <p phx-click="inline_edit"
+        phx-value="<%= @card.id %>"
+        class="content is-size-<%= card_body_size_by_copy(@card.body) %>">
         <%= @card.body %>
       </p>
     <% end %>
