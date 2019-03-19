@@ -12,12 +12,20 @@ defmodule Lucidboard.Board do
     has_many(:columns, Column)
     belongs_to(:user, User)
 
-    timestamps()
+    field(:inserted_at, :utc_datetime)
+    field(:updated_at, :utc_datetime)
   end
 
   @spec new(keyword) :: Board.t()
   def new(fields \\ []) do
-    defaults = [settings: BoardSettings.new()]
+    now = DateTime.truncate(DateTime.utc_now(), :second)
+
+    defaults = [
+      settings: BoardSettings.new(),
+      inserted_at: now,
+      updated_at: now
+    ]
+
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 

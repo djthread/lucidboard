@@ -88,7 +88,21 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "move a card from 3-card pile to an existing pile", %{board: board} do
+  # test "move from 1-card pile to other col between piles", %{board: board} do
+  #   card_lens =
+  #     Lens.make_lens(:columns)
+  #     ~> Lens.idx(2)
+  #     ~> Lens.make_lens(:piles)
+  #     ~> Lens.idx(1)
+  #     ~> Lens.make_lens(:cards)
+  #     ~> Lens.idx(0)
+
+  #   target_
+
+  #   IO.inspect(Focus.view(board, card_lens))
+  # end
+
+  test "move card from 3-card pile to an existing pile", %{board: board} do
     card_lens = a_card_lens()
 
     target_pile_lens =
