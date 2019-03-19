@@ -50,11 +50,21 @@ defmodule Lucidboard.LiveBoard do
     supervisor = Keyword.get(opts, :supervisor, BoardSupervisor)
     registry = Keyword.get(opts, :registry, BoardRegistry)
 
-    [{agent_pid, nil}] = Registry.lookup(registry, {:agent, id})
-    DynamicSupervisor.terminate_child(supervisor, agent_pid)
+    case Registry.lookup(registry, {:agent, id}) do
+      [{agent_pid, nil}] ->
+        DynamicSupervisor.terminate_child(supervisor, agent_pid)
 
-    [{scribe_pid, nil}] = Registry.lookup(registry, {:scribe, id})
-    DynamicSupervisor.terminate_child(supervisor, scribe_pid)
+      _ ->
+        nil
+    end
+
+    case Registry.lookup(registry, {:scribe, id}) do
+      [{scribe_pid, nil}] ->
+        DynamicSupervisor.terminate_child(supervisor, scribe_pid)
+
+      _ ->
+        nil
+    end
   end
 
   @doc "Uses GenServer.call to act upon a LiveBoard Agent"

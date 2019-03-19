@@ -1,3 +1,11 @@
+defimpl Inspect, for: Lucidboard.Board do
+  import Inspect.Algebra
+
+  def inspect(_dict, _opts) do
+    concat(["#board<>"])
+  end
+end
+
 defmodule Lucidboard.Board do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
