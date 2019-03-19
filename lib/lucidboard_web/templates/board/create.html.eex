@@ -2,7 +2,7 @@
   <h1 class="title">Create a Lucidboard</h1>
 
   <div class="card">
-    <div class="card-content">
+    <div class="c-Card__content card-content">
     <%= form_for @conn, Routes.board_path(@conn, :create), fn f -> %>
 
       <div class="field">

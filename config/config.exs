@@ -29,9 +29,9 @@ config :lucidboard, :templates, %{
   }
 }
 
-config :lucidboard, :default_theme, "solar"
+config :lucidboard, :default_theme, "minty"
 
-config :lucidboard, :themes, ~w(solar minty journal darkly)
+config :lucidboard, :themes, ~w(minty darkly)
 
 config :phoenix, :json_library, Jason
 
