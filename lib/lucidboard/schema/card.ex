@@ -10,7 +10,7 @@ defmodule Lucidboard.Card do
   schema "cards" do
     field(:pos, :integer)
     field(:body, :string)
-    field(:locked, :boolean)
+    # field(:locked, :boolean)
     # field(:locked_by, User)
     embeds_one(:settings, CardSettings)
     belongs_to(:pile, Pile, type: :binary_id)

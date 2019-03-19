@@ -9,8 +9,9 @@ defmodule Lucidboard.Twiddler do
   alias Lucidboard.Twiddler.{Actions, Op}
 
   @type action :: {atom, keyword | map}
+  @type meta :: map
   @type action_ok_or_error ::
-          {:ok, Board.t(), function, Event.t()} | {:error, String.t()}
+          {:ok, Board.t(), function, meta, Event.t()} | {:error, String.t()}
 
   @spec act(Board.t(), action) :: action_ok_or_error
   def act(%Board{} = board, {action_name, args}) when is_list(args) do
@@ -20,7 +21,7 @@ defmodule Lucidboard.Twiddler do
   def act(%Board{} = board, {action_name, args})
       when is_atom(action_name) and is_map(args) do
     with true <- function_exported?(Actions, action_name, 2) || :no_action,
-         {:ok, _, _, _} = res <- apply(Actions, action_name, [board, args]) do
+         {:ok, _, _, _, _} = res <- apply(Actions, action_name, [board, args]) do
       res
     else
       :no_action ->
@@ -44,9 +45,7 @@ defmodule Lucidboard.Twiddler do
           left_join: cards in assoc(piles, :cards),
           left_join: likes in assoc(cards, :likes),
           preload: [
-            columns:
-              {columns,
-               piles: {piles, cards: {cards, likes: likes}}}
+            columns: {columns, piles: {piles, cards: {cards, likes: likes}}}
           ]
         )
       )

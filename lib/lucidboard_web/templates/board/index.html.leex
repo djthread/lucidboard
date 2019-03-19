@@ -1,3 +1,7 @@
+<%
+  {user_locked_card_id, locked_card_ids} =
+    locked_cards(user_id(@socket.assigns), board_id(@socket.assigns), @socket)
+%>
 <div class="o-CenteredColumn o-CenteredColumn--wide">
   <h1 class="title"><%= @board.title %></h1>
 
@@ -6,7 +10,13 @@
       <div class="column">
         <h2 class="subtitle"><%= column.title %></h2>
         <%= for pile <- column.piles do %>
-          <%= render(BoardView, "pile.html", pile: pile) %>
+          <%= render(
+            LucidboardWeb.BoardView,
+            "pile.html",
+            pile: pile,
+            locked_card_id: user_locked_card_id,
+            locked_card_ids: locked_card_ids
+          ) %>
         <% end %>
 
         <p class="has-text-grey-light u-Mbm">
