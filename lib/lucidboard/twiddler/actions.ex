@@ -13,7 +13,7 @@ defmodule Lucidboard.Twiddler.Actions do
   def update_board(board, args) do
     with %Changeset{valid?: true} = cs <- Board.changeset(board, args),
          new_board <- Changeset.apply_changes(cs) do
-      {:ok, new_board, fn -> Repo.update(cs) end,
+      {:ok, new_board, fn -> Repo.update(cs) end, %{},
        event("has updated the board settings.")}
     end
   end
@@ -25,7 +25,7 @@ defmodule Lucidboard.Twiddler.Actions do
          %Changeset{valid?: true} = cs <-
            lens |> Focus.view(board) |> Column.changeset(args),
          new_col <- Changeset.apply_changes(cs) do
-      {:ok, Focus.set(lens, board, new_col), fn -> Repo.update(cs) end,
+      {:ok, Focus.set(lens, board, new_col), fn -> Repo.update(cs) end, %{},
        event("has updated the `#{new_col.title}` column.")}
     else
       :not_found -> {:error, "Column not found"}
@@ -39,7 +39,7 @@ defmodule Lucidboard.Twiddler.Actions do
          %Changeset{valid?: true} = cs <-
            lens |> Focus.view(board) |> Card.changeset(args) do
       {:ok, Focus.set(lens, board, Changeset.apply_changes(cs)),
-       fn -> Repo.update(cs) end, event("has changed card text.")}
+       fn -> Repo.update(cs) end, %{}, event("has changed card text.")}
     end
   end
 
@@ -64,7 +64,7 @@ defmodule Lucidboard.Twiddler.Actions do
          {:ok, col, new_cols} <- Op.move_item(board.columns, pos, new_pos),
          tx_fn <- QueryBuilder.move_item(queryable, id, pos, new_pos) do
       new_board = %{board | columns: new_cols}
-      {:ok, new_board, tx_fn, event("has moved the `#{col.title}` column.")}
+      {:ok, new_board, tx_fn, %{}, event("has moved the `#{col.title}` column.")}
     end
   end
 
@@ -79,7 +79,7 @@ defmodule Lucidboard.Twiddler.Actions do
          tx_fn <- QueryBuilder.move_item(queryable, id, pos, new_pos) do
       new_board = Focus.set(col_lens, board, %{col | piles: new_piles})
       what = if pile.cards == 1, do: "card", else: "pile"
-      {:ok, new_board, tx_fn, event("has moved a #{what}.")}
+      {:ok, new_board, tx_fn, %{}, event("has moved a #{what}.")}
     end
   end
 
@@ -91,7 +91,7 @@ defmodule Lucidboard.Twiddler.Actions do
       {:ok, built_like, new_card} = Op.like(card, user)
       tx_fn = fn -> Repo.insert!(built_like) end
       new_board = Focus.set(card_lens, board, new_card)
-      {:ok, new_board, tx_fn, event("liked a card.")}
+      {:ok, new_board, tx_fn, %{}, event("liked a card.")}
     end
   end
 
@@ -103,7 +103,7 @@ defmodule Lucidboard.Twiddler.Actions do
       {:ok, like_to_delete, new_card} = Op.unlike(card, user)
       tx_fn = fn -> Repo.delete!(like_to_delete) end
       new_board = Focus.set(card_lens, board, new_card)
-      {:ok, new_board, tx_fn, event("liked a card.")}
+      {:ok, new_board, tx_fn, %{}, event("liked a card.")}
     end
   end
 

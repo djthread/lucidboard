@@ -14,8 +14,10 @@ defmodule Lucidboard.Twiddler.Op do
     iex> Op.move_item([%{id: 1, pos: 0}, %{id: 2, pos: 1}], 1, 0)
     {:ok, %{id: 2, pos: 0}, [%{id: 2, pos: 0}, %{id: 1, pos: 1}]}
   """
+  import Focus
   alias Ecto.UUID
   alias Lucidboard.{Card, Column, Like, Pile, Twiddler, User}
+  alias Lucidboard.Twiddler.Glass
 
   @spec move_item([struct], integer, integer) ::
           {:ok, any, [any]} | {:error, String.t()}
@@ -102,6 +104,12 @@ defmodule Lucidboard.Twiddler.Op do
   def sort_likes(%Card{likes: likes} = card) do
     new_likes = Enum.sort(likes, &(&1.id < &2.id))
     %{card | likes: new_likes}
+  end
+
+  def card_by_id(board, card_id) do
+    with {:ok, lens} <- Glass.card_by_id(board, card_id) do
+      {:ok, Focus.view(lens, board)}
+    end
   end
 
   # This is important to mark the metadata on our schema structs so they seem
