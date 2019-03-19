@@ -15,6 +15,7 @@ alias ml "mix lint"
 alias mer "mix ecto.reset"
 
 function setup
+    /setup_security.sh
     mix deps.get; and \
     cd assets; npm install; and cd ..; \
     mix ecto.setup; and \

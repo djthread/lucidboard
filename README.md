@@ -31,7 +31,9 @@ When running this the first time, you'll need to install the dependencies and
 initialize the database. (You may also simply type `setup` since it is an alias
 for these commands.)
 
+**Note:** the `setup` command is an alias for all of the following scripts
 ```bash
+/setup_secrets.sh
 mix deps.get
 cd assets; npm install; cd ..
 mix ecto.setup
@@ -72,7 +74,7 @@ fish shell in the docker-based dev environment.
 | `mtw`   | mix test.watch        |
 | `ml`    | mix lint              |
 | `mer`   | mix ecto.reset        |
-| `setup` | mix deps.get<br>cd assets; npm install; cd ..<br> mix ecto.setup | 
+| `setup` | /setup_secrets.sh<br>mix deps.get<br>cd assets; npm install; cd ..<br> mix ecto.setup | 
 
 ## Learn more
 
