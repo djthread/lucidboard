@@ -3,11 +3,13 @@
   src: url(/fonts/Arsenal-Regular.ttf) format("truetype");
 }
 
-@import "../node_modules/bulmaswatch/pulse/variables";
+@import "../settings/settings";
+
+@import "../../node_modules/bulmaswatch/solar/variables";
 $family-primary: "Arsenal";
 $family-heading: "Arsenal";
 @import "bulma";
-@import "../node_modules/bulmaswatch/pulse/overrides";
+@import "../../node_modules/bulmaswatch/solar/overrides";
 
 main { padding-top: 2em; }
 .cardspacer { margin-bottom: 1em; }

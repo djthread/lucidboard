@@ -1,11 +1,11 @@
 <% card = render(BoardView, "card.html", card: hd(@pile.cards)) %>
 
 <%= if length(@pile.cards) == 1 do %>
-  <div class="cardspacer">
+  <div class="u-Mbm">
     <%= card %>
   </div>
 <% else %>
-  <div class="card pile cardspacer">
+  <div class="card pile u-Mbm">
     <%= card %>
     <footer class="card-footer">
       <span class="card-footer-item has-text-grey">of <%= length(@pile.cards) %></span>
