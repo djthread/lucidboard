@@ -14,10 +14,10 @@ module.exports = (env, options) => ({
   },
   entry: {
     'app': ['./js/app.js'].concat(glob.sync('./vendor/**/*.js')),
-    'cyborg': ['./css/cyborg.scss'],
-    'slate': ['./css/slate.scss'],
-    'spacelab': ['./css/spacelab.scss'],
-    'pulse': ['./css/pulse.scss'],
+    'journal': ['./css/themes/journal.scss'],
+    'minty': ['./css/themes/minty.scss'],
+    'solar': ['./css/themes/solar.scss'],
+    'darkly': ['./css/themes/darkly.scss'],
   },
   output: {
     filename: '[name].js',
