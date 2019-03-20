@@ -6,11 +6,8 @@
 <% end %>
 </ul>
 
-<%= form_for @new_column_changeset, "#", [phx_submit: :column_save], fn f -> %>
-  <%= input f, :title %>
+<%= form_for @column_changeset, "#", [phx_submit: :column_add], fn f -> %>
+  <%= text_input f, :title, placeholder: "New column title..." %>
   <%= error_tag f, :title %>
   <%= submit "Save", phx_disable_with: "Saving..." %>
-  <%= submit "Cancel", phx_click: :card_cancel %>
 <% end %>
-
-<button phx-click="Add Column">

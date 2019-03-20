@@ -17,14 +17,14 @@ defmodule Lucidboard.Column do
 
   @spec new(keyword) :: Column.t()
   def new(fields \\ []) do
-    defaults = [id: UUID.generate(), pos: 0]
+    defaults = [id: UUID.generate(), pos: 0, piles: []]
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
   @doc false
   def changeset(column, attrs) do
     column
-    |> cast(attrs, [:title])
+    |> cast(attrs, [:id, :title, :pos, :board_id])
     |> cast_assoc(:piles)
     |> validate_required([:title])
   end

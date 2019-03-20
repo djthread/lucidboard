@@ -32,7 +32,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:user, Seeds.get_user())
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
-          |> assign(:new_column_changeset, Column.changeset(%Column{}))
+          |> assign(:column_changeset, Column.changeset(%Column{}, %{}))
 
         {:ok, socket}
     end
@@ -97,6 +97,21 @@ defmodule LucidboardWeb.BoardLive do
     action = {:like, id: card_id, user: %User{id: @user_id}}
     {:ok, _} = LiveBoard.call(board.id, {:action, action})
     {:noreply, socket}
+  end
+
+  def handle_event("column_add", form_data, socket) do
+    column = Changeset.apply_changes(socket.assigns.column_changeset)
+
+    case Column.changeset(column, form_data["column"]) do
+      %{valid?: true} = changeset ->
+        column = Changeset.apply_changes(changeset)
+        action = {:add_column, %{title: column.title}}
+        {:ok, _} = LiveBoard.call(socket.assigns.board.id, {:action, action})
+        {:noreply, assign(socket, column_changeset: Column.changeset(%Column{}, %{}))}
+
+      invalid_changeset ->
+        {:noreply, assign(socket, column_changeset: invalid_changeset)}
+    end
   end
 
   def handle_info({:board, board}, socket) do

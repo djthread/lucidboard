@@ -18,6 +18,25 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  @spec add_column(Board.t(), map) :: Twiddler.action_ok_or_error()
+  def add_column(board, args) do
+    args =
+      args
+      |> Enum.into([])
+      |> Keyword.merge(board_id: board.id, pos: length(board.columns))
+      |> Column.new()
+      |> Map.from_struct()
+
+    with %Changeset{valid?: true} = cs <- Column.changeset(%Column{}, args),
+         new_col <- Changeset.apply_changes(cs) do
+      new_board = %{board | columns: List.insert_at(board.columns, -1, new_col)}
+
+      {:ok, new_board, fn -> Repo.insert(cs) end, %{},
+       event("has created the `#{new_col.title}` column.")}
+    end
+    |> IO.inspect()
+  end
+
   @spec update_column(Board.t(), map) :: Twiddler.action_ok_or_error()
   def update_column(board, args) do
     with [id] <- grab(args, [:id]),
@@ -64,7 +83,9 @@ defmodule Lucidboard.Twiddler.Actions do
          {:ok, col, new_cols} <- Op.move_item(board.columns, pos, new_pos),
          tx_fn <- QueryBuilder.move_item(queryable, id, pos, new_pos) do
       new_board = %{board | columns: new_cols}
-      {:ok, new_board, tx_fn, %{}, event("has moved the `#{col.title}` column.")}
+
+      {:ok, new_board, tx_fn, %{},
+       event("has moved the `#{col.title}` column.")}
     end
   end
 
