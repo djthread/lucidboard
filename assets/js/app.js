@@ -22,3 +22,12 @@ import LiveSocket from "phoenix_live_view"
 
 let liveSocket = new LiveSocket("/live")
 liveSocket.connect()
+
+var cardLabel = document.getElementsByClassName('c-Card__label');
+
+for (var i = 0; i < cardLabel.length; i++){
+  cardLabel[i].addEventListener("click", function(e) {
+      var targetedLabel = e.target;
+      targetedLabel.classList.toggle('c-Card__label--active');
+  });
+};

@@ -1,4 +1,3 @@
-<div class="c-Card card">
   <!--
   <header class="card-header">
     <p class="card-header-title">
@@ -10,8 +9,27 @@
       </span>
     </a>
   </header>
+
+
   -->
-  <div class="card-content">
+  <!-- Uncomment out if you want to see the labels 
+  <div class="c-Card__labels u-Phl u-Ptm">
+    <span class="c-Card__label c-Card__label--turquoise">
+      si
+    </span>
+    <span class="c-Card__label c-Card__label--red">
+      here is some text too
+    </span>
+    <span class="c-Card__label c-Card__label--purple">
+        if they hover and the content is really long we expect it to play nicely
+    </span>
+    <span class="c-Card__label c-Card__label--cyan">
+      omg me tooooo here is some amazing text that could take up a lot of room in the label
+      but really if people had a label this long, idk
+    </span>
+  </div>
+  -->
+  <div class="c-Card__content card-content">
     <%= cond do %>
     <% @locked_by_user? -> %>
       <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
@@ -37,6 +55,7 @@
   <footer class="card-footer">
     <a href="#" class="card-footer-item"><%= fas("heart") %>&nbsp;7</a>
     <a href="#" class="card-footer-item" data-modal="trigger"><%= fas("edit") %></a>
+    <a href="#" class="card-footer-item"><%= fas("trash-alt") %></a>
   </footer>
   <div class="modal">
     <div class="modal-background"></div>
@@ -48,9 +67,19 @@
         <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
-          <div class="u-Mbm is-block">
-            <p class="is-inline-block">Labels</p>
-            <a href="#"><%= fas("plus fa-md") %></a>
+        <div class="dropdown u-Mbl">
+          <div class="dropdown-trigger">
+            <a href="#" class="" aria-haspopup="true" aria-controls="dropdown-menu">
+              Labels <%= fas("plus fa-md") %>
+            </a>
+          </div>
+          <div class="dropdown-menu c-DropDown__menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content u-Pas">
+              <a href="#" class="dropdown-item c-DropDown__item--turquoise u-Pam u-Mbs"></a>
+              <a class="dropdown-item c-DropDown__item--red u-Pam u-Mbs"></a>
+              <a href="#" class="dropdown-item is-active c-DropDown__item--purple u-Pam u-Mbs"></a>
+              <a href="#" class="dropdown-item c-DropDown__item--cyan u-Pam u-Mbs"></a>
+            </div>
           </div>
           <div class="is-block">
             <div class="c-Card__label c-Card__label--green"></div>
@@ -58,36 +87,7 @@
             <div class="c-Card__label c-Card__label--red"></div>
             <div class="c-Card__label c-Card__label--orange"></div>
           </div>
-            <div class="dropdown">
-              <div class="dropdown-trigger">
-                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>Dropdown button</span>
-                  <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                  </span>
-                </button>
-              </div>
-              <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">
-                    Dropdown item
-                  </a>
-                  <a class="dropdown-item">
-                    Other dropdown item
-                  </a>
-                  <a href="#" class="dropdown-item is-active">
-                    Active dropdown item
-                  </a>
-                  <a href="#" class="dropdown-item">
-                    Other dropdown item
-                  </a>
-                  <hr class="dropdown-divider">
-                  <a href="#" class="dropdown-item">
-                    With a divider
-                  </a>
-                </div>
-              </div>
-            </div>
+        </div>
       </section>
       <footer class="modal-card-foot">
         <button class="button is-success">Save changes</button>
@@ -95,4 +95,3 @@
       </footer>
     </div>
   </div>
-</div>
