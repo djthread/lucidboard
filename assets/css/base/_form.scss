@@ -1,0 +1,14 @@
+.b-TextArea {
+    background-color: transparent;
+    color: white;
+    border: 0;
+    resize: none;
+    outline: none;
+    box-shadow: none;
+    overflow: hidden;
+    padding: 0;
+
+    &:focus {
+        box-shadow: none;
+    }
+}

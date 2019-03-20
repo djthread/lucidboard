@@ -33,7 +33,7 @@
     <%= cond do %>
     <% @locked_by_user? -> %>
       <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
-      <%= textarea f, :body %>
+      <%= textarea f, :body, class: "textarea is-medium has-fixed-size b-TextArea" %>
       <%= error_tag f, :body %>
       <div>
         <%= submit "Save", phx_disable_with: "Saving..." %>

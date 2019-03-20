@@ -31,3 +31,20 @@ for (var i = 0; i < cardLabel.length; i++){
       targetedLabel.classList.toggle('c-Card__label--active');
   });
 };
+
+var inlineEdit = document.querySelector('.is-size-5');
+
+inlineEdit.addEventListener('click', function() {
+  setTimeout(function(){
+    var tx = document.getElementsByTagName('textarea');
+    for (var i = 0; i < tx.length; i++) {
+      tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+      tx[i].addEventListener("input", OnInput, false);
+    }
+
+    function OnInput(e) {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    }
+  }, 100);
+})
