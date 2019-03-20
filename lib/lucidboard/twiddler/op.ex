@@ -14,7 +14,6 @@ defmodule Lucidboard.Twiddler.Op do
     iex> Op.move_item([%{id: 1, pos: 0}, %{id: 2, pos: 1}], 1, 0)
     {:ok, %{id: 2, pos: 0}, [%{id: 2, pos: 0}, %{id: 1, pos: 1}]}
   """
-  import Focus
   alias Ecto.UUID
   alias Lucidboard.{Card, Column, Like, Pile, Twiddler, User}
   alias Lucidboard.Twiddler.Glass
