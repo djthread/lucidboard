@@ -30,6 +30,7 @@ defmodule LucidboardWeb.BoardLive do
           socket
           |> assign(:board, board)
           |> assign(:user, Seeds.get_user())
+          |> assign(:modal_open?, false)
 
         {:ok, socket}
     end
@@ -65,23 +66,29 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("card_save", form_data, socket) do
-    socket =
-      case Card.changeset(socket.assigns.card, form_data["card"]) do
-        %{valid?: true} = changeset ->
-          card = Changeset.apply_changes(changeset)
-          action = {:update_card, %{id: card.id, body: card.body}}
-          {:ok, _} = LiveBoard.call(socket.assigns.board.id, {:action, action})
-          finish_card_edit(socket)
+    {:noreply, save_card(socket, form_data)}
+  end
 
-        invalid_changeset ->
-          assign(socket, card_changeset: invalid_changeset)
-      end
+  def handle_event("modal_card_save", form_data, socket) do
+    case save_card(socket, form_data) do
+      {:ok, socket} -> {:noreply, assign(socket, :modal_open?, false)}
+      {:invalid, socket} -> socket
+    end
+  end
+
+  def handle_event("modal_card_edit", card_id, socket) do
+    {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
+
+    socket =
+      socket
+      |> presence_lock_card(card)
+      |> assign(:modal_open?, true)
 
     {:noreply, socket}
   end
 
   def handle_event("card_cancel", _, socket) do
-    {:noreply, finish_card_edit(socket)}
+    {:noreply, socket |> finish_card_edit() |> assign(:modal_open?, false)}
   end
 
   def handle_info({:board, board}, socket) do
@@ -94,8 +101,6 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   defp finish_card_edit(socket) do
-    assigns = Map.drop(socket.assigns, [:card, :card_changeset])
-
     Presence.update(
       self(),
       topic(socket),
@@ -103,6 +108,7 @@ defmodule LucidboardWeb.BoardLive do
       &Map.drop(&1, [:locked_card_id])
     )
 
+    assigns = Map.drop(socket.assigns, [:card_changeset])
     Map.put(socket, :assigns, assigns)
   end
 
@@ -114,9 +120,23 @@ defmodule LucidboardWeb.BoardLive do
       &Map.put(&1, :locked_card_id, card.id)
     )
 
-    socket
-    |> assign(:card, card)
-    |> assign(:card_changeset, Card.changeset(card))
+    assign(socket, :card_changeset, Card.changeset(card))
+  end
+
+  @spec save_card(Socket.t(), map) :: {:ok | :invalid, Socket.t()}
+  defp save_card(socket, form_data) do
+    card = Changeset.apply_changes(socket.assigns.card_changeset)
+
+    case Card.changeset(card, form_data["card"]) do
+      %{valid?: true} = changeset ->
+        card = Changeset.apply_changes(changeset)
+        action = {:update_card, %{id: card.id, body: card.body}}
+        {:ok, _} = LiveBoard.call(socket.assigns.board.id, {:action, action})
+        {:ok, finish_card_edit(socket)}
+
+      invalid_changeset ->
+        {:invalid, assign(socket, card_changeset: invalid_changeset)}
+    end
   end
 
   def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"

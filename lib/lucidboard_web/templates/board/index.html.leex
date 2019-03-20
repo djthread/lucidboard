@@ -34,3 +34,9 @@
     <% end %>
   </div>
 </div>
+
+<%=
+  if @modal_open? do
+    render(LucidboardWeb.BoardView, "modal_card.html", assigns)
+  end
+%>
