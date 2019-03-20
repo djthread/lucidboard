@@ -1,0 +1,7 @@
+.t-default a:hover {
+    color: $primary;
+}
+
+.t-darkly a:hover {
+    color: lighten($primary, 25%);
+}

@@ -25,7 +25,6 @@
           <button class="button is-primary">Create</button>
         </div>
       </div>
-
     <% end %>
     </div>
   </div>

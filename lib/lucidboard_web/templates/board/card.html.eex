@@ -29,15 +29,15 @@
     </span>
   </div>
   -->
-  <div class="c-Card__content card-content">
+  <div class="c-Card__content card-content u-Pan">
     <%= cond do %>
     <% @locked_by_user? -> %>
       <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
-      <%= textarea f, :body, class: "textarea is-medium has-fixed-size b-TextArea" %>
+      <%= textarea f, :body, class: "textarea is-medium has-fixed-size b-TextArea u-Phm u-Ptm" %>
       <%= error_tag f, :body %>
-      <div>
-        <%= submit "Save", phx_disable_with: "Saving..." %>
-        <%= submit "Cancel", phx_click: :card_cancel %>
+      <div class="u-Pam">
+        <%= submit "Save", phx_disable_with: "Saving...", class: "button is-primary" %>
+        <%= submit "Cancel", phx_click: :card_cancel, class: "button" %>
       </div>
       <% end %>
 
@@ -47,7 +47,7 @@
     <% true -> %>
       <p phx-click="inline_edit"
         phx-value="<%= @card.id %>"
-        class="content is-size-<%= card_body_size_by_copy(@card.body) %>">
+        class="content is-size-<%= card_body_size_by_copy(@card.body) %> js-inlineEdit u-Pam">
         <%= @card.body %>
       </p>
     <% end %>
