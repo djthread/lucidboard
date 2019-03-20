@@ -8,9 +8,9 @@
 
   <%= for board <- @boards do %>
     <a class="card is-block c-Card u-Mbm" href="<%= Routes.live_path(@conn, BoardLive, board.id) %>">
-      <div class="card-content">
+      <div class="c-Card__content card-content">
         <div class="content">
-          <h3 class="subtitle is-marginless">
+          <h3 class="b-Subtitle subtitle is-marginless">
             <%= board.title %>
           </h3>
           Created by <strong><%= board.user.name %></strong>,

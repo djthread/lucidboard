@@ -1,8 +1,45 @@
-.c-Card:hover {
-    background-color: $light;
+.c-Card {
+    transition: background-color .2s ease-in-out;
+}
+
+.c-Card__labels {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .c-Card__label {
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    max-height: 8px;
+    margin: 0 0.55rem 0.25rem 0;
+    min-width: 40px;
+    width: auto;
+    line-height: 100px;
+    overflow: hidden;
+    max-width: 40px;
+    transition: max-width 1s ease-in-out,
+    max-height .5s ease-in-out;;
+}
+
+// if they click on a label that has content, add this class
+.c-Card__label--active {
+    overflow: hidden;
+    white-space: nowrap;
+    max-height: 25px;
+    line-height: 16px;
+    max-width: 20rem;
+    padding: 0.25rem 0.5rem;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    display: inline-block;
+
+    @media all and (min-width: $desktop) {
+        max-width: 20rem;
+    }
+}
+
+.c-CardModal__label {
     border-radius: 3px;
     box-sizing: border-box;
     display: inline-block;
@@ -14,19 +51,28 @@
     width: auto;
 }
 
-.c-Card__label--green {
-    background-color: $green;
+.c-Card__label--turquoise,
+.c-DropDown__item--turquoise {
+    background-color: $turquoise;
 }
 
-.c-Card__label--blue {
-    background-color: $blue;
-}
-
-.c-Card__label--red {
+.c-Card__label--red,
+.c-DropDown__item--red {
     background-color: $red;
 }
 
-.c-Card__label--orange {
-    background-color: $orange;
+.c-Card__label--purple,
+.c-DropDown__item--purple {
+    background-color: $purple;
 }
 
+.c-Card__label--cyan,
+.c-DropDown__item--cyan {
+    background-color: $cyan;
+}
+
+.c-DropDown__menu {
+    left: -4.75rem;
+    position: relative;
+    top: 2rem;
+}

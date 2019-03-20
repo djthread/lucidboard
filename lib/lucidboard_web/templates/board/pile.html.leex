@@ -14,17 +14,17 @@
 %>
 
 <%= if length(@pile.cards) == 1 do %>
-  <div class="u-Mbm">
+  <div class="c-Card card u-Mbm">
     <%= rendered_card %>
   </div>
 <% else %>
-  <div class="card pile u-Mbm">
+  <div class="c-Card card u-Mbm">
     <%= rendered_card %>
-    <footer class="card-footer">
-      <span class="card-footer-item has-text-grey">of <%= length(@pile.cards) %></span>
-      <span class="card-footer-item has-text-grey"><%= fas("heart") %> 10</span>
+    <div class="c-Card__footer--extra card-footer">
+      <span class="card-footer-item has-text-grey-lighter">of <%= length(@pile.cards) %></span>
+      <span class="card-footer-item has-text-grey-lighter"><%= fas("heart") %> 10</span>
       <a href="#" class="card-footer-item"><%= fas("angle-left") %></a>
       <a href="#" class="card-footer-item"><%= fas("angle-right") %></a>
-    </footer>
+    </div>
   </div>
 <% end %>
