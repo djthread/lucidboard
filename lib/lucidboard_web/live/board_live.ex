@@ -2,7 +2,7 @@ defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
   use Phoenix.LiveView
   alias Ecto.Changeset
-  alias Lucidboard.{Card, LiveBoard, Presence, Seeds, Twiddler, User}
+  alias Lucidboard.{Card, Column, LiveBoard, Presence, Seeds, Twiddler, User}
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.BoardView
   # alias Phoenix.Socket
@@ -32,6 +32,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:user, Seeds.get_user())
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
+          |> assign(:new_column_changeset, Column.changeset(%Column{}))
 
         {:ok, socket}
     end

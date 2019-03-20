@@ -1,1 +1,16 @@
-hello board options
+<h2>Manage Columns</h2>
+
+<ul>
+<%= for %{id: id, title: title} <- @board.columns do %>
+  <li><%= title %></li>
+<% end %>
+</ul>
+
+<%= form_for @new_column_changeset, "#", [phx_submit: :column_save], fn f -> %>
+  <%= input f, :title %>
+  <%= error_tag f, :title %>
+  <%= submit "Save", phx_disable_with: "Saving..." %>
+  <%= submit "Cancel", phx_click: :card_cancel %>
+<% end %>
+
+<button phx-click="Add Column">
