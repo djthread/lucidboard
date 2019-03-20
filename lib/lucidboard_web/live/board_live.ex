@@ -2,7 +2,7 @@ defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
   use Phoenix.LiveView
   alias Ecto.Changeset
-  alias Lucidboard.{Card, LiveBoard, Presence, Seeds, Twiddler}
+  alias Lucidboard.{Card, LiveBoard, Presence, Seeds, Twiddler, User}
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.BoardView
   # alias Phoenix.Socket
@@ -48,25 +48,20 @@ defmodule LucidboardWeb.BoardLive do
     action = {:add_and_lock_card, col_id: col_id, user_id: @user_id}
     board_id = socket.assigns.board.id
 
-    socket =
-      case LiveBoard.call(board_id, {:action, action}) do
-        {:ok, %{card: new_card}} ->
-          presence_lock_card(socket, new_card)
-
-        {:error, message} ->
-          put_flash(socket, :error, message)
-      end
+    {:ok, %{card: new_card}} = LiveBoard.call(board_id, {:action, action})
+    socket = presence_lock_card(socket, new_card)
 
     {:noreply, socket}
   end
 
   def handle_event("inline_edit", card_id, socket) do
-    {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
+    {:ok, card} = Glass.card_by_id(socket.assigns.board, card_id)
     {:noreply, presence_lock_card(socket, card)}
   end
 
   def handle_event("card_save", form_data, socket) do
-    {:noreply, save_card(socket, form_data)}
+    {_, socket} = save_card(socket, form_data)
+    {:noreply, socket}
   end
 
   def handle_event("modal_card_save", form_data, socket) do
@@ -77,7 +72,7 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("modal_card_edit", card_id, socket) do
-    {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
+    {:ok, card} = Glass.card_by_id(socket.assigns.board, card_id)
 
     socket =
       socket
@@ -89,6 +84,13 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_event("card_cancel", _, socket) do
     {:noreply, socket |> finish_card_edit() |> assign(:modal_open?, false)}
+  end
+
+  def handle_event("like", card_id, socket) do
+    board = socket.assigns.board
+    action = {:like, id: card_id, user: %User{id: @user_id}}
+    {:ok, _} = LiveBoard.call(board.id, {:action, action})
+    {:noreply, socket}
   end
 
   def handle_info({:board, board}, socket) do

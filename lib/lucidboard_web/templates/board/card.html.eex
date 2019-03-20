@@ -53,7 +53,7 @@
     <% end %>
   </div>
   <footer class="card-footer">
-    <a href="#" class="card-footer-item"><%= fas("heart") %>&nbsp;7</a>
+    <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card-footer-item"><%= fas("heart") %>&nbsp;<%= length(@card.likes) %></a>
     <a phx-click="modal_card_edit" phx-value="<%= @card.id %>" href="#" class="card-footer-item" data-modal="trigger"><%= fas("edit") %></a>
     <a href="#" class="card-footer-item"><%= fas("trash-alt") %></a>
   </footer>
