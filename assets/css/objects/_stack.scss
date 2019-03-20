@@ -1,0 +1,24 @@
+.o-Stack {
+    display: flex;
+}
+
+.o-Stack--split\@s {
+    @media all and (min-width: 630px) {
+        display: flex;
+    }
+}
+
+.o-Stack--spaceBetween {
+    justify-content: space-between;
+}
+
+.o-Stack__item {
+    margin-bottom: 1rem;
+    flex: 0 0 auto;
+}
+
+.o-Stack--split\@s .o-Stack__item {
+    @media all and (min-width: 630px) {
+        margin-bottom: 0;
+    }
+}

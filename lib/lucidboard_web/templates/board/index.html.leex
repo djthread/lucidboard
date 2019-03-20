@@ -1,6 +1,9 @@
 <div class="o-CenteredColumn o-CenteredColumn--wide">
-  <div style="float:right;margin:0 5px">
-    <div class="tabs is-toggle">
+  <div class="o-Stack--split@s o-Stack--spaceBetween u-Mbl">
+    <div class="o-Stack__item">
+      <h1 class="title"><%= @board.title %></h1>
+    </div>
+    <div class="tabs is-toggle o-Stack__item">
       <ul>
         <li class="<%= if @tab == :board, do: "is-active" %>">
           <a phx-click="tab" phx-value="board">
@@ -24,7 +27,6 @@
     </div>
   </div>
 
-  <h1 class="title"><%= @board.title %></h1>
 
   <%=
     case @tab do
