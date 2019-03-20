@@ -30,7 +30,7 @@
       <p phx-click="inline_edit"
         phx-value="<%= @card.id %>"
         class="content is-size-<%= card_body_size_by_copy(@card.body) %>">
-        <%= @card.body %>
+        <%= @card.body |> String.replace("\n", "<br />") |> raw %>
       </p>
     <% end %>
   </div>
