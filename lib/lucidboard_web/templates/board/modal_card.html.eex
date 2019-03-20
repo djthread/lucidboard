@@ -1,0 +1,40 @@
+<div class="modal is-active">
+  <%= form_for @card_changeset, "#", [phx_submit: :modal_card_save], fn f -> %>
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">is this a thing?</p>
+      <%= textarea f, :body %>
+      <%= error_tag f, :body %>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="dropdown u-Mbl">
+        <div class="dropdown-trigger">
+          <a href="#" class="" aria-haspopup="true" aria-controls="dropdown-menu">
+            Labels <%= fas("plus fa-md") %>
+          </a>
+        </div>
+        <div class="dropdown-menu c-DropDown__menu" id="dropdown-menu" role="menu">
+          <div class="dropdown-content u-Pas">
+            <a href="#" class="dropdown-item c-DropDown__item--turquoise u-Pam u-Mbs"></a>
+            <a class="dropdown-item c-DropDown__item--red u-Pam u-Mbs"></a>
+            <a href="#" class="dropdown-item is-active c-DropDown__item--purple u-Pam u-Mbs"></a>
+            <a href="#" class="dropdown-item c-DropDown__item--cyan u-Pam u-Mbs"></a>
+          </div>
+        </div>
+        <div class="is-block">
+          <div class="c-Card__label c-Card__label--green"></div>
+          <div class="c-Card__label c-Card__label--blue"></div>
+          <div class="c-Card__label c-Card__label--red"></div>
+          <div class="c-Card__label c-Card__label--orange"></div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <%= submit "Save Changes", class: "button is-success", phx_disable_with: "Saving..." %>
+      <%= submit "Cancel", class: "button", phx_click: :card_cancel %>
+    </footer>
+  </div>
+  <% end %>
+</div>
