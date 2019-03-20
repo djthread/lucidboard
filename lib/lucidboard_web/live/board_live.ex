@@ -31,6 +31,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:board, board)
           |> assign(:user, Seeds.get_user())
           |> assign(:modal_open?, false)
+          |> assign(:tab, :board)
 
         {:ok, socket}
     end
@@ -42,6 +43,10 @@ defmodule LucidboardWeb.BoardLive do
     if 1 == socket |> topic() |> Presence.list() |> Map.keys() |> length() do
       LiveBoard.stop(board_id)
     end
+  end
+
+  def handle_event("tab", tab, socket) when tab in ~w(board events options) do
+    {:noreply, assign(socket, :tab, String.to_atom(tab))}
   end
 
   def handle_event("add_card", col_id, socket) do
