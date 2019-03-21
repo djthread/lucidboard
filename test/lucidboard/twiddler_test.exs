@@ -79,7 +79,7 @@ defmodule Lucidboard.TwiddlerTest do
       Twiddler.act(board, {:delete_card, id: card.id})
 
     column_after = Glass.column_by_path(new_board, card_path)
-    assert 0 == length(column_after.piles)
+    assert Enum.empty?(column_after.piles)
     assert "has deleted a card." == event.desc
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
