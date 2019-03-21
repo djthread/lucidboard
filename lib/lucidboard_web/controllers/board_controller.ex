@@ -27,7 +27,9 @@ defmodule LucidboardWeb.BoardController do
 
   def create(conn, %{"title" => title, "template" => template}) do
     columns =
-      Enum.map(@templates[template].columns, fn c -> Column.new(title: c) end)
+      Enum.map(Enum.with_index(@templates[template].columns), fn {c, idx} ->
+        Column.new(title: c, pos: idx)
+      end)
 
     board = Board.new(title: title, columns: columns, user: conn.assigns[:user])
 
