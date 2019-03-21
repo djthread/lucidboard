@@ -63,7 +63,6 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_event("inline_edit", card_id, socket) do
     {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
-    IO.inspect(card)
     {:noreply, presence_lock_card(socket, card)}
   end
 
