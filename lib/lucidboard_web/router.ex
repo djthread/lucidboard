@@ -4,10 +4,10 @@ defmodule LucidboardWeb.Router do
 
   pipeline :browser do
     plug(:accepts, ["html"])
-    plug(LucidboardWeb.LoadUserPlug)
     plug(:fetch_session)
     plug(:fetch_flash)
-    plug Phoenix.LiveView.Flash
+    plug(Phoenix.LiveView.Flash)
+    plug(LucidboardWeb.LoadUserPlug)
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
     plug(:put_layout, {LayoutView, :normal})
@@ -22,8 +22,10 @@ defmodule LucidboardWeb.Router do
 
     get("/", PageController, :index)
 
-    get("/signin", UserController, :signin)
+    get("/signin", UserController, :signin_page)
+    post("/signin", UserController, :signin)
     get("/signout", UserController, :signout)
+
     get("/user-settings", UserController, :settings)
     post("/user-settings", UserController, :update_settings)
 
@@ -33,7 +35,7 @@ defmodule LucidboardWeb.Router do
     get("/create-board", BoardController, :create_form)
     post("/create-board", BoardController, :create)
 
-    live "/boards/:id", BoardLive
+    live("/boards/:id", BoardLive)
 
     # scope "/boards/:id" do
     #   get("/", BoardController, :index)

@@ -1,1 +1,14 @@
-signin!
+<div class="auth-form-wrapper">
+  <%= form_for @conn, Routes.user_path(@conn, :signin), [as: :signin], fn f -> %>
+    <div class="text-center mb-4">
+      <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
+    </div>
+
+    <div class="form-label-group">
+      <%= text_input f, :username, class: "form-control", placeholder: "Username", required: true, autofocus: true %>
+      <%= label f, :username, "Username", class: "control-label" %>
+    </div>
+
+    <%= submit "Sign in" %>
+  <% end %>
+</div>
