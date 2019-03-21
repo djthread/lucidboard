@@ -3,14 +3,21 @@ defmodule LucidboardWeb.BoardController do
   alias Lucidboard.{Board, Column, Twiddler}
   alias LucidboardWeb.BoardLive
   alias LucidboardWeb.Router.Helpers, as: Routes
+  alias Phoenix.LiveView.Controller, as: LiveViewController
 
   @templates Application.get_env(:lucidboard, :templates)
 
   def index(conn, %{"id" => board_id}) do
-    case Twiddler.by_id(board_id) do
-      nil -> {:error, :not_found}
-      board -> render(conn, "index.html", board: board)
-    end
+    LiveViewController.live_render(conn, BoardLive,
+      session: %{
+        id: board_id,
+        user_id: get_session(conn, :user_id)
+      }
+    )
+  end
+
+  def create_form(%{assigns: %{user: nil}} = conn, _) do
+    {:see_other, Routes.user_path(conn, :signin_page)}
   end
 
   def create_form(conn, _params) do
@@ -34,7 +41,7 @@ defmodule LucidboardWeb.BoardController do
     board = Board.new(title: title, columns: columns, user: conn.assigns[:user])
 
     with {:ok, %Board{id: id}} <- Twiddler.insert(board) do
-      {:see_other, Routes.live_path(conn, BoardLive, id)}
+      {:see_other, Routes.board_path(conn, :index, id)}
     end
   end
 end

@@ -7,7 +7,7 @@
   <h2 class="title">All Lucidboards</h2>
 
   <%= for board <- @boards do %>
-    <a class="card is-block c-Card u-Mbm" href="<%= Routes.live_path(@conn, BoardLive, board.id) %>">
+    <a class="card is-block c-Card u-Mbm" href="<%= Routes.board_path(@conn, :index, board.id) %>">
       <div class="c-Card__content card-content">
         <div class="content">
           <h3 class="b-Subtitle subtitle is-marginless">

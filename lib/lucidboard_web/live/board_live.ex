@@ -2,19 +2,27 @@ defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
   use Phoenix.LiveView
   alias Ecto.Changeset
-  alias Lucidboard.{Card, Column, LiveBoard, Presence, Seeds, Twiddler, User}
+  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, Twiddler, User}
   alias Lucidboard.Twiddler.Op
-  alias LucidboardWeb.BoardView
+  alias LucidboardWeb.{BoardView, Endpoint}
+  alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Socket
   alias Phoenix.Socket.Broadcast
-
-  @user_id 1
 
   def render(assigns) do
     BoardView.render("index.html", assigns)
   end
 
-  def mount(%{path_params: %{"id" => board_id}}, socket) do
+  def mount(%{user_id: nil}, socket) do
+    {:stop,
+     socket
+     |> put_flash(:error, "You must be signed in")
+     |> redirect(to: Routes.user_path(Endpoint, :signin_page))}
+  end
+
+  def mount(%{id: board_id, user_id: user_id}, socket) do
+    user = user_id && Account.get_user!(user_id)
+
     case Twiddler.by_id(board_id) do
       nil ->
         {:stop, put_flash(socket, :error, "Board not found")}
@@ -23,12 +31,12 @@ defmodule LucidboardWeb.BoardLive do
         identifier = "board:#{board.id}"
         LiveBoard.start(board.id)
         Lucidboard.subscribe(identifier)
-        Presence.track(self(), identifier, @user_id, %{lv_ref: socket.id})
+        Presence.track(self(), identifier, user.id, %{lv_ref: socket.id})
 
         socket =
           socket
           |> assign(:board, board)
-          |> assign(:user, Seeds.get_user())
+          |> assign(:user, user)
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
           |> assign(:column_changeset, new_column_changeset())
@@ -51,7 +59,8 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("add_card", col_id, socket) do
-    action = {:add_and_lock_card, col_id: col_id, user_id: @user_id}
+    user_id = socket.assigns.user.id
+    action = {:add_and_lock_card, col_id: col_id, user_id: user_id}
     board_id = socket.assigns.board.id
 
     {:ok, %{card: new_card}} = LiveBoard.call(board_id, {:action, action})
@@ -94,7 +103,7 @@ defmodule LucidboardWeb.BoardLive do
     card_id =
       Presence.get_for_session(
         topic(socket),
-        @user_id,
+        socket.assigns.user.id,
         socket.id,
         :locked_card_id
       )
@@ -114,7 +123,7 @@ defmodule LucidboardWeb.BoardLive do
   def handle_event("like", card_id, socket) do
     board = socket.assigns.board
 
-    {:like, id: card_id, user: %User{id: @user_id}}
+    {:like, id: card_id, user: %User{id: socket.assigns.user.id}}
     |> live_board_action(board.id)
 
     {:noreply, socket}
@@ -197,7 +206,7 @@ defmodule LucidboardWeb.BoardLive do
     Presence.update(
       self(),
       topic,
-      @user_id,
+      socket.assigns.user.id,
       &Map.drop(&1, [:locked_card_id])
     )
 
@@ -209,7 +218,7 @@ defmodule LucidboardWeb.BoardLive do
     Presence.update(
       self(),
       topic(socket),
-      @user_id,
+      socket.assigns.user.id,
       &Map.put(&1, :locked_card_id, card.id)
     )
 
