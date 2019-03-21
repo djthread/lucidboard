@@ -33,6 +33,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
           |> assign(:column_changeset, Column.changeset(%Column{}, %{}))
+          |> assign(:delete_confirming_card_id, nil)
 
         {:ok, socket}
     end
@@ -98,6 +99,25 @@ defmodule LucidboardWeb.BoardLive do
     action = {:like, id: card_id, user: %User{id: @user_id}}
     {:ok, _} = LiveBoard.call(board.id, {:action, action})
     {:noreply, socket}
+  end
+
+  def handle_event("card_delete", card_id, socket) do
+    {:noreply, assign(socket, :delete_confirming_card_id, card_id)}
+  end
+
+  def handle_event("card_delete_confirmed", card_id, socket) do
+    board = socket.assigns.board
+    action = {:delete_card, id: card_id}
+    {:ok, _} = LiveBoard.call(board.id, {:action, action})
+    {:noreply, assign(socket, :delete_confirming_card_id, nil)}
+  end
+
+  def handle_event(
+        "card_delete_cancelled",
+        card_id,
+        %{assigns: %{delete_confirming_card_id: card_id}} = socket
+      ) do
+    {:noreply, assign(socket, :delete_confirming_card_id, nil)}
   end
 
   def handle_event("column_add", form_data, socket) do

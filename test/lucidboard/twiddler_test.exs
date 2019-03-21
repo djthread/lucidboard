@@ -75,12 +75,8 @@ defmodule Lucidboard.TwiddlerTest do
     pile_before = Glass.pile_by_path(board, card_path)
     assert 1 == length(pile_before.cards)
 
-    # IO.inspect(Enum.at(board.columns, 1))
-
     {:ok, new_board, tx_fn, %{}, event} =
       Twiddler.act(board, {:delete_card, id: card.id})
-
-    # IO.inspect(Enum.at(new_board.columns, 1))
 
     column_after = Glass.column_by_path(new_board, card_path)
     assert 0 == length(column_after.piles)
