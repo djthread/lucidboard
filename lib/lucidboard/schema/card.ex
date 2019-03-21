@@ -17,7 +17,9 @@ defmodule Lucidboard.Card do
     belongs_to(:pile, Pile, type: :binary_id)
     belongs_to(:user, User)
     # many_to_many(:users_liked, User, join_through: Like)
-    has_many(:likes, Like)
+    # No idea why this `on_delete` is needed when it seems to be set up
+    # properly in the db migration
+    has_many(:likes, Like, on_delete: :delete_all)
   end
 
   @spec new(keyword) :: Card.t()

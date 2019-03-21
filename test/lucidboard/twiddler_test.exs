@@ -4,6 +4,7 @@ defmodule Lucidboard.TwiddlerTest do
   alias Lucidboard.{Card, CardSettings, Column, Pile}
   alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler
+  alias Lucidboard.Twiddler.Glass
   import Focus
 
   test "update_board", %{board: board} do
@@ -38,6 +39,52 @@ defmodule Lucidboard.TwiddlerTest do
 
     assert "has changed card text." == event.desc
     assert "OH YEAH" == Focus.view(card_lens, new_board).body
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "delete card from 3-card pile", %{board: board} do
+    card_path = a_card_path()
+    card = Glass.card_by_path(board, card_path)
+
+    pile_before = Glass.pile_by_path(board, card_path)
+    assert 3 == length(pile_before.cards)
+
+    {:ok, new_board, tx_fn, %{}, event} =
+      Twiddler.act(board, {:delete_card, id: card.id})
+
+    pile_after = Glass.pile_by_path(new_board, card_path)
+    assert ~w(srs? neat) == Enum.map(pile_after.cards, fn c -> c.body end)
+    assert "has deleted a card." == event.desc
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "delete card from 1-card pile", %{board: board} do
+    card_path = [
+      Lens.make_lens(:columns),
+      Lens.idx(1),
+      Lens.make_lens(:piles),
+      Lens.idx(0),
+      Lens.make_lens(:cards),
+      Lens.idx(0)
+    ]
+
+    card = Glass.card_by_path(board, card_path)
+
+    pile_before = Glass.pile_by_path(board, card_path)
+    assert 1 == length(pile_before.cards)
+
+    # IO.inspect(Enum.at(board.columns, 1))
+
+    {:ok, new_board, tx_fn, %{}, event} =
+      Twiddler.act(board, {:delete_card, id: card.id})
+
+    # IO.inspect(Enum.at(new_board.columns, 1))
+
+    column_after = Glass.column_by_path(new_board, card_path)
+    assert 0 == length(column_after.piles)
+    assert "has deleted a card." == event.desc
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
@@ -208,12 +255,18 @@ defmodule Lucidboard.TwiddlerTest do
   end
 
   defp a_card_lens do
-    Lens.make_lens(:columns)
-    ~> Lens.idx(2)
-    ~> Lens.make_lens(:piles)
-    ~> Lens.idx(0)
-    ~> Lens.make_lens(:cards)
-    ~> Lens.idx(0)
+    Glass.card_lens_by_path(a_card_path())
+  end
+
+  defp a_card_path do
+    [
+      Lens.make_lens(:columns),
+      Lens.idx(2),
+      Lens.make_lens(:piles),
+      Lens.idx(0),
+      Lens.make_lens(:cards),
+      Lens.idx(0)
+    ]
   end
 
   defp first_card_body_of_each_pile(piles) do

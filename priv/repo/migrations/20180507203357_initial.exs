@@ -53,7 +53,10 @@ defmodule Lucidboard.Repo.Migrations.Initial do
       add(:id, :uuid, primary_key: true)
       # add(:count, :integer, default: 1, null: false)
       add(:user_id, references(:users), null: false)
-      add(:card_id, references(:cards, type: :uuid), null: false)
+
+      add(:card_id, references(:cards, type: :uuid, on_delete: :delete_all),
+        null: false
+      )
     end
   end
 end

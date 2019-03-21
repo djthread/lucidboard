@@ -30,8 +30,15 @@ defmodule Lucidboard.Twiddler.Glass do
     end
   end
 
-  @spec col_lens_by_path(path) :: Lens.t()
-  def col_lens_by_path(path), do: compose_path(path, 2)
+  @spec card_by_id(Board.t(), integer) :: lens_or_not_found
+  def card_by_id(board, id) do
+    with {:ok, path} <- card_path_by_id(board, id) do
+      {:ok, compose_path(path)}
+    end
+  end
+
+  @spec column_lens_by_path(path) :: Lens.t()
+  def column_lens_by_path(path), do: compose_path(path, 2)
 
   @spec pile_lens_by_path(path) :: Lens.t()
   def pile_lens_by_path(path), do: compose_path(path, 4)
@@ -39,21 +46,14 @@ defmodule Lucidboard.Twiddler.Glass do
   @spec card_lens_by_path(path) :: Lens.t()
   def card_lens_by_path(path), do: compose_path(path, 6)
 
-  @spec col_by_path(Board.t(), path) :: Column.t()
-  def col_by_path(board, path), do: Focus.view(board, compose_path(path, 2))
+  @spec column_by_path(Board.t(), path) :: Column.t()
+  def column_by_path(board, path), do: Focus.view(board, compose_path(path, 2))
 
   @spec pile_by_path(Board.t(), path) :: Pile.t()
   def pile_by_path(board, path), do: Focus.view(board, compose_path(path, 4))
 
   @spec card_by_path(Board.t(), path) :: Card.t()
   def card_by_path(board, path), do: Focus.view(board, compose_path(path, 6))
-
-  @spec card_by_id(Board.t(), integer) :: lens_or_not_found
-  def card_by_id(board, id) do
-    with {:ok, path} <- card_path_by_id(board, id) do
-      {:ok, compose_path(path)}
-    end
-  end
 
   @spec pile_path_by_id(Board.t(), integer) :: lens_path_or_not_found
   def pile_path_by_id(%Board{columns: columns}, id) do

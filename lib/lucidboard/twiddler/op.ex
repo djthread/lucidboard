@@ -7,12 +7,18 @@ defmodule Lucidboard.Twiddler.Op do
   intended to be injected into the running board state.
   """
   import Ecto.Query
-  import Focus
   alias Ecto.UUID
   # alias Lucidboard.{Card, Column, Like, Pile, Twiddler, User}
   alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
   alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler.Glass
+
+  @spec card_by_id(Board.t(), integer) :: {:ok, Card.t()} | :not_found
+  def card_by_id(board, id) do
+    with {:ok, path} <- Glass.card_path_by_id(board, id) do
+      {:ok, Glass.card_by_path(board, path)}
+    end
+  end
 
   def remove_item(items, pos) do
     {_item, leftover} = List.pop_at(items, pos)
@@ -59,7 +65,7 @@ defmodule Lucidboard.Twiddler.Op do
   @spec cut_pile(Board.t(), Glass.path()) ::
           {:ok, Board.t(), Pile.t(), Scribe.tx_fn()}
   def cut_pile(board, pile_path) do
-    col = Glass.col_by_path(board, pile_path)
+    col = Glass.column_by_path(board, pile_path)
     pile = Glass.pile_by_path(board, pile_path)
 
     {:ok, pile_pos} = find_pos_by_id(col.piles, pile.id)
@@ -90,7 +96,7 @@ defmodule Lucidboard.Twiddler.Op do
   def cut_card(board, card_path) do
     pile_lens = Glass.pile_lens_by_path(card_path)
 
-    col = Focus.view(board, Glass.col_lens_by_path(card_path))
+    col = Focus.view(board, Glass.column_lens_by_path(card_path))
     pile = Focus.view(board, pile_lens)
     card = Focus.view(board, Glass.card_lens_by_path(card_path))
 
@@ -101,14 +107,15 @@ defmodule Lucidboard.Twiddler.Op do
       {:ok, pile_pos} = find_pos_by_id(col.piles, pile.id)
       new_col = %{col | piles: remove_item(col.piles, pile_pos)}
 
-      col_pos = find_pos_by_id(board.columns, col.id)
+      {:ok, col_pos} = find_pos_by_id(board.columns, col.id)
       new_columns = List.replace_at(board.columns, col_pos, new_col)
       new_board = Map.put(board, :columns, new_columns)
 
       tx_fn = fn ->
-        q = from(p in Pile, where: p.column_id == ^col.id and p.pos > ^pile_pos)
+        in_col = from(p in Pile, where: p.column_id == ^col.id)
+        q = from(p in in_col, where: p.pos > ^pile_pos)
         Repo.update_all(q, inc: [pos: -1])
-        Repo.delete_all(from(i in q, where: i.id == ^pile.id))
+        Repo.delete_all(from(i in in_col, where: i.id == ^pile.id))
       end
 
       {:ok, new_board, card, tx_fn}

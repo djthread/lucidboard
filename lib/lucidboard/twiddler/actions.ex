@@ -61,6 +61,16 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  @spec delete_card(Board.t(), map) :: Twiddler.action_ok_or_error()
+  def delete_card(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, card_path} <- Glass.card_path_by_id(board, id),
+         {:ok, new_board, card, tx_fn} <- Op.cut_card(board, card_path) do
+      del_card = fn -> Repo.delete(card) end
+      {:ok, new_board, [del_card, tx_fn], %{}, event("has deleted a card.")}
+    end
+  end
+
   @spec add_and_lock_card(Board.t(), map) :: Twiddler.action_ok_or_error()
   def add_and_lock_card(board, args) do
     with [col_id, user_id] <- grab(args, [:col_id, :user_id]),

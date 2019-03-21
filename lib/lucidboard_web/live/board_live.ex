@@ -3,7 +3,7 @@ defmodule LucidboardWeb.BoardLive do
   use Phoenix.LiveView
   alias Ecto.Changeset
   alias Lucidboard.{Card, Column, LiveBoard, Presence, Seeds, Twiddler, User}
-  alias Lucidboard.Twiddler.Glass
+  alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.BoardView
   # alias Phoenix.Socket
   alias Phoenix.LiveView.Socket
@@ -61,7 +61,8 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("inline_edit", card_id, socket) do
-    {:ok, card} = Glass.card_by_id(socket.assigns.board, card_id)
+    {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
+    IO.inspect(card)
     {:noreply, presence_lock_card(socket, card)}
   end
 
@@ -78,7 +79,7 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("modal_card_edit", card_id, socket) do
-    {:ok, card} = Glass.card_by_id(socket.assigns.board, card_id)
+    {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
 
     socket =
       socket
@@ -107,7 +108,9 @@ defmodule LucidboardWeb.BoardLive do
         column = Changeset.apply_changes(changeset)
         action = {:add_column, %{title: column.title}}
         {:ok, _} = LiveBoard.call(socket.assigns.board.id, {:action, action})
-        {:noreply, assign(socket, column_changeset: Column.changeset(%Column{}, %{}))}
+
+        {:noreply,
+         assign(socket, column_changeset: Column.changeset(%Column{}, %{}))}
 
       invalid_changeset ->
         {:noreply, assign(socket, column_changeset: invalid_changeset)}
@@ -153,7 +156,13 @@ defmodule LucidboardWeb.BoardLive do
     case Card.changeset(card, form_data["card"]) do
       %{valid?: true} = changeset ->
         card = Changeset.apply_changes(changeset)
-        action = {:update_card, %{id: card.id, body: card.body}}
+
+        action =
+          case String.trim(card.body) do
+            "" -> {:delete_card, %{id: card.id}}
+            body -> {:update_card, %{id: card.id, body: body}}
+          end
+
         {:ok, _} = LiveBoard.call(socket.assigns.board.id, {:action, action})
         {:ok, finish_card_edit(socket)}
 
