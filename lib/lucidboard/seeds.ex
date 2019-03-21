@@ -100,12 +100,12 @@ defmodule Lucidboard.Seeds do
           piles: [
             Pile.new(
               pos: 0,
-              cards: [new_card(uid, pos: 0, body: "The wall")]
+              cards: [new_card(uid, pos: 0, body: "I donno")]
             ),
             Pile.new(
               pos: 0,
               cards: [
-                new_card(uid, pos: 0, body: "that whole free market thing")
+                new_card(uid, pos: 0, body: "Tunafish?")
               ]
             )
           ]
@@ -119,7 +119,7 @@ defmodule Lucidboard.Seeds do
               cards: [
                 new_card(uid, pos: 0, body: "political entertainment"),
                 new_card(uid, pos: 1, body: "like seriously"),
-                new_card(uid, pos: 2, body: "like you've got to be kidding")
+                new_card(uid, pos: 2, body: "you can't make this stuff up")
               ]
             ),
             Pile.new(

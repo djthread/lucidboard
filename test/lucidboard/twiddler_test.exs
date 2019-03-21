@@ -88,19 +88,33 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  # test "move from 1-card pile to other col between piles", %{board: board} do
-  #   card_lens =
-  #     Lens.make_lens(:columns)
-  #     ~> Lens.idx(2)
-  #     ~> Lens.make_lens(:piles)
-  #     ~> Lens.idx(1)
-  #     ~> Lens.make_lens(:cards)
-  #     ~> Lens.idx(0)
+  test "move pile (w/1 card) to other col as second pile", %{board: board} do
+    pile_lens =
+      Lens.make_lens(:columns)
+      ~> Lens.idx(2)
+      ~> Lens.make_lens(:piles)
+      ~> Lens.idx(1)
 
-  #   target_
+    pile = Focus.view(board, pile_lens)
+    dest_col_id = Enum.at(board.columns, 1).id
 
-  #   IO.inspect(Focus.view(board, card_lens))
-  # end
+    action = {:move_pile, id: pile.id, col_id: dest_col_id, new_pos: 1}
+
+    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
+
+    dest_card_lens =
+      Lens.make_lens(:columns)
+      ~> Lens.idx(1)
+      ~> Lens.make_lens(:piles)
+      ~> Lens.idx(1)
+      ~> Lens.make_lens(:cards)
+      ~> Lens.idx(0)
+
+    assert "has moved a pile." == event.desc
+    assert "definitely" == Focus.view(new_board, dest_card_lens).body
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
 
   test "move card from 3-card pile to an existing pile", %{board: board} do
     card_lens = a_card_lens()

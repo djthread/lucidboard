@@ -3,7 +3,7 @@ defmodule Lucidboard.Twiddler.Actions do
   Core logic responsible for handling different lucidboard changes.
   """
   alias Ecto.Changeset
-  alias Lucidboard.{Board, Card, Column, Event, Pile}
+  alias Lucidboard.{Board, Card, Column, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler
   alias Lucidboard.Twiddler.{Glass, Op, QueryBuilder}
@@ -68,19 +68,15 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  # TODO: Allow moving a pile to a different column
   @spec move_pile(Board.t(), map) :: Twiddler.action_ok_or_error()
   def move_pile(board, args) do
     with [id, col_id, new_pos] <- grab(args, ~w/id col_id new_pos/a),
-         {:ok, col_lens} <- Glass.column_by_id(board, col_id),
-         col <- Focus.view(col_lens, board),
-         {:ok, pos} <- Op.find_pos_by_id(col.piles, id),
-         {:ok, pile, new_piles} <- Op.move_item(col.piles, pos, new_pos),
-         queryable <- from(p in Pile, where: p.column_id == ^col_id),
-         tx_fn <- QueryBuilder.move_item(queryable, id, pos, new_pos) do
-      new_board = Focus.set(col_lens, board, %{col | piles: new_piles})
-      what = if pile.cards == 1, do: "card", else: "pile"
-      {:ok, new_board, tx_fn, event("has moved a #{what}.")}
+         {:ok, pile_path} <- Glass.pile_path_by_id(board, id),
+         {:ok, dest_col_lens} <- Glass.column_by_id(board, col_id),
+         {:ok, new_board, pile, reflow_fn} <- Op.cut_pile(board, pile_path),
+         {:ok, new_board2, readd_fn} <-
+           Op.add_pile_to_column(new_board, pile, dest_col_lens, new_pos) do
+      {:ok, new_board2, [reflow_fn, readd_fn], event("has moved a pile.")}
     end
   end
 

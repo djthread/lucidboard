@@ -13,7 +13,7 @@ defmodule Lucidboard.Twiddler.Op do
   alias Lucidboard.Twiddler.Glass
 
   def remove_item(items, pos) do
-    {item, leftover} = List.pop_at(items, pos)
+    {_item, leftover} = List.pop_at(items, pos)
     renumber_positions(leftover)
   end
 
@@ -32,11 +32,7 @@ defmodule Lucidboard.Twiddler.Op do
              length(items) > pos and
              length(items) > new_pos do
     {item, leftover} = List.pop_at(items, pos)
-
-    new_list =
-      leftover
-      |> List.insert_at(new_pos, item)
-      |> renumber_positions()
+    new_list = leftover |> List.insert_at(new_pos, item) |> renumber_positions()
 
     {:ok, Enum.at(new_list, new_pos), new_list}
   end
@@ -47,6 +43,37 @@ defmodule Lucidboard.Twiddler.Op do
      Error moving pos #{inspect(pos)} to #{inspect(new_pos)} in a \
      #{length(items)}-item list\
      """}
+  end
+
+  @doc """
+  Lifts a pile from a column, reflowing the `pos` fields of surrounding
+  piles.
+
+  Note that while the pile will be removed from the returned board structure,
+  it still exists in the database with an overlapping `pos`! The caller's
+  next step should be to insert the pile back into the board, update the
+  `pos` and `column_id` fields, and update the db.
+  """
+  @spec cut_pile(Board.t(), Glass.path()) ::
+          {:ok, Board.t(), Pile.t(), Scribe.tx_fn()}
+  def cut_pile(board, pile_path) do
+    col = Glass.col_by_path(board, pile_path)
+    pile = Glass.pile_by_path(board, pile_path)
+
+    {:ok, pile_pos} = find_pos_by_id(col.piles, pile.id)
+    new_col = %{col | piles: remove_item(col.piles, pile_pos)}
+
+    {:ok, col_pos} = find_pos_by_id(board.columns, col.id)
+    new_columns = List.replace_at(board.columns, col_pos, new_col)
+    new_board = Map.put(board, :columns, new_columns)
+
+    reflow_tx_fn = fn ->
+      q = from(p in Pile, where: p.column_id == ^col.id and p.pos > ^pile_pos)
+      Repo.update_all(q, inc: [pos: -1])
+      Repo.delete_all(from(i in q, where: i.id == ^pile.id))
+    end
+
+    {:ok, new_board, pile, reflow_tx_fn}
   end
 
   @doc """
@@ -107,6 +134,27 @@ defmodule Lucidboard.Twiddler.Op do
       Repo.update_all(q, inc: [pos: 1])
       q = from(c in Card, where: c.id == ^card.id)
       Repo.update_all(q, set: [pile_id: pile.id, pos: 0])
+    end
+
+    {:ok, new_board, tx_fn}
+  end
+
+  @doc "Add a pile (already existing in the db) to a column"
+  @spec add_pile_to_column(Board.t(), Pile.t(), Lens.t(), integer) ::
+          {:ok, Board.t(), Scribe.tx_fn()}
+  def add_pile_to_column(board, pile, col_lens, pos) do
+    col = Focus.view(col_lens, board)
+    new_pile = Map.put(pile, :column_id, col.id)
+    new_piles = renumber_positions(List.insert_at(col.piles, pos, new_pile))
+    new_col = Map.put(col, :piles, new_piles)
+
+    new_board = Focus.set(col_lens, board, new_col)
+
+    tx_fn = fn ->
+      q = from(p in Pile, where: p.column_id == ^col.id and p.pos >= ^pos)
+      Repo.update_all(q, inc: [pos: 1])
+      q = from(p in Pile, where: p.id == ^pile.id)
+      Repo.update_all(q, set: [column_id: col.id, pos: pos])
     end
 
     {:ok, new_board, tx_fn}
