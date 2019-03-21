@@ -5,7 +5,6 @@ defmodule LucidboardWeb.BoardLive do
   alias Lucidboard.{Card, Column, LiveBoard, Presence, Seeds, Twiddler, User}
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.BoardView
-  # alias Phoenix.Socket
   alias Phoenix.LiveView.Socket
   alias Phoenix.Socket.Broadcast
 
@@ -63,7 +62,6 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_event("inline_edit", card_id, socket) do
     {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
-    IO.inspect(card)
     {:noreply, presence_lock_card(socket, card)}
   end
 
@@ -91,13 +89,34 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("card_cancel", _, socket) do
-    {:noreply, socket |> finish_card_edit() |> assign(:modal_open?, false)}
+    board = socket.assigns.board
+
+    card_id =
+      Presence.get_for_session(
+        topic(socket),
+        @user_id,
+        socket.id,
+        :locked_card_id
+      )
+
+    {:ok, card} = Op.card_by_id(board, card_id)
+
+    socket =
+      socket
+      |> finish_card_edit()
+      |> assign(:modal_open?, false)
+
+    delete_card_if_empty(socket, card)
+
+    {:noreply, socket}
   end
 
   def handle_event("like", card_id, socket) do
     board = socket.assigns.board
-    action = {:like, id: card_id, user: %User{id: @user_id}}
-    {:ok, _} = LiveBoard.call(board.id, {:action, action})
+
+    {:like, id: card_id, user: %User{id: @user_id}}
+    |> live_board_action(board.id)
+
     {:noreply, socket}
   end
 
@@ -146,10 +165,28 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, assign(socket, :online_users, Presence.list("board:#{id}"))}
   end
 
+  def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"
+  def topic(board_id), do: "board:#{board_id}"
+
   defp finish_card_edit(socket) do
+    topic = topic(socket)
+    # board = socket.assigns.board
+
+    # card_id =
+    #   Presence.get_for_session(topic, @user_id, socket.id, :locked_card_id)
+
+    # {:ok, card} = Op.card_by_id(board, card_id)
+    # |> IO.inspect()
+
+    # if "" == card.body do
+    #   IO.puts "HALLO"
+    #   action = {:delete_card, id: card_id}
+    #   {:ok, _} = LiveBoard.call(board.id, {:action, action})
+    # end
+
     Presence.update(
       self(),
-      topic(socket),
+      topic,
       @user_id,
       &Map.drop(&1, [:locked_card_id])
     )
@@ -177,13 +214,11 @@ defmodule LucidboardWeb.BoardLive do
       %{valid?: true} = changeset ->
         card = Changeset.apply_changes(changeset)
 
-        action =
-          case String.trim(card.body) do
-            "" -> {:delete_card, %{id: card.id}}
-            body -> {:update_card, %{id: card.id, body: body}}
-          end
+        unless delete_card_if_empty(socket, card) do
+          {:update_card, %{id: card.id, body: String.trim(card.body)}}
+          |> live_board_action(socket.assigns.board.id)
+        end
 
-        {:ok, _} = LiveBoard.call(socket.assigns.board.id, {:action, action})
         {:ok, finish_card_edit(socket)}
 
       invalid_changeset ->
@@ -191,6 +226,18 @@ defmodule LucidboardWeb.BoardLive do
     end
   end
 
-  def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"
-  def topic(board_id), do: "board:#{board_id}"
+  defp delete_card_if_empty(socket, card) do
+    if "" == String.trim(card.body || "") do
+      {:delete_card, %{id: card.id}}
+      |> live_board_action(socket.assigns.board.id)
+
+      true
+    else
+      false
+    end
+  end
+
+  defp live_board_action(action, board_id) do
+    {:ok, _} = LiveBoard.call(board_id, {:action, action})
+  end
 end
