@@ -3,7 +3,7 @@ defmodule LucidboardWeb.BoardLive do
   use Phoenix.LiveView
   alias Ecto.Changeset
   alias Lucidboard.{Card, Column, LiveBoard, Presence, Seeds, Twiddler, User}
-  alias Lucidboard.Twiddler.Op
+  alias Lucidboard.Twiddler.Glass
   alias LucidboardWeb.BoardView
   # alias Phoenix.Socket
   alias Phoenix.LiveView.Socket

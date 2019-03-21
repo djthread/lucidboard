@@ -223,17 +223,10 @@ defmodule Lucidboard.Twiddler.Op do
     %{card | likes: new_likes}
   end
 
-<<<<<<< HEAD
   defp renumber_positions(items) do
     items
     |> Enum.with_index()
     |> Enum.map(fn {i, pos} -> Map.put(i, :pos, pos) end)
-=======
-  def card_by_id(board, card_id) do
-    with {:ok, lens} <- Glass.card_by_id(board, card_id) do
-      {:ok, Focus.view(lens, board)}
-    end
->>>>>>> card editing!
   end
 
   # This is important to mark the metadata on our schema structs so they seem

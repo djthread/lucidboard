@@ -100,7 +100,7 @@ defmodule Lucidboard.TwiddlerTest do
 
     action = {:move_pile, id: pile.id, col_id: dest_col_id, new_pos: 1}
 
-    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
+    {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
     dest_card_lens =
       Lens.make_lens(:columns)
@@ -129,7 +129,7 @@ defmodule Lucidboard.TwiddlerTest do
     target_pile = Focus.view(board, target_pile_lens)
 
     action = {:move_card_to_pile, id: card.id, pile_id: target_pile.id}
-    {:ok, new_board, tx_fn, event} = Twiddler.act(board, action)
+    {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
     new_pile = Focus.view(target_pile_lens, new_board)
     assert 2 == length(new_pile.cards)
