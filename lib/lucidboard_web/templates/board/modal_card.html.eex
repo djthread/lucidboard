@@ -4,11 +4,13 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">is this a thing?</p>
-      <%= textarea f, :body %>
-      <%= error_tag f, :body %>
-      <button class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
+      <div class="is-block">
+        <%= textarea f, :body %>
+        <%= error_tag f, :body %>
+        <button class="delete" aria-label="close"></button>
+      </div>
       <div class="dropdown u-Mbl">
         <div class="dropdown-trigger">
           <a href="#" class="" aria-haspopup="true" aria-controls="dropdown-menu">
