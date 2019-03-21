@@ -13,6 +13,13 @@ defmodule Lucidboard.Twiddler.Op do
   alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler.Glass
 
+  @spec column_by_id(Board.t(), integer) :: {:ok, Column.t()} | :not_found
+  def column_by_id(board, id) do
+    with {:ok, lens} <- Glass.column_by_id(board, id) do
+      {:ok, Focus.view(board, lens)}
+    end
+  end
+
   @spec card_by_id(Board.t(), integer) :: {:ok, Card.t()} | :not_found
   def card_by_id(board, id) do
     with {:ok, path} <- Glass.card_path_by_id(board, id) do

@@ -2,12 +2,30 @@
 
 <ul>
 <%= for %{id: id, title: title} <- @board.columns do %>
-  <li><%= title %></li>
+  <li phx-click="column_edit" phx-value="<%= id %>">
+    <%= title %>
+  </li>
 <% end %>
 </ul>
 
-<%= form_for @column_changeset, "#", [phx_submit: :column_add], fn f -> %>
+<% cs_data = Ecto.Changeset.apply_changes(@column_changeset) %>
+
+<%
+  {button_txt, title} =
+    if cs_data.id do
+      {"Update", "Editing Column: #{cs_data.title}"}
+    else
+      {"Create", "Create Column"}
+    end
+%>
+
+<h3><%= title %></h3>
+<pre>
+<%= inspect @column_changeset %>
+</pre>
+
+<%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
   <%= text_input f, :title, placeholder: "New column title..." %>
   <%= error_tag f, :title %>
-  <%= submit "Save", phx_disable_with: "Saving..." %>
+  <%= submit button_txt, phx_disable_with: "Saving..." %>
 <% end %>

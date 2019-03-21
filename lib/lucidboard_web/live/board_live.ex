@@ -31,7 +31,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:user, Seeds.get_user())
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
-          |> assign(:column_changeset, Column.changeset(%Column{}, %{}))
+          |> assign(:column_changeset, new_column_changeset())
           |> assign(:delete_confirming_card_id, nil)
 
         {:ok, socket}
@@ -139,17 +139,27 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, assign(socket, :delete_confirming_card_id, nil)}
   end
 
-  def handle_event("column_add", form_data, socket) do
-    column = Changeset.apply_changes(socket.assigns.column_changeset)
+  def handle_event("column_edit", col_id, socket) do
+    {:ok, column} = Op.column_by_id(socket.assigns.board, col_id)
+    changeset = Column.changeset(column, %{})
+    {:noreply, assign(socket, :column_changeset, changeset)}
+  end
 
-    case Column.changeset(column, form_data["column"]) do
+  def handle_event("column_save", form_data, socket) do
+    cs = socket.assigns.column_changeset
+
+    case Column.changeset(cs, form_data["column"]) do
       %{valid?: true} = changeset ->
         column = Changeset.apply_changes(changeset)
-        action = {:add_column, %{title: column.title}}
-        {:ok, _} = LiveBoard.call(socket.assigns.board.id, {:action, action})
 
-        {:noreply,
-         assign(socket, column_changeset: Column.changeset(%Column{}, %{}))}
+        action =
+          if column.id,
+            do: {:update_column, id: column.id, title: column.title},
+            else: {:add_column, title: column.title}
+
+        live_board_action(action, socket.assigns.board.id)
+
+        {:noreply, assign(socket, column_changeset: new_column_changeset())}
 
       invalid_changeset ->
         {:noreply, assign(socket, column_changeset: invalid_changeset)}
@@ -239,5 +249,9 @@ defmodule LucidboardWeb.BoardLive do
 
   defp live_board_action(action, board_id) do
     {:ok, _} = LiveBoard.call(board_id, {:action, action})
+  end
+
+  defp new_column_changeset() do
+    Column.changeset(%Column{}, %{})
   end
 end
