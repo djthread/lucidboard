@@ -1,0 +1,58 @@
+version: '3.2'
+
+services:
+  db:
+    container_name: lucidboard_dev_db
+    restart: always
+    image: postgres
+    volumes: [ "lucidboard_dev_db:/var/lib/postgresql/data" ]
+    ports: [ "5432:5432" ]
+    environment: 
+      POSTGRES_PASSWORD: verysecure123
+    networks:
+      - lnet
+
+  node:
+    container_name: lucidboard_node
+    restart: always
+    image: node:10.10
+    stdin_open: true
+    tty: true
+    volumes: 
+      - node_bin:/usr/local/bin
+      - node_modules:/usr/local/lib/node_modules
+    networks:
+      - lnet
+
+  app:
+    container_name: lucidboard_dev
+    restart: always
+    build:
+      context: .
+      dockerfile: ./assets/ops/dev/Dockerfile
+      args: { QL_MODE: "${QL_MODE}" }
+    stdin_open: true
+    tty: true
+    depends_on: [ db ]
+    volumes: 
+      - ./:/app
+      - node_bin:/usr/local/njs
+      - node_modules:/usr/local/lib/node_modules
+    ports: [ "8800:8800" ]
+    environment:
+      PG_HOST: db
+      # HEX_UNSAFE_HTTPS: 1
+      # NODE_TLS_REJECT_UNAUTHORIZED: 0
+      PATH: /usr/local/njs:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      QL_CERTS: $QL_CERTS
+      QL_MODE: $QL_MODE
+    networks:
+      - lnet
+
+volumes:
+  node_bin:
+  node_modules:
+  lucidboard_dev_db:
+
+networks:
+  lnet:

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker exec -w /app lucidboard_dev iex -S mix phx.server
