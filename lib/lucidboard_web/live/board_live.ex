@@ -140,8 +140,11 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_event("column_save", form_data, socket) do
     cs = socket.assigns.column_changeset
+    is_edit = Map.get(Changeset.apply_changes(cs), :id, nil)
 
-    case Column.changeset(cs, form_data["column"]) do
+    subject = if is_edit, do: cs, else: %Column{}
+
+    case Column.changeset(subject, form_data["column"]) do
       %{valid?: true} = changeset ->
         column = Changeset.apply_changes(changeset)
 
