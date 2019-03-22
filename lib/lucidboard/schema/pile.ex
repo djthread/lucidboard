@@ -10,7 +10,7 @@ defmodule Lucidboard.Pile do
 
   schema "piles" do
     field(:pos, :integer)
-    has_many(:cards, Card)
+    has_many(:cards, Card, on_delete: :delete_all)
     belongs_to(:column, Column, type: :binary_id)
   end
 

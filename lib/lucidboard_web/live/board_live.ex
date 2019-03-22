@@ -14,14 +14,16 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def mount(%{user_id: nil}, socket) do
-    {:stop,
-     socket
-     |> put_flash(:error, "You must be signed in")
-     |> redirect(to: Routes.user_path(Endpoint, :signin_page))}
+    socket =
+      socket
+      |> put_flash(:error, "You must be signed in")
+      |> redirect(to: Routes.user_path(Endpoint, :signin_page))
+
+    {:stop, socket}
   end
 
   def mount(%{id: board_id, user_id: user_id}, socket) do
-    user = user_id && Account.get_user!(user_id)
+    user = user_id && Account.get_user(user_id)
 
     case Twiddler.by_id(board_id) do
       nil ->
@@ -47,10 +49,8 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def terminate(_reason, socket) do
-    board_id = socket.assigns.board.id
-
     if 1 == socket |> topic() |> Presence.list() |> Map.keys() |> length() do
-      LiveBoard.stop(board_id)
+      LiveBoard.stop(socket.assigns.board.id)
     end
   end
 
@@ -59,14 +59,11 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("add_card", col_id, socket) do
-    user_id = socket.assigns.user.id
-    action = {:add_and_lock_card, col_id: col_id, user_id: user_id}
-    board_id = socket.assigns.board.id
+    {:ok, %{card: new_card}} =
+      {:add_and_lock_card, col_id: col_id, user_id: socket.assigns.user.id}
+      |> live_board_action(socket)
 
-    {:ok, %{card: new_card}} = LiveBoard.call(board_id, {:action, action})
-    socket = presence_lock_card(socket, new_card)
-
-    {:noreply, socket}
+    {:noreply, presence_lock_card(socket, new_card)}
   end
 
   def handle_event("inline_edit", card_id, socket) do
@@ -88,12 +85,7 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_event("modal_card_edit", card_id, socket) do
     {:ok, card} = Op.card_by_id(socket.assigns.board, card_id)
-
-    socket =
-      socket
-      |> presence_lock_card(card)
-      |> assign(:modal_open?, true)
-
+    socket = socket |> presence_lock_card(card) |> assign(:modal_open?, true)
     {:noreply, socket}
   end
 
@@ -109,11 +101,7 @@ defmodule LucidboardWeb.BoardLive do
       )
 
     {:ok, card} = Op.card_by_id(board, card_id)
-
-    socket =
-      socket
-      |> finish_card_edit()
-      |> assign(:modal_open?, false)
+    socket = socket |> finish_card_edit() |> assign(:modal_open?, false)
 
     delete_card_if_empty(socket, card)
 
@@ -121,10 +109,8 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("like", card_id, socket) do
-    board = socket.assigns.board
-
     {:like, id: card_id, user: %User{id: socket.assigns.user.id}}
-    |> live_board_action(board.id)
+    |> live_board_action(socket)
 
     {:noreply, socket}
   end
@@ -134,9 +120,7 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("card_delete_confirmed", card_id, socket) do
-    board = socket.assigns.board
-    action = {:delete_card, id: card_id}
-    {:ok, _} = LiveBoard.call(board.id, {:action, action})
+    live_board_action({:delete_card, id: card_id}, socket)
     {:noreply, assign(socket, :delete_confirming_card_id, nil)}
   end
 
@@ -166,7 +150,7 @@ defmodule LucidboardWeb.BoardLive do
             do: {:update_column, id: column.id, title: column.title},
             else: {:add_column, title: column.title}
 
-        live_board_action(action, socket.assigns.board.id)
+        live_board_action(action, socket)
 
         {:noreply, assign(socket, column_changeset: new_column_changeset())}
 
@@ -188,24 +172,9 @@ defmodule LucidboardWeb.BoardLive do
   def topic(board_id), do: "board:#{board_id}"
 
   defp finish_card_edit(socket) do
-    topic = topic(socket)
-    # board = socket.assigns.board
-
-    # card_id =
-    #   Presence.get_for_session(topic, @user_id, socket.id, :locked_card_id)
-
-    # {:ok, card} = Op.card_by_id(board, card_id)
-    # |> IO.inspect()
-
-    # if "" == card.body do
-    #   IO.puts "HALLO"
-    #   action = {:delete_card, id: card_id}
-    #   {:ok, _} = LiveBoard.call(board.id, {:action, action})
-    # end
-
     Presence.update(
       self(),
-      topic,
+      topic(socket),
       socket.assigns.user.id,
       &Map.drop(&1, [:locked_card_id])
     )
@@ -235,7 +204,7 @@ defmodule LucidboardWeb.BoardLive do
 
         unless delete_card_if_empty(socket, card) do
           {:update_card, %{id: card.id, body: String.trim(card.body)}}
-          |> live_board_action(socket.assigns.board.id)
+          |> live_board_action(socket)
         end
 
         {:ok, finish_card_edit(socket)}
@@ -247,20 +216,22 @@ defmodule LucidboardWeb.BoardLive do
 
   defp delete_card_if_empty(socket, card) do
     if "" == String.trim(card.body || "") do
-      {:delete_card, %{id: card.id}}
-      |> live_board_action(socket.assigns.board.id)
-
+      live_board_action({:delete_card, %{id: card.id}}, socket)
       true
     else
       false
     end
   end
 
+  defp live_board_action(action, %Socket{} = socket) do
+    live_board_action(action, socket.assigns.board.id)
+  end
+
   defp live_board_action(action, board_id) do
     {:ok, _} = LiveBoard.call(board_id, {:action, action})
   end
 
-  defp new_column_changeset() do
+  defp new_column_changeset do
     Column.changeset(%Column{}, %{})
   end
 end

@@ -2,7 +2,7 @@ defimpl Inspect, for: Lucidboard.Board do
   import Inspect.Algebra
 
   def inspect(_dict, _opts) do
-    concat(["#board<>"])
+    concat(["#Board<>"])
   end
 end
 

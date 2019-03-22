@@ -12,17 +12,12 @@
 
 <%
   {button_txt, title} =
-    if cs_data.id do
-      {"Update", "Editing Column: #{cs_data.title}"}
-    else
-      {"Create", "Create Column"}
-    end
+    if cs_data.id,
+      do: {"Update", "Editing Column: #{cs_data.title}"},
+      else: {"Create", "Create Column"}
 %>
 
 <h3><%= title %></h3>
-<pre>
-<%= inspect @column_changeset %>
-</pre>
 
 <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
   <%= text_input f, :title, placeholder: "New column title..." %>

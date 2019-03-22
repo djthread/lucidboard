@@ -12,25 +12,25 @@ defmodule LucidboardWeb.LoadUserPlug do
     {conn, user} =
       case get_session(conn, :user_id) do
         nil ->
-          {assign_theme(conn), nil}
+          {conn, nil}
 
         user_id ->
           user = Repo.one(from(u in User, where: u.id == ^user_id))
-          {assign_theme(conn), user}
+          {conn, user}
       end
 
-    assign(conn, :user, user)
+    conn
+    |> assign(:user, user)
+    |> assign_theme()
   end
 
   defp assign_theme(conn) do
     user = conn.assigns[:user]
 
     theme_css =
-      if is_nil(user) or user.settings.theme in ["default", nil] do
-        @default_theme
-      else
-        user.settings.theme
-      end
+      if is_nil(user) or user.settings.theme in ["default", nil],
+        do: @default_theme,
+        else: user.settings.theme
 
     assign(conn, :theme_css, theme_css <> ".css")
   end

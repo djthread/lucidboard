@@ -2,10 +2,9 @@
 
 A kanban tool.
 
-**Status:** Lots of board manipulation logic is built; starting to experiment
-with frontend things. Hoping [Phoenix
+**Status:** Many basic board features work! [Phoenix
 LiveView](https://dockyard.com/blog/2018/12/12/phoenix-liveview-interactive-real-time-apps-no-need-to-write-javascript)
-comes soon.
+is awesome! Still plenty of work yet to go, but things are done, too!
 
 **CI:** [Lucidboard on CircleCI](https://circleci.com/gh/djthread/lucidboard) [![CircleCI](https://circleci.com/gh/djthread/lucidboard.svg?style=svg)](https://circleci.com/gh/djthread/lucidboard)
 

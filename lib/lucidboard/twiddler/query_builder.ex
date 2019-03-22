@@ -9,7 +9,7 @@ defmodule Lucidboard.Twiddler.QueryBuilder do
   """
   import Ecto.Query
   alias Lucidboard.LiveBoard.Scribe
-  alias Lucidboard.Repo
+  alias Lucidboard.{Card, Repo}
 
   @doc """
   Return a function that will remove item with id `id` and position `pos`.
@@ -19,8 +19,12 @@ defmodule Lucidboard.Twiddler.QueryBuilder do
 
     fn ->
       Repo.update_all(queryable, inc: [pos: -1])
-      Repo.delete_all(from(i in q, where: i.id == ^id))
+      Repo.delete(Repo.one!(from(i in q, where: i.id == ^id)))
     end
+  end
+
+  def delete_card(card) do
+    Repo.delete(Repo.one!(from(c in Card, where: c.id == ^card.id)))
   end
 
   @doc """

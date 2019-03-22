@@ -85,18 +85,18 @@ defmodule Lucidboard.Twiddler.Op do
     reflow_tx_fn = fn ->
       q = from(p in Pile, where: p.column_id == ^col.id and p.pos > ^pile_pos)
       Repo.update_all(q, inc: [pos: -1])
-      Repo.delete_all(from(i in q, where: i.id == ^pile.id))
     end
 
     {:ok, new_board, pile, reflow_tx_fn}
   end
 
   @doc """
-  Remove a card from the board, cleaning up an empty pile if needed.
+  Remove a card from the board, renumbering surrounding elements' positions.
+  Any orphaned Pile is deleted.
 
   Note that the tx_fn does not delete the card record. This allows the card
-  to be moved to another location before our tx_fn is executed, thus moving
-  the card.
+  to be moved to another location before our tx_fn is executed (which could
+  delete the card if it was the only one in the pile when the pile goes).
   """
   @spec cut_card(Board.t(), Glass.path()) ::
           {:ok, Board.t(), Card.t(), Scribe.tx_fn()}
@@ -122,7 +122,7 @@ defmodule Lucidboard.Twiddler.Op do
         in_col = from(p in Pile, where: p.column_id == ^col.id)
         q = from(p in in_col, where: p.pos > ^pile_pos)
         Repo.update_all(q, inc: [pos: -1])
-        Repo.delete_all(from(i in in_col, where: i.id == ^pile.id))
+        Repo.delete(Repo.one!(from(p in Pile, where: p.id == ^pile.id)))
       end
 
       {:ok, new_board, card, tx_fn}

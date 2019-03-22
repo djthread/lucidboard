@@ -60,7 +60,7 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "delete card from 1-card pile", %{board: board} do
+  test "delete card from 1-card pile (with like)", %{board: board} do
     card_path = [
       Lens.make_lens(:columns),
       Lens.idx(1),

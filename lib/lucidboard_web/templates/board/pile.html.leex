@@ -10,7 +10,6 @@
       locked?: card.id in @locked_card_ids
     })
   )
-  #IO.inspect {@locked_card_id, card.id, @locked_card_id == card.id, @socket}
 %>
 
 <%= if length(@pile.cards) == 1 do %>
