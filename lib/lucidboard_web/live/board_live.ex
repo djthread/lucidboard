@@ -2,7 +2,7 @@ defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
   use Phoenix.LiveView
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, Twiddler, User}
+  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, Twiddler}
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.{BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
@@ -60,7 +60,7 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_event("add_card", col_id, socket) do
     {:ok, %{card: new_card}} =
-      {:add_and_lock_card, col_id: col_id, user_id: socket.assigns.user.id}
+      {:add_and_lock_card, col_id: col_id, user_id: user_id(socket)}
       |> live_board_action(socket)
 
     {:noreply, presence_lock_card(socket, new_card)}
@@ -109,9 +109,7 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("like", card_id, socket) do
-    {:like, id: card_id, user: %User{id: socket.assigns.user.id}}
-    |> live_board_action(socket)
-
+    live_board_action({:like, id: card_id, user: user(socket)}, socket)
     {:noreply, socket}
   end
 
@@ -173,6 +171,10 @@ defmodule LucidboardWeb.BoardLive do
 
   def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"
   def topic(board_id), do: "board:#{board_id}"
+
+  def user(%Socket{assigns: %{user: user}}), do: user
+
+  def user_id(%Socket{assigns: %{user: %{id: id}}}), do: id
 
   defp finish_card_edit(socket) do
     Presence.update(
