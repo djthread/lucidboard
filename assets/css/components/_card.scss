@@ -54,25 +54,82 @@
 .c-Card__label--turquoise,
 .c-DropDown__item--turquoise {
     background-color: $turquoise;
+
+    &:hover,
+    &:focus {
+        background-color: darken($turquoise, 15%);
+    }
 }
 
 .c-Card__label--red,
 .c-DropDown__item--red {
     background-color: $red;
+
+    &:hover,
+    &:focus {
+        background-color: darken($red, 15%);
+    }
 }
 
 .c-Card__label--purple,
 .c-DropDown__item--purple {
     background-color: $purple;
+
+    &:hover,
+    &:focus {
+        background-color: darken($purple, 15%);
+    }
 }
 
 .c-Card__label--cyan,
 .c-DropDown__item--cyan {
     background-color: $cyan;
+
+    &:hover,
+    &:focus {
+        background-color: darken($cyan, 15%);
+    }
 }
 
 .c-DropDown__menu {
     left: -4.75rem;
     position: relative;
     top: 2rem;
+}
+
+.c-DropDown__item {
+    width: 100%;
+    display: block;
+}
+
+.c-Card__content {
+    cursor: pointer;
+}
+
+.t-default {
+    .c-Card:hover {
+        background-color: darken($white, 5%);
+
+        .b-Subtitle {
+            color: $primary;
+        }
+    }
+
+    .card-footer-item:hover {
+        color: $primary;
+    }
+}
+
+.t-darkly {
+    .c-Card:hover {
+        background-color: darken(#282f2f, 5%);
+
+        .b-Subtitle {
+            color: lighten($primary, 25%);
+        }
+    }
+
+    .card-footer-item:hover {
+        color: lighten($primary, 25%);
+    }
 }

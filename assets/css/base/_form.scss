@@ -1,0 +1,31 @@
+.b-TextArea {
+    background-color: transparent;
+    border: 0;
+    resize: none;
+    outline: none;
+    box-shadow: none;
+    overflow: hidden;
+    padding: 0;
+
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+.textarea:not([rows]) {
+    min-height: 1rem;
+
+}
+
+.t-darkly .b-TextArea {
+    color: $white;
+}
+
+.t-default .b-TextArea {
+    color: $black;
+}
+
+.b-TextArea--compact:not([rows]) {
+    min-height: 1.75rem;
+    max-height: 1.75rem;
+}

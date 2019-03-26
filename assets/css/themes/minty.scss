@@ -5,26 +5,8 @@
 
 @import "../../node_modules/bulma/bulma";
 
-
 @import "../../node_modules/bulmaswatch/minty/overrides";
 
+@import "../base/links";
+@import "../base/form";
 @import "../components/card";
-
-a:hover {
-    color: $primary;
-}
-
-.c-Card__content {
-    cursor: pointer;
-}
-  
-.c-Card:hover {
-    background-color: darken($white, 5%);
-
-    .b-Subtitle {
-        color: $primary;
-    }
-}
-.card-footer-item:hover {
-    color: $primary;
-}

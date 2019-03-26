@@ -9,35 +9,17 @@
     </span>
   </a>
 </header>
-
-
 -->
-<!-- Uncomment out if you want to see the labels 
-<div class="c-Card__labels u-Phl u-Ptm">
-  <span class="c-Card__label c-Card__label--turquoise">
-    si
-  </span>
-  <span class="c-Card__label c-Card__label--red">
-    here is some text too
-  </span>
-  <span class="c-Card__label c-Card__label--purple">
-      if they hover and the content is really long we expect it to play nicely
-  </span>
-  <span class="c-Card__label c-Card__label--cyan">
-    omg me tooooo here is some amazing text that could take up a lot of room in the label
-    but really if people had a label this long, idk
-  </span>
-</div>
--->
-<div class="c-Card__content card-content">
+
+<div class="c-Card__content card-content u-Pan">
   <%= cond do %>
   <% @locked_by_user? -> %>
     <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
-    <%= textarea f, :body %>
+    <%= textarea f, :body, class: "textarea is-medium has-fixed-size b-TextArea u-Phm u-Ptm" %>
     <%= error_tag f, :body %>
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
-      <%= submit "Cancel", phx_click: :card_cancel %>
+    <div class="u-Pam">
+      <%= submit "Save", phx_disable_with: "Saving...", class: "button is-primary" %>
+      <%= submit "Cancel", phx_click: :card_cancel, class: "button" %>
     </div>
     <% end %>
 
@@ -47,7 +29,7 @@
   <% true -> %>
     <p phx-click="inline_edit"
       phx-value="<%= @card.id %>"
-      class="content is-size-<%= card_body_size_by_copy(@card.body) %>">
+      class="content is-size-<%= card_body_size_by_copy(@card.body) %> js-inlineEdit u-Pam">
       <%= @card.body %>
     </p>
   <% end %>
@@ -58,9 +40,11 @@
   <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item"><%= fas("trash-alt") %></a>
 </footer>
 <%= if @delete_confirming_card_id == @card.id do %>
-<div>
-Are you super duper sure?
-<button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>">Confirm</button>
-<button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>">Cancel</button>
+<div class="u-Pam">
+  <p class="u-Mbm">
+  Are you super duper sure?
+  </p>
+  <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button is-primary">Confirm</button>
+  <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button">Cancel</button>
 </div>
 <% end %>

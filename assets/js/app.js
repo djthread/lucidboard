@@ -23,11 +23,42 @@ import LiveSocket from "phoenix_live_view"
 let liveSocket = new LiveSocket("/live")
 liveSocket.connect()
 
-var cardLabel = document.getElementsByClassName('c-Card__label');
+// add gotta alter the height of the textarea based on how much text is in there
+var inlineEdit = document.getElementsByClassName('js-inlineEdit');
 
-for (var i = 0; i < cardLabel.length; i++){
-  cardLabel[i].addEventListener("click", function(e) {
-      var targetedLabel = e.target;
-      targetedLabel.classList.toggle('c-Card__label--active');
-  });
+for (var edit = 0; edit < inlineEdit.length; edit++) {
+  inlineEdit[edit].addEventListener('click', function () {
+    setTimeout(function () {
+      var tx = document.getElementsByTagName('textarea');
+      for (var i = 0; i < tx.length; i++) {
+        tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+        tx[i].addEventListener("input", OnInput, false);
+      }
+
+      function OnInput(e) {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+      }
+    }, 300);
+  })
+};
+
+// add gotta alter the height of the textarea for add card based on how much text is in there
+var addCard = document.getElementsByClassName('js-addCard');
+
+for (var a = 0; a < addCard.length; a++) {
+  addCard[a].addEventListener('click', function () {
+    setTimeout(function () {
+      var tx = document.getElementsByTagName('textarea');
+      for (var i = 0; i < tx.length; i++) {
+        tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+        tx[i].addEventListener("input", OnInput, false);
+      }
+
+      function OnInput(e) {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+      }
+    }, 300);
+  })
 };
