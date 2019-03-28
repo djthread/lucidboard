@@ -1,12 +1,12 @@
-$space-s: 0.5em;
-$space-m: 1em;
-$space-l: 2em;
-$space-h: 3em;
+$space-s: 0.5em !important;
+$space-m: 1em !important;
+$space-l: 2em !important;
+$space-h: 3em !important;
 
 .u-Ptn,
 .u-Pvn,
 .u-Pan {
-  padding-top: 0;
+  padding-top: 0 !important;
 }
 
 .u-Pts,
@@ -36,7 +36,7 @@ $space-h: 3em;
 .u-Prn,
 .u-Phn,
 .u-Pan {
-  padding-right: 0;
+  padding-right: 0 !important;
 }
 
 .u-Prs,
@@ -66,7 +66,7 @@ $space-h: 3em;
 .u-Pbn,
 .u-Pvn,
 .u-Pan {
-  padding-bottom: 0;
+  padding-bottom: 0 !important;
 }
 
 .u-Pbs,
@@ -96,7 +96,7 @@ $space-h: 3em;
 .u-Pln,
 .u-Phn,
 .u-Pan {
-  padding-left: 0;
+  padding-left: 0 !important;
 }
 
 .u-Pls,
@@ -126,7 +126,7 @@ $space-h: 3em;
 .u-Mtn,
 .u-Mvn,
 .u-Man {
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 
 .u-Mts,
@@ -156,7 +156,7 @@ $space-h: 3em;
 .u-Mrn,
 .u-Mhn,
 .u-Man {
-  margin-right: 0;
+  margin-right: 0 !important;
 }
 
 .u-Mrs,
@@ -186,7 +186,7 @@ $space-h: 3em;
 .u-Mbn,
 .u-Mvn,
 .u-Man {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 .u-Mbs,
@@ -216,7 +216,7 @@ $space-h: 3em;
 .u-Mln,
 .u-Mhn,
 .u-Man {
-  margin-left: 0;
+  margin-left:  !important;
 }
 
 .u-Mls,

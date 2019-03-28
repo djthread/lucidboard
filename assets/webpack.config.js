@@ -14,9 +14,7 @@ module.exports = (env, options) => ({
   },
   entry: {
     'app': ['./js/app.js'].concat(glob.sync('./vendor/**/*.js')),
-    'journal': ['./css/themes/journal.scss'],
     'minty': ['./css/themes/minty.scss'],
-    'solar': ['./css/themes/solar.scss'],
     'darkly': ['./css/themes/darkly.scss'],
   },
   output: {
