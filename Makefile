@@ -3,6 +3,7 @@
 APP_NAME ?= `grep 'app:' mix.exs | sed -e 's/\[//g' -e 's/ //g' -e 's/app://' -e 's/[:,]//g' | head -n1`
 APP_VSN ?= `grep 'version:' mix.exs | cut -d '"' -f2`
 BUILD ?= `git rev-parse --short HEAD`
+QL_MODE ?= 0
 
 help:
 	@echo "$(APP_NAME):$(APP_VSN)-$(BUILD)"
