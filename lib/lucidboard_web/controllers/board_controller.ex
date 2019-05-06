@@ -44,4 +44,12 @@ defmodule LucidboardWeb.BoardController do
       {:see_other, Routes.board_path(conn, :index, id)}
     end
   end
+
+  def dnd(conn, %{"id" => board_id}) do
+    IO.inspect conn.body_params
+    resp(conn, 200, "ok")
+    #     "card_id" => card_id,
+    #     "column_id" => column_id,
+    #     "pos" => pos
+  end
 end

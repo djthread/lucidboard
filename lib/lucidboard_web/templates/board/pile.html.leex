@@ -13,7 +13,10 @@
 %>
 
 <%= if length(@pile.cards) == 1 do %>
-  <div class="c-Card card u-Mbm">
+  <div id="card-<%= card.id %>"
+    class="c-Card card u-Mbm"
+    draggable="true"
+    onDragStart="dnd.drag(event)">
     <%= rendered_card %>
   </div>
 <% else %>
