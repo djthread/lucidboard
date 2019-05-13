@@ -46,6 +46,8 @@ defmodule LucidboardWeb.BoardController do
   end
 
   def dnd_into_junction(conn, %{"id" => board_id}) do
+    params = conn.body_params
+    |> IO.inspect()
     conn
   end
 

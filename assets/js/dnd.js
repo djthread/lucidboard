@@ -6,16 +6,10 @@ const bodyClassWhenDragging = 'dnd-dragging';
 
 // Utility (non-exported) function for finding a data attribute in a parent element
 const findDataFromParent = function findDataFromParent(el, dataKey) {
-    console.log('ds', dataKey, el.dataset);
   if (el.dataset[dataKey]) {
-    console.log('win', el.dataset[dataKey]);
     return el.dataset[dataKey];
   } else if (el.parentElement) {
-    console.log('par');
-    return findDataFromParent(el.parentElement, dataKey)
-  } else {
-    console.log('nah');
-    return null;
+    return findDataFromParent(el.parentElement, dataKey);
   }
 };
 
@@ -27,8 +21,12 @@ const drag = function drag(ev) {
 };
 
 const allowDrop = function allowDrop(ev) {
-  console.log('allowDrop');
+  ev.target.classList.add('active');
   ev.preventDefault();
+};
+
+const dragLeave = function dragLeave(ev) {
+  ev.target.classList.remove('active');
 };
 
 const dropIntoPile = function dropIntoPile(ev) {
@@ -50,24 +48,24 @@ const dropIntoPile = function dropIntoPile(ev) {
   }));
 };
 
-// const dropIntoPile = function dropIntoPile(ev) {
-//   console.log('drop');
-//   ev.preventDefault();
-//   document.body.classList.remove(bodyClassWhenDragging);
-//   const board_id = document.querySelector('meta[name=board_id]').getAttribute('content');
-//   const card_id = ev.dataTransfer.getData('text').replace('card-', '');
+const dropIntoJunction = function dropIntoJunction(ev) {
+  console.log('dropIntoJun');
+  ev.preventDefault();
+  document.body.classList.remove(bodyClassWhenDragging);
+  ev.target.classList.remove('active');
+  const boardId = document.querySelector('meta[name=board_id]').getAttribute('content');
+  const cardId = ev.dataTransfer.getData('text').replace('card-', '');
+  const colId = findDataFromParent(ev.target, 'colId');
+  const newPos = findDataFromParent(ev.target, 'pos');
 
-//   const [x, column_id, pos] = ev.target.id.split('_');
+  const request = new XMLHttpRequest();
+  request.open('POST', `/boards/${boardId}/dnd-into-junction`, true);
+  request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+  request.setRequestHeader('X-CSRF-Token', document.querySelector('meta[name=csrf]').content);
+  request.send(JSON.stringify({
+    new_pos: newPos,
+    col_id: colId
+  }));
+};
 
-//   const request = new XMLHttpRequest();
-//   request.open('POST', `/boards/${board_id}/dnd-into-pile`, true);
-//   request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-//   request.setRequestHeader('X-CSRF-Token', document.querySelector('meta[name=csrf]').content);
-//   request.send(JSON.stringify({
-//     card_id: card_id,
-//     column_id: column_id,
-//     pos: pos
-//   }));
-// };
-
-module.exports = { drag, allowDrop, dropIntoPile };
+module.exports = { drag, dragLeave, allowDrop, dropIntoPile, dropIntoJunction };

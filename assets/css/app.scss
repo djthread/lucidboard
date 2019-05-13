@@ -6,4 +6,8 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "objects/stack";
 @import "utilities/utilities";
 
-.cardjunction { height: 50px; }
+.cardjunction { height: 0; }
+
+.dnd-dragging .cardjunction { height: 15px; border: 2px dashed pink; }
+
+.cardjunction.active { border: 2px dashed red; }

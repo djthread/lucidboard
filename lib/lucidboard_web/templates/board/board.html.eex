@@ -4,15 +4,17 @@
 %>
 <div class="columns is-desktop">
   <%= for column <- @board.columns do %>
-    <div class="column">
+    <div class="column" data-col-id="<%= column.id %>">
       <h2 class="subtitle"><%= column.title %></h2>
 
       <%= for pile <- column.piles do %>
 
-        <div id="col_<%= column.id %>_<%= pile.pos %>"
+        <div
+          data-pos="<%= pile.pos %>"
           class="cardjunction"
           onDragOver="dnd.allowDrop(event)"
-          onDrop="dnd.drop(event)">
+          onDragLeave="dnd.dragLeave(event)"
+          onDrop="dnd.dropIntoJunction(event)">
         </div>
 
         <%= render(
@@ -27,10 +29,12 @@
 
       <% end %>
 
-      <div id="col_<%= column.id %>_<%= length(column.piles) %>"
+      <div
+        data-pos="<%= length(column.piles) %>"
         class="cardjunction"
         onDragOver="dnd.allowDrop(event)"
-        onDrop="dnd.drop(event)">
+        onDragLeave="dnd.dragLeave(event)"
+        onDrop="dnd.dropIntoJunction(event)">
       </div>
 
       <p class="has-text-grey-light u-Mbm">
