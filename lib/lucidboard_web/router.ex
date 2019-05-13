@@ -37,7 +37,8 @@ defmodule LucidboardWeb.Router do
 
     get("/boards/:id", BoardController, :index)
 
-    post("/boards/:id/dnd", BoardController, :dnd)
+    post("/boards/:id/dnd-into-junction", BoardController, :dnd_into_junction)
+    post("/boards/:id/dnd-into-pile", BoardController, :dnd_into_pile)
   end
 
   # Other scopes may use custom stacks.

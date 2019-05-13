@@ -6,12 +6,15 @@
   <%= for column <- @board.columns do %>
     <div class="column">
       <h2 class="subtitle"><%= column.title %></h2>
+
       <%= for pile <- column.piles do %>
+
         <div id="col_<%= column.id %>_<%= pile.pos %>"
           class="cardjunction"
           onDragOver="dnd.allowDrop(event)"
           onDrop="dnd.drop(event)">
         </div>
+
         <%= render(
           LucidboardWeb.BoardView,
           "pile.html",
@@ -21,6 +24,7 @@
             locked_card_ids: locked_card_ids,
           })
         ) %>
+
       <% end %>
 
       <div id="col_<%= column.id %>_<%= length(column.piles) %>"
@@ -32,12 +36,13 @@
       <p class="has-text-grey-light u-Mbm">
         <%= show_card_count(column) %>
       </p>
-        <a href="#"
-          phx-click="add_card"
-          phx-value="<%= column.id %>"
-          class="is-primary icon-padder">
-          <%= fas("plus") %><span>Add Card</span>
-        </a>
+
+      <a href="#"
+        phx-click="add_card"
+        phx-value="<%= column.id %>"
+        class="is-primary icon-padder">
+        <%= fas("plus") %><span>Add Card</span>
+      </a>
     </div>
   <% end %>
 </div>

@@ -1,6 +1,6 @@
 defmodule LucidboardWeb.BoardController do
   use LucidboardWeb, :controller
-  alias Lucidboard.{Board, Column, Twiddler}
+  alias Lucidboard.{Board, Column, LiveBoard, Twiddler}
   alias LucidboardWeb.BoardLive
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Controller, as: LiveViewController
@@ -45,11 +45,18 @@ defmodule LucidboardWeb.BoardController do
     end
   end
 
-  def dnd(conn, %{"id" => board_id}) do
-    IO.inspect conn.body_params
+  def dnd_into_junction(conn, %{"id" => board_id}) do
+    conn
+  end
+
+  def dnd_into_pile(conn, %{"id" => board_id}) do
+    params = conn.body_params
+
+    action =
+      {:move_card_to_pile, id: params["card_id"], pile_id: params["pile_id"]}
+
+    {:ok, _} = LiveBoard.call(String.to_integer(board_id), {:action, action})
+
     resp(conn, 200, "ok")
-    #     "card_id" => card_id,
-    #     "column_id" => column_id,
-    #     "pos" => pos
   end
 end

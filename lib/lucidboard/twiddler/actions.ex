@@ -110,6 +110,13 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  # Moves a card to an empty space in a column, creating a new, 1-card pile
+  # TODO
+  # def move_card_to_junction(board, args) do
+  #   with [id, col_id, new_pos] <- grab(args, ~w/id, col_id, new_pos/a) do
+  #   end
+  # end
+
   def move_card_to_pile(board, args) do
     with [id, pile_id] <- grab(args, ~w(id pile_id)a),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
