@@ -106,7 +106,7 @@ defmodule Lucidboard.Seeds do
               cards: [new_card(uid, pos: 0, body: "I donno")]
             ),
             Pile.new(
-              pos: 0,
+              pos: 1,
               cards: [
                 new_card(uid, pos: 0, body: "Tunafish?")
               ]
