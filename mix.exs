@@ -25,7 +25,7 @@ defmodule Lucidboard.MixProject do
   def application do
     [
       mod: {Lucidboard.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :toml]
     ]
   end
 

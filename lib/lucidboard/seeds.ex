@@ -88,9 +88,9 @@ defmodule Lucidboard.Seeds do
                   uid,
                   pos: 1,
                   body: """
-                  This board is just an example, so we need to cover a range of
-                  different cases like maybe having a card with lots and lots of
-                  text.
+                  This board is just an example, so we need to cover a range of \
+                  different cases like maybe having a card with lots and lots of \
+                  text.\
                   """
                 )
               ]
