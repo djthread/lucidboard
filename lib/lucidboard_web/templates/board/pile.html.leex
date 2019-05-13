@@ -10,27 +10,29 @@
       locked?: card.id in @locked_card_ids
     })
   )
+
+  pile_div_attrs = """
+    id="card-#{card.id}"
+    data-pile-id="#{@pile.id}"
+    class="c-Card card u-Mbm"
+    draggable="true"
+    onDragStart="dnd.drag(event)"
+    onDragOver="dnd.allowDrop(event)"
+    onDrop="dnd.dropIntoPile(event)"
+    """
 %>
 
 <%= if length(@pile.cards) == 1 do %>
-  <div id="card-<%= card.id %>"
-    data-pile-id="<%= @pile.id %>"
-    class="c-Card card u-Mbm"
-    draggable="true"
-    onDragStart="dnd.drag(event)"
-    onDragOver="dnd.allowDrop(event)"
-    onDrop="dnd.dropIntoPile(event)">
-    <%= rendered_card %>
+  <div <%= raw pile_div_attrs %>>
+    <div class="c-Card card u-Mbm">
+      <%= rendered_card %>
+    </div>
   </div>
 <% else %>
-  <div id="card-<%= card.id %>"
-    class="c-Card card u-Mbm"
-    data-pile-id="<%= @pile.id %>"
-    draggable="true"
-    onDragStart="dnd.drag(event)"
-    onDragOver="dnd.allowDrop(event)"
-    onDrop="dnd.dropIntoPile(event)">
-    <%= rendered_card %>
+  <div <%= raw pile_div_attrs %>>
+    <div class="c-Card card u-Mbm">
+      <%= rendered_card %>
+    </div>
     <div class="c-Card__footer--extra card-footer">
       <span class="card-footer-item has-text-grey-lighter">of <%= length(@pile.cards) %></span>
       <span class="card-footer-item has-text-grey-lighter"><%= fas("heart") %> 10</span>
