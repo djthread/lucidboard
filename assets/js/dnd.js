@@ -15,7 +15,7 @@ const findDataFromParent = function findDataFromParent(el, dataKey) {
 
 const drag = function drag(ev) {
   console.log('drag');
-  ev.dataTransfer.setData('text', ev.target.id);
+  ev.dataTransfer.setData('text', findDataFromParent(ev.target, 'cardId'));
   ev.dataTransfer.dropEffect = 'copy';
   document.body.classList.add(bodyClassWhenDragging);
 };
@@ -35,7 +35,6 @@ const dropIntoPile = function dropIntoPile(ev) {
   document.body.classList.remove(bodyClassWhenDragging);
   const boardId = document.querySelector('meta[name=board_id]').getAttribute('content');
   const cardId = ev.dataTransfer.getData('text').replace('card-', '');
-
   const pileId = findDataFromParent(ev.target, 'pileId');
 
   const request = new XMLHttpRequest();

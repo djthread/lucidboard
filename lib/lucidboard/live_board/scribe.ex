@@ -30,10 +30,15 @@ defmodule Lucidboard.LiveBoard.Scribe do
   def handle_cast(tx_fn, state) do
     case execute_tx_fn(tx_fn) do
       {:ok, _struct} -> nil
+      nil -> nil
       bad -> Logger.error("Repo.update on changeset failed: #{inspect(bad)}")
     end
 
     {:noreply, state}
+  end
+
+  def execute_tx_fn(nil) do
+    nil
   end
 
   def execute_tx_fn(functions) when is_list(functions) do
