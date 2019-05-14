@@ -117,7 +117,7 @@ defmodule Lucidboard.TwiddlerTest do
     assert ~w(whoa definitely cheese flapjacks) ==
              col.piles |> first_card_body_of_each_pile()
 
-    action = {:move_pile, id: pile.id, col_id: col.id, new_pos: 0}
+    action = {:move_pile_to_junction, id: pile.id, col_id: col.id, new_pos: 0}
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
     assert "has moved a pile." == event.desc
@@ -141,7 +141,8 @@ defmodule Lucidboard.TwiddlerTest do
     pile = Focus.view(board, pile_lens)
     dest_col_id = Enum.at(board.columns, 1).id
 
-    action = {:move_pile, id: pile.id, col_id: dest_col_id, new_pos: 1}
+    action =
+      {:move_pile_to_junction, id: pile.id, col_id: dest_col_id, new_pos: 1}
 
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
@@ -155,6 +156,33 @@ defmodule Lucidboard.TwiddlerTest do
 
     assert "has moved a pile." == event.desc
     assert "definitely" == Focus.view(new_board, dest_card_lens).body
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "move a card from 1-card pile to junction", %{board: board} do
+    card_path = [
+      Lens.make_lens(:columns),
+      Lens.idx(1),
+      Lens.make_lens(:piles),
+      Lens.idx(0),
+      Lens.make_lens(:cards),
+      Lens.idx(0)
+    ]
+
+    card = Glass.card_by_path(board, card_path)
+    target_col = hd(board.columns)
+
+    assert "hi" == card.body
+
+    action =
+      {:move_card_to_junction, id: card.id, col_id: target_col.id, new_pos: 0}
+
+    {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
+
+    assert "has moved a card." == event.desc
+    assert "hi" == hd(hd(hd(new_board.columns).piles).cards).body
+    assert :not_found == Glass.card_by_path(new_board, card_path)
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end

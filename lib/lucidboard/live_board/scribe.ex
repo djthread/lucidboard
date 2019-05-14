@@ -37,17 +37,13 @@ defmodule Lucidboard.LiveBoard.Scribe do
     {:noreply, state}
   end
 
-  def execute_tx_fn(nil) do
-    nil
-  end
-
   def execute_tx_fn(functions) when is_list(functions) do
     execute_tx_fn(fn ->
       Enum.each(functions, fn fun -> fun.() end)
     end)
   end
 
-  def execute_tx_fn(fun) do
-    Repo.transaction(fun)
-  end
+  def execute_tx_fn(nil), do: nil
+
+  def execute_tx_fn(fun), do: Repo.transaction(fun)
 end

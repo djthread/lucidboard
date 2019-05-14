@@ -7,7 +7,7 @@ defmodule Lucidboard.Twiddler.Glass do
   compose not just the full lens to the card, but also a lens to its
   enclosing pile.
   """
-  import Focus
+  import Focus, except: [view: 2]
   alias Lucidboard.Board
 
   @type path :: [Lens.t()]
@@ -46,14 +46,14 @@ defmodule Lucidboard.Twiddler.Glass do
   @spec card_lens_by_path(path) :: Lens.t()
   def card_lens_by_path(path), do: compose_path(path, 6)
 
-  @spec column_by_path(Board.t(), path) :: Column.t()
-  def column_by_path(board, path), do: Focus.view(board, compose_path(path, 2))
+  @spec column_by_path(Board.t(), path) :: Column.t() | :not_found
+  def column_by_path(board, path), do: view(board, compose_path(path, 2))
 
-  @spec pile_by_path(Board.t(), path) :: Pile.t()
-  def pile_by_path(board, path), do: Focus.view(board, compose_path(path, 4))
+  @spec pile_by_path(Board.t(), path) :: Pile.t() | :not_found
+  def pile_by_path(board, path), do: view(board, compose_path(path, 4))
 
-  @spec card_by_path(Board.t(), path) :: Card.t()
-  def card_by_path(board, path), do: Focus.view(board, compose_path(path, 6))
+  @spec card_by_path(Board.t(), path) :: Card.t() | :not_found
+  def card_by_path(board, path), do: view(board, compose_path(path, 6))
 
   @spec pile_path_by_id(Board.t(), integer) :: lens_path_or_not_found
   def pile_path_by_id(%Board{columns: columns}, id) do
@@ -112,5 +112,11 @@ defmodule Lucidboard.Twiddler.Glass do
     Enum.reduce(lenses, first, fn lens, acc ->
       Focus.compose(acc, lens)
     end)
+  end
+
+  defp view(board, lens) do
+    with {:error, {:lens, :bad_path}} <- Focus.view(board, lens) do
+      :not_found
+    end
   end
 end

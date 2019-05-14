@@ -98,8 +98,8 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec move_pile(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def move_pile(board, args) do
+  @spec move_pile_to_junction(Board.t(), map) :: Twiddler.action_ok_or_error()
+  def move_pile_to_junction(board, args) do
     with [id, col_id, new_pos] <- grab(args, ~w/id col_id new_pos/a),
          {:ok, pile_path} <- Glass.pile_path_by_id(board, id),
          {:ok, dest_col_lens} <- Glass.column_by_id(board, col_id),
@@ -111,14 +111,19 @@ defmodule Lucidboard.Twiddler.Actions do
   end
 
   # Moves a card to an empty space in a column, creating a new, 1-card pile
-  # TODO
-  # def move_card_to_junction(board, args) do
-  #   with [id, col_id, new_pos] <- grab(args, ~w/id, col_id, new_pos/a) do
-  #   end
-  # end
+  def move_card_to_junction(board, args) do
+    with [id, col_id, new_pos] <- grab(args, ~w/id col_id new_pos/a),
+         {:ok, card_path} <- Glass.card_path_by_id(board, id),
+         {:ok, col_lens} <- Glass.column_by_id(board, col_id),
+         {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
+         {:ok, new_board2, paste_fn} <-
+           Op.add_card_to_column(new_board, card, col_lens, new_pos) do
+      {:ok, new_board2, [cut_fn, paste_fn], %{}, event("has moved a card.")}
+    end
+  end
 
   def move_card_to_pile(board, args) do
-    with [id, pile_id] <- grab(args, ~w(id pile_id)a),
+    with [id, pile_id] <- grab(args, ~w/id pile_id/a),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
          {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
          true <- pile_id != card.pile_id || :wth_same_pile,
@@ -176,7 +181,7 @@ defmodule Lucidboard.Twiddler.Actions do
     end)
     |> Enum.reverse()
   catch
-    k -> {:error, "Missing required argument #{k}"}
+    k -> {:error, "Missing required argument: #{k}"}
   end
 
   defp event(msg) when is_binary(msg) do

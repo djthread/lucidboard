@@ -155,6 +155,19 @@ defmodule Lucidboard.Twiddler.Op do
     {:ok, new_board, tx_fn}
   end
 
+  @doc "Add a card to a column by creating the intermediate pile"
+  @spec add_card_to_column(Board.t(), Card.t(), Lens.t(), integer) ::
+          {:ok, Board.t(), Scribe.tx_fn()}
+  def add_card_to_column(board, card, col_lens, pos) do
+    pile_uuid = UUID.generate()
+    col_id = Focus.view(col_lens, board).id
+
+    new_pile =
+      Pile.new(id: pile_uuid, column_id: col_id, pos: pos, cards: [card])
+
+    add_pile_to_column(board, new_pile, col_lens, pos)
+  end
+
   @doc "Add a pile (already existing in the db) to a column"
   @spec add_pile_to_column(Board.t(), Pile.t(), Lens.t(), integer) ::
           {:ok, Board.t(), Scribe.tx_fn()}

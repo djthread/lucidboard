@@ -45,17 +45,20 @@ defmodule LucidboardWeb.BoardController do
     end
   end
 
-  def dnd_into_junction(conn, %{"id" => board_id}) do
-    params = conn.body_params
-    |> IO.inspect()
-    conn
-  end
+  # def dnd_into_junction(conn, %{"id" => board_id}) do
+  #   params =
+  #     conn.body_params
+  #     |> IO.inspect()
 
-  def dnd_into_pile(conn, %{"id" => board_id}) do
-    params = conn.body_params
+  #   conn
+  # end
 
+  def dnd_into_pile(%{body_params: p} = conn, %{"id" => board_id}) do
     action =
-      {:move_card_to_pile, id: params["card_id"], pile_id: params["pile_id"]}
+      case p["what"] do
+        "card" -> {:move_card_to_pile, id: p["what_id"], pile_id: p["pile_id"]}
+        "pile" -> raise "to be implemented"
+      end
 
     {:ok, _} = LiveBoard.call(String.to_integer(board_id), {:action, action})
 
