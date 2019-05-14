@@ -79,14 +79,14 @@ defmodule Lucidboard.Seeds do
             ),
             Pile.new(
               pos: 1,
-              cards: [new_card(uid, pos: 1, body: "Bitcoin")]
+              cards: [new_card(uid, pos: 0, body: "Bitcoin")]
             ),
             Pile.new(
               pos: 2,
               cards: [
                 new_card(
                   uid,
-                  pos: 1,
+                  pos: 0,
                   body: """
                   This board is just an example, so we need to cover a range of \
                   different cases like maybe having a card with lots and lots of \

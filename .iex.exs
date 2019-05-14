@@ -6,6 +6,7 @@ alias Lucidboard.{
   Column,
   Card,
   Event,
+  Glass,
   Like,
   LiveBoard,
   Pile,
