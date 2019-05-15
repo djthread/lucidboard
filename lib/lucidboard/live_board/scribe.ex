@@ -39,7 +39,7 @@ defmodule Lucidboard.LiveBoard.Scribe do
 
   def execute_tx_fn(functions) when is_list(functions) do
     execute_tx_fn(fn ->
-      Enum.each(functions, fn fun -> fun.() end)
+      Enum.each(functions, fn fun -> execute_tx_fn(fun) end)
     end)
   end
 

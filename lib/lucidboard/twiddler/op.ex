@@ -117,12 +117,11 @@ defmodule Lucidboard.Twiddler.Op do
       {:ok, col_pos} = find_pos_by_id(board.columns, col.id)
       new_columns = List.replace_at(board.columns, col_pos, new_col)
       new_board = Map.put(board, :columns, new_columns)
+      q = from(p in Pile, where: p.pos > ^pile_pos and p.column_id == ^col.id)
 
       tx_fn = fn ->
-        in_col = from(p in Pile, where: p.column_id == ^col.id)
-        q = from(p in in_col, where: p.pos > ^pile_pos)
         Repo.update_all(q, inc: [pos: -1])
-        Repo.delete(Repo.one!(from(p in Pile, where: p.id == ^pile.id)))
+        repo_delete_pile(pile)
       end
 
       {:ok, new_board, card, tx_fn}
@@ -165,7 +164,12 @@ defmodule Lucidboard.Twiddler.Op do
     new_pile =
       Pile.new(id: pile_uuid, column_id: col_id, pos: pos, cards: [card])
 
-    add_pile_to_column(board, new_pile, col_lens, pos)
+    insert_pile_fn = fn -> Repo.insert(new_pile) end
+
+    {:ok, new_board, add_pile_fn} =
+      add_pile_to_column(board, new_pile, col_lens, pos)
+
+    {:ok, new_board, [insert_pile_fn, add_pile_fn]}
   end
 
   @doc "Add a pile (already existing in the db) to a column"
@@ -254,6 +258,17 @@ defmodule Lucidboard.Twiddler.Op do
     items
     |> Enum.with_index()
     |> Enum.map(fn {i, pos} -> Map.put(i, :pos, pos) end)
+  end
+
+  # This seems necessary because `on_delete: :delete_all` does not cascade to
+  # children. So, if a pile is deleted, we need to first delete all its cards
+  # because those cards may, in turn, contain likes.
+  defp repo_delete_pile(pile) do
+    Enum.each(pile.cards, fn card ->
+      Repo.delete(card)
+    end)
+
+    Repo.delete(pile)
   end
 
   # This is important to mark the metadata on our schema structs so they seem
