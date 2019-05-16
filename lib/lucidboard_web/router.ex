@@ -18,12 +18,12 @@ defmodule LucidboardWeb.Router do
   end
 
   scope "/auth", LucidboardWeb do
-    pipe_through [:browser]
+    pipe_through([:browser])
 
-    get "/:provider", AuthController, :request
-    get "/:provider/callback", AuthController, :callback
-    post "/:provider/callback", AuthController, :callback
-    post "/logout", AuthController, :delete
+    get("/:provider", AuthController, :request)
+    get("/:provider/callback", AuthController, :callback)
+    post("/:provider/callback", AuthController, :callback)
+    post("/logout", AuthController, :delete)
   end
 
   scope "/", LucidboardWeb do
