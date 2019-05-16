@@ -10,8 +10,8 @@ defmodule Lucidboard.Like do
   @derive {Jason.Encoder, only: ~w(id)a}
 
   schema "likes" do
-    belongs_to :card, Card, type: :binary_id
-    belongs_to :user, User
+    belongs_to(:card, Card, type: :binary_id)
+    belongs_to(:user, User)
     # field(:count, :integer)
   end
 
