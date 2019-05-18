@@ -72,7 +72,7 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :ueberauth, Ueberauth,
   providers: [
-    github: {Ueberauth.Strategy.Github, [ default_scope: "user:email" ]}
+    github: {Ueberauth.Strategy.Github, [default_scope: "user:email"]}
   ]
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
@@ -81,6 +81,5 @@ config :ueberauth, Ueberauth.Strategy.Github.OAuth,
 #site: "https://git.rockfin.com",
 #authorize_url: "https://git.rockfin.com/login/oauth/authorize",
 #token_url: "https://git.rockfin.com/login/oauth/access_token"
-
 
 import_config "dev.secret.exs"
