@@ -89,7 +89,7 @@ defmodule Lucidboard.TwiddlerTest do
     # Baseline
     ~w(Col1 Col2 Col3) = titles(board.columns)
 
-    action = {:move_column, id: Enum.at(board.columns, 2).id, new_pos: 0}
+    action = {:move_column, id: Enum.at(board.columns, 2).id, pos: 0}
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
     assert "has moved the `Col3` column." == event.desc
@@ -99,7 +99,7 @@ defmodule Lucidboard.TwiddlerTest do
   end
 
   test "move first column to the last position", %{board: board} do
-    action = {:move_column, id: Enum.at(board.columns, 0).id, new_pos: 2}
+    action = {:move_column, id: Enum.at(board.columns, 0).id, pos: 2}
     {:ok, new_board, tx_fn, %{}, _event} = Twiddler.act(board, action)
 
     assert ~w(Col2 Col3 Col1) == titles(new_board.columns)
@@ -117,7 +117,7 @@ defmodule Lucidboard.TwiddlerTest do
     assert ~w(whoa definitely cheese flapjacks) ==
              col.piles |> first_card_body_of_each_pile()
 
-    action = {:move_pile_to_junction, id: pile.id, col_id: col.id, new_pos: 0}
+    action = {:move_pile_to_junction, id: pile.id, col_id: col.id, pos: 0}
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
     assert "has moved a pile." == event.desc
@@ -142,7 +142,7 @@ defmodule Lucidboard.TwiddlerTest do
     dest_col_id = Enum.at(board.columns, 1).id
 
     action =
-      {:move_pile_to_junction, id: pile.id, col_id: dest_col_id, new_pos: 1}
+      {:move_pile_to_junction, id: pile.id, col_id: dest_col_id, pos: 1}
 
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
@@ -176,7 +176,7 @@ defmodule Lucidboard.TwiddlerTest do
     assert "hi" == card.body
 
     action =
-      {:move_card_to_junction, id: card.id, col_id: target_col.id, new_pos: 0}
+      {:move_card_to_junction, id: card.id, col_id: target_col.id, pos: 0}
 
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 

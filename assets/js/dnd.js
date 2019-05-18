@@ -13,7 +13,7 @@ const findDataFromParent = function findDataFromParent(el, dataKey) {
   }
 };
 
-const handleDrop = function drop(pathPart, data) {
+const handleDrop = function drop(ev, pathPart, data) {
   ev.preventDefault();
   document.body.classList.remove(bodyClassWhenDragging);
   const boardId = document.querySelector('meta[name=board_id]').getAttribute('content');
@@ -45,7 +45,7 @@ const dropIntoPile = function dropIntoPile(ev) {
   cardId = ev.dataTransfer.getData('cardId');
   pileId = ev.dataTransfer.getData('pileId');
 
-  handleDrop('dnd-into-pile', {
+  handleDrop(ev, 'dnd-into-pile', {
     what: cardId ? 'card' : 'pile',
     what_id: cardId || pileId,
     pile_id: findDataFromParent(ev.target, 'pileId'),
@@ -53,9 +53,14 @@ const dropIntoPile = function dropIntoPile(ev) {
 };
 
 const dropIntoJunction = function dropIntoJunction(ev) {
-  handleDrop('dnd-into-junction', {
-    new_pos: findDataFromParent(ev.target, 'pos'),
+  cardId = ev.dataTransfer.getData('cardId');
+  pileId = ev.dataTransfer.getData('pileId');
+
+  handleDrop(ev, 'dnd-into-junction', {
+    what: cardId ? 'card' : 'pile',
+    what_id: cardId || pileId,
     col_id: findDataFromParent(ev.target, 'colId'),
+    pos: findDataFromParent(ev.target, 'pos'),
   });
 };
 
