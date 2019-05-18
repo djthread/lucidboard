@@ -4,16 +4,12 @@ defmodule UserFromAuth do
   """
   require Logger
   require Poison
-
   alias Ueberauth.Auth
 
   def find_or_create(%Auth{provider: :identity} = auth) do
     case validate_pass(auth.credentials) do
-      :ok ->
-        {:ok, basic_info(auth)}
-
-      {:error, reason} ->
-        {:error, reason}
+      :ok -> {:ok, basic_info(auth)}
+      {:error, reason} -> {:error, reason}
     end
   end
 
