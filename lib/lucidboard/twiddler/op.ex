@@ -121,7 +121,7 @@ defmodule Lucidboard.Twiddler.Op do
 
       tx_fn = fn ->
         Repo.update_all(q, inc: [pos: -1])
-        repo_delete_pile(pile)
+        repo_delete_pile(new_pile)
       end
 
       {:ok, new_board, card, tx_fn}
@@ -154,24 +154,25 @@ defmodule Lucidboard.Twiddler.Op do
     {:ok, new_board, tx_fn}
   end
 
-  @doc "Add a card to a column by creating the intermediate pile"
+  @doc """
+  Add a card (already existing in the db) to a column by creating the
+  intermediate pile
+  """
   @spec add_card_to_column(Board.t(), Card.t(), Lens.t(), integer) ::
           {:ok, Board.t(), Scribe.tx_fn()}
   def add_card_to_column(board, card, col_lens, pos) do
     pile_uuid = UUID.generate()
     col_id = Focus.view(col_lens, board).id
-    new_card = %{card | pile_id: pile_uuid}
+    new_card = %{card | pile_id: pile_uuid, pos: 0}
 
     new_pile =
       Pile.new(id: pile_uuid, column_id: col_id, pos: pos, cards: [new_card])
 
     insert_pile_fn = fn ->
-      saved_pile = Repo.insert!(new_pile)
+      Repo.insert!(new_pile)
 
       card
-      |> IO.inspect()
-      |> Ecto.Changeset.change()
-      |> Ecto.Changeset.put_assoc(:pile, saved_pile)
+      |> Card.changeset(%{pile_id: new_pile.id})
       |> Repo.update!()
     end
 

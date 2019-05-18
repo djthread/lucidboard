@@ -181,7 +181,6 @@ defmodule Lucidboard.TwiddlerTest do
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
     assert "has moved a card." == event.desc
-    IO.inspect hd(new_board.columns)
     assert "hi" == hd(hd(hd(new_board.columns).piles).cards).body
     assert :not_found == Glass.card_by_path(new_board, card_path)
 
