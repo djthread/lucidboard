@@ -160,14 +160,23 @@ defmodule Lucidboard.Twiddler.Op do
   def add_card_to_column(board, card, col_lens, pos) do
     pile_uuid = UUID.generate()
     col_id = Focus.view(col_lens, board).id
+    new_card = %{card | pile_id: pile_uuid}
 
     new_pile =
-      Pile.new(id: pile_uuid, column_id: col_id, pos: pos, cards: [card])
+      Pile.new(id: pile_uuid, column_id: col_id, pos: pos, cards: [new_card])
 
-    insert_pile_fn = fn -> Repo.insert(new_pile) end
+    insert_pile_fn = fn ->
+      saved_pile = Repo.insert!(new_pile)
+
+      card
+      |> IO.inspect()
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_assoc(:pile, saved_pile)
+      |> Repo.update!()
+    end
 
     {:ok, new_board, add_pile_fn} =
-      add_pile_to_column(board, new_pile, col_lens, pos)
+      add_pile_to_column(board, mark_loaded(new_pile), col_lens, pos)
 
     {:ok, new_board, [insert_pile_fn, add_pile_fn]}
   end

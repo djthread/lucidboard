@@ -118,7 +118,7 @@ defmodule Lucidboard.Twiddler.Actions do
          {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
          {:ok, new_board2, paste_fn} <-
            Op.add_card_to_column(new_board, card, col_lens, new_pos) do
-      {:ok, new_board2, [cut_fn, paste_fn], %{}, event("has moved a card.")}
+      {:ok, new_board2, [paste_fn, cut_fn], %{}, event("has moved a card.")}
     end
   end
 
