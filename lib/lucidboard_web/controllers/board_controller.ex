@@ -46,16 +46,16 @@ defmodule LucidboardWeb.BoardController do
   end
 
   def dnd_into_junction(%{body_params: p} = conn, %{"id" => board_id}) do
+    args = %{
+      id: p["what_id"],
+      col_id: p["col_id"],
+      pos: String.to_integer(p["pos"])
+    }
+
     action =
       case p["what"] do
-        "card" ->
-          {:move_card_to_junction,
-           id: p["what_id"],
-           col_id: p["col_id"],
-           pos: String.to_integer(p["pos"])}
-
-        "pile" ->
-          raise "to be implemented!"
+        "card" -> {:move_card_to_junction, args}
+        "pile" -> {:move_pile_to_junction, args}
       end
 
     do_liveboard_action(board_id, action)

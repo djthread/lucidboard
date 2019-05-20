@@ -29,6 +29,7 @@ const drag = function drag(ev) {
   ev.dataTransfer.setData('cardId', findDataFromParent(ev.target, 'cardId'));
   ev.dataTransfer.setData('pileId', findDataFromParent(ev.target, 'pileId'));
   ev.dataTransfer.dropEffect = 'copy';
+
   document.body.classList.add(bodyClassWhenDragging);
 };
 
@@ -46,8 +47,8 @@ const dropIntoPile = function dropIntoPile(ev) {
   pileId = ev.dataTransfer.getData('pileId');
 
   handleDrop(ev, 'dnd-into-pile', {
-    what: cardId ? 'card' : 'pile',
-    what_id: cardId || pileId,
+    what: cardId === 'undefined' ? 'pile' : 'card',
+    what_id: cardId === 'undefined' ? pileId : cardId,
     pile_id: findDataFromParent(ev.target, 'pileId'),
   });
 };
@@ -57,8 +58,8 @@ const dropIntoJunction = function dropIntoJunction(ev) {
   pileId = ev.dataTransfer.getData('pileId');
 
   handleDrop(ev, 'dnd-into-junction', {
-    what: cardId ? 'card' : 'pile',
-    what_id: cardId || pileId,
+    what: cardId === 'undefined' ? 'pile' : 'card',
+    what_id: cardId === 'undefined' ? pileId : cardId,
     col_id: findDataFromParent(ev.target, 'colId'),
     pos: findDataFromParent(ev.target, 'pos'),
   });
