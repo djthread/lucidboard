@@ -2,7 +2,6 @@ Lucidboard Features
 ===================
 
 Pile flipping
-Pile vote counts
 Event Feed
 Network Logins
 
@@ -15,10 +14,16 @@ all of the things
 ## maybes
 
 Reorder columns
+board list a liveview?
+rename board
+delete board?
+freeze board?
 
 
 ## future things?
 
+fancy guid or whatever-based board urls
+permissions and board ownership
 private boards
 auto groups
 timer maybe ?
