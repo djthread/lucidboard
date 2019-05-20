@@ -264,6 +264,32 @@ defmodule Lucidboard.Twiddler.Op do
     %{card | likes: new_likes}
   end
 
+  @doc """
+  Recalculate the target position for a pile in a column
+
+  This is important because if a pile is moved lower in the same column, the
+  fact that the pile is being removed (and lower piles renumbered) has an
+  affect on the actual position we want to then splice it into.
+
+  Note that this is only important if a pile is being dragged. If a card from
+  a pile is moved, the pile will still remain, and this logic does not apply.
+
+  The original board (that the user's command is based on) should be passed
+  in here since that is what `target_pos` is based on.
+  """
+  def calculate_pile_pos(board, card_or_pile_path, target_col_id, target_pos) do
+    moving_a_pile? = Glass.pile_path?(card_or_pile_path)
+    pile = Glass.pile_by_path(board, card_or_pile_path)
+
+    if target_col_id == Glass.column_by_path(board, card_or_pile_path).id and
+         pile.pos < target_pos and
+         (moving_a_pile? or length(pile.cards) == 1) do
+      target_pos - 1
+    else
+      target_pos
+    end
+  end
+
   defp renumber_positions(items) do
     items
     |> Enum.with_index()

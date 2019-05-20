@@ -104,8 +104,9 @@ defmodule Lucidboard.Twiddler.Actions do
          {:ok, pile_path} <- Glass.pile_path_by_id(board, id),
          {:ok, dest_col_lens} <- Glass.column_by_id(board, col_id),
          {:ok, new_board, pile, reflow_fn} <- Op.cut_pile(board, pile_path),
+         actual_pos <- Op.calculate_pile_pos(board, pile_path, col_id, pos),
          {:ok, new_board2, readd_fn} <-
-           Op.add_pile_to_column(new_board, pile, dest_col_lens, pos) do
+           Op.add_pile_to_column(new_board, pile, dest_col_lens, actual_pos) do
       {:ok, new_board2, [reflow_fn, readd_fn], %{}, event("has moved a pile.")}
     end
   end
@@ -116,8 +117,9 @@ defmodule Lucidboard.Twiddler.Actions do
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
          {:ok, col_lens} <- Glass.column_by_id(board, col_id),
          {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
+         actual_pos <- Op.calculate_pile_pos(board, card_path, col_id, pos),
          {:ok, new_board2, paste_fn} <-
-           Op.add_card_to_column(new_board, card, col_lens, pos) do
+           Op.add_card_to_column(new_board, card, col_lens, actual_pos) do
       {:ok, new_board2, [paste_fn, cut_fn], %{}, event("has moved a card.")}
     end
   end

@@ -104,6 +104,12 @@ defmodule Lucidboard.Twiddler.Glass do
     lens_path -> {:ok, lens_path}
   end
 
+  def pile_path?(path) when 4 == length(path), do: true
+  def pile_path?(_), do: false
+
+  def card_path?(path) when 6 == length(path), do: true
+  def card_path?(_), do: false
+
   # Create a lens from a path
   @spec compose_path(path, integer | nil) :: Lens.t()
   defp compose_path(path, count \\ nil) do

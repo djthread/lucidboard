@@ -26,5 +26,6 @@ fancy guid or whatever-based board urls
 permissions and board ownership
 private boards
 auto groups
+starred board
 timer maybe ?
 search

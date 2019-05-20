@@ -63,14 +63,13 @@ defmodule LucidboardWeb.BoardController do
     resp(conn, 200, "ok")
   end
 
+  # When a pile is dragged onto a pile, p["what"] is "pile", and we straight
+  # ignore it. Unsupported action.
   def dnd_into_pile(%{body_params: p} = conn, %{"id" => board_id}) do
-    action =
-      case p["what"] do
-        "card" -> {:move_card_to_pile, id: p["what_id"], pile_id: p["pile_id"]}
-        "pile" -> raise "to be implemented"
-      end
-
-    do_liveboard_action(board_id, action)
+    if "card" == p["what"] do
+      action = {:move_card_to_pile, id: p["what_id"], pile_id: p["pile_id"]}
+      do_liveboard_action(board_id, action)
+    end
 
     resp(conn, 200, "ok")
   end
