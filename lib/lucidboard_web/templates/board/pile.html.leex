@@ -26,6 +26,12 @@
     </div>
   </div>
 <% else %>
+  <%
+    pile_like_count =
+      Enum.reduce(@pile.cards, 0, fn %{likes: likes}, acc ->
+        acc + length(likes)
+      end)
+  %>
   <div
     data-pile-id="<%= @pile.id %>"
     draggable="true"
@@ -43,7 +49,7 @@
     </div>
     <div class="c-Card__footer--extra card-footer">
       <span class="card-footer-item has-text-grey-lighter">of <%= length(@pile.cards) %></span>
-      <span class="card-footer-item has-text-grey-lighter"><%= fas("heart") %> 10</span>
+      <span class="card-footer-item has-text-grey-lighter"><%= fas("heart") %> <%= pile_like_count %></span>
       <a href="#" class="card-footer-item"><%= fas("angle-left") %></a>
       <a href="#" class="card-footer-item"><%= fas("angle-right") %></a>
     </div>
