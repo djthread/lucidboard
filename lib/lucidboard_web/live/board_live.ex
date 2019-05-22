@@ -160,6 +160,16 @@ defmodule LucidboardWeb.BoardLive do
     end
   end
 
+  def handle_event("flip_pile", pile_id, socket) do
+    live_board_action({:flip_pile, id: pile_id, user: user(socket)}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("unflip_pile", pile_id, socket) do
+    live_board_action({:unflip_pile, id: pile_id, user: user(socket)}, socket)
+    {:noreply, socket}
+  end
+
   def handle_info({:board, board}, socket) do
     {:noreply, assign(socket, :board, board)}
   end

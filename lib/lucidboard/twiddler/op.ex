@@ -8,7 +8,6 @@ defmodule Lucidboard.Twiddler.Op do
   """
   import Ecto.Query
   alias Ecto.UUID
-  # alias Lucidboard.{Card, Column, Like, Pile, Twiddler, User}
   alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
   alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler.Glass
@@ -234,6 +233,44 @@ defmodule Lucidboard.Twiddler.Op do
     loaded_col = %{column | piles: loaded_piles}
 
     {:ok, built_col, loaded_col, %{card: new_card}}
+  end
+
+  @doc "Move the top card to the bottom of a pile"
+  def flip_pile(board, pile_lens) do
+    %{cards: [top_card | cards]} = pile = Focus.view(board, pile_lens)
+    new_cards = cards |> List.insert_at(-1, top_card) |> renumber_positions()
+    new_pile = %{pile | cards: new_cards}
+
+    cs =
+      Card.changeset(top_card, %{pos: new_cards |> List.last() |> Map.get(:pos)})
+
+    tx_fn = fn ->
+      q = from(c in Card, where: c.pile_id == ^pile.id and c.pos > 0)
+      Repo.update_all(q, inc: [pos: -1])
+      Repo.update(cs)
+    end
+
+    {:ok, Focus.set(pile_lens, board, new_pile), tx_fn}
+  end
+
+  @doc "Move the last card to the top of a pile"
+  def unflip_pile(board, pile_lens) do
+    pile = Focus.view(board, pile_lens)
+    {last_card, cards} = List.pop_at(pile.cards, -1)
+    new_cards = cards |> List.insert_at(0, last_card) |> renumber_positions()
+    new_pile = %{pile | cards: new_cards}
+
+    cs = Card.changeset(last_card, %{pos: 0})
+
+    tx_fn = fn ->
+      q =
+        from(c in Card, where: c.pile_id == ^pile.id and c.pos < ^last_card.pos)
+
+      Repo.update_all(q, inc: [pos: 1])
+      Repo.update(cs)
+    end
+
+    {:ok, Focus.set(pile_lens, board, new_pile), tx_fn}
   end
 
   @doc "Create a like"

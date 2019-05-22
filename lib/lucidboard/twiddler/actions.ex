@@ -139,6 +139,22 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  def flip_pile(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, pile_lens} <- Glass.pile_by_id(board, id),
+         {:ok, new_board, tx_fn} <- Op.flip_pile(board, pile_lens) do
+      {:ok, new_board, tx_fn, %{}, nil}
+    end
+  end
+
+  def unflip_pile(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, pile_lens} <- Glass.pile_by_id(board, id),
+         {:ok, new_board, tx_fn} <- Op.unflip_pile(board, pile_lens) do
+      {:ok, new_board, tx_fn, %{}, nil}
+    end
+  end
+
   @spec like(Board.t(), map) :: Twiddler.action_ok_or_error()
   def like(board, args) do
     with [id, user] <- grab(args, ~w/id user/a),

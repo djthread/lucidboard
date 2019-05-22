@@ -141,8 +141,7 @@ defmodule Lucidboard.TwiddlerTest do
     pile = Focus.view(board, pile_lens)
     dest_col_id = Enum.at(board.columns, 1).id
 
-    action =
-      {:move_pile_to_junction, id: pile.id, col_id: dest_col_id, pos: 1}
+    action = {:move_pile_to_junction, id: pile.id, col_id: dest_col_id, pos: 1}
 
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
@@ -234,6 +233,37 @@ defmodule Lucidboard.TwiddlerTest do
            } = new_card
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
+  test "flip_pile and unflip_pile", %{board: board} do
+    pile_lens =
+      Lens.make_lens(:columns)
+      ~> Lens.idx(2)
+      ~> Lens.make_lens(:piles)
+      ~> Lens.idx(0)
+
+    card_txts = fn board ->
+      pile_lens
+      |> Focus.view(board)
+      |> Map.get(:cards)
+      |> Enum.map(fn c -> c.body end)
+    end
+
+    assert ~w(whoa srs? neat) == card_txts.(board)
+
+    action = {:flip_pile, id: Focus.view(pile_lens, board).id}
+    {:ok, new_board, tx_fn, _, _} = Twiddler.act(board, action)
+
+    assert ~w(srs? neat whoa) == card_txts.(new_board)
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+
+    action2 = {:unflip_pile, id: Focus.view(pile_lens, board).id}
+    {:ok, new_board2, tx_fn2, _, _} = Twiddler.act(new_board, action2)
+
+    assert ~w(whoa srs? neat) == card_txts.(new_board2)
+
+    execute_tx_and_assert_board_matches(tx_fn2, new_board2)
   end
 
   test "like", %{user: user, board: board} do

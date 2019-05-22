@@ -50,8 +50,8 @@
     <div class="c-Card__footer--extra card-footer">
       <span class="card-footer-item has-text-grey-lighter">of <%= length(@pile.cards) %></span>
       <span class="card-footer-item has-text-grey-lighter"><%= fas("heart") %> <%= pile_like_count %></span>
-      <a href="#" class="card-footer-item"><%= fas("angle-left") %></a>
-      <a href="#" class="card-footer-item"><%= fas("angle-right") %></a>
+      <a phx-click="unflip_pile" phx-value="<%= @pile.id %>" href="#" class="card-footer-item"><%= fas("angle-left") %></a>
+      <a phx-click="flip_pile" phx-value="<%= @pile.id %>" href="#" class="card-footer-item"><%= fas("angle-right") %></a>
     </div>
   </div>
 <% end %>
