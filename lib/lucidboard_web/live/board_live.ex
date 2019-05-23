@@ -33,7 +33,8 @@ defmodule LucidboardWeb.BoardLive do
         identifier = "board:#{board.id}"
         LiveBoard.start(board.id)
         Lucidboard.subscribe(identifier)
-        Presence.track(self(), identifier, user.id, %{lv_ref: socket.id})
+        presence_meta = %{lv_ref: socket.id, name: user.name}
+        Presence.track(self(), identifier, user.id, presence_meta)
 
         socket =
           socket
@@ -43,13 +44,14 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:tab, :board)
           |> assign(:column_changeset, new_column_changeset())
           |> assign(:delete_confirming_card_id, nil)
+          |> assign(:online_count, online_count(board.id))
 
         {:ok, socket}
     end
   end
 
   def terminate(_reason, socket) do
-    if 1 == socket |> topic() |> Presence.list() |> Map.keys() |> length() do
+    if 1 == online_count(socket) do
       LiveBoard.stop(socket.assigns.board.id)
     end
   end
@@ -258,5 +260,13 @@ defmodule LucidboardWeb.BoardLive do
 
   defp new_column_changeset do
     Column.changeset(%Column{}, %{})
+  end
+
+  defp online_count(socket_or_board_id) do
+    socket_or_board_id |> online_users() |> Map.keys() |> length()
+  end
+
+  defp online_users(socket_or_board_id) do
+    socket_or_board_id |> topic() |> Presence.list()
   end
 end

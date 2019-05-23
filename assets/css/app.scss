@@ -6,34 +6,68 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "objects/stack";
 @import "utilities/utilities";
 
-.cardjunction {
-    height: 0;
+.clearpls {
+    clear: both;
 }
 
-.dnd-dragging .cardjunction {
-    height: 10px;
-    margin-bottom: 12px;
-    border: 2px dashed gray;
+.right-panel {
+    float: right;
+    margin: 0 5px;
 }
 
-.cardjunction.active {
-    border: 2px dashed red;
+.online-short a {
+    border-width: 0 !important;
+}
+
+span.onlinedot {
+    color: limegreen;
+}
+
+
+section.board {
+    .cardjunction {
+        height: 0;
+    }
+
+    .dnd-dragging .cardjunction {
+        height: 10px;
+        margin-bottom: 12px;
+        border: 2px dashed gray;
+    }
+
+    .cardjunction.active {
+        border: 2px dashed red;
+    }
+}
+
+section.events {
+    .user-list {
+        width: 25%;
+        float: right;
+    }
+
+    .event-list {
+        width: 75%;
+        float: left;
+    }
 }
 
 section.column-manager {
     width: 28em;
-}
 
-.col-edit-item {
-    line-height: 1.5em;
-    padding: 0.2em;
-    margin: 0.2em;
-    border: 1px solid darkgray;
+    .col-edit-item {
+        line-height: 1.5em;
+        padding: 0.2em;
+        margin: 0.2em;
+        border: 1px solid darkgray;
 
-    .controls {
-        float: right;
-        padding: 3px;
-        span { width: 2em; }
+        .controls {
+            float: right;
+            padding: 3px;
 
+            span {
+                width: 2em;
+            }
+        }
     }
 }

@@ -8,6 +8,15 @@ defmodule LucidboardWeb.BoardView do
   def board_id(:unset), do: 1
   def board_id(assigns), do: assigns.board.id
 
+  def online_indicator({_user_id, map} = _presence_item) do
+    list = Map.get(map, :metas)
+    name = list |> hd() |> Map.get(:name)
+
+    if length(list) > 1,
+      do: "#{name} (#{length(list)})",
+      else: name
+  end
+
   @doc """
   Get the user's session's locked card id and a list of all locked card ids
   """

@@ -2,7 +2,7 @@
   {user_locked_card_id, locked_card_ids} =
     locked_cards(@user.id, @board.id, @socket.id)
 %>
-<div class="columns is-desktop">
+<section class="board clearpls columns is-desktop">
   <%= for column <- @board.columns do %>
     <div class="column" data-col-id="<%= column.id %>">
       <h2 class="subtitle"><%= column.title %></h2>
@@ -49,4 +49,4 @@
       </a>
     </div>
   <% end %>
-</div>
+</section>
