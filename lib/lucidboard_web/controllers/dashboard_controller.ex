@@ -3,8 +3,6 @@ defmodule LucidboardWeb.DashboardController do
   alias LucidboardWeb.DashboardLive
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Controller, as: LiveViewController
-  # alias Phoenix.LiveView.Socket
-  # alias Phoenix.Socket.Broadcast
 
   def index(%{assigns: %{user: nil}} = conn, _) do
     {:see_other, Routes.user_path(conn, :signin_page)}

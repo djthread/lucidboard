@@ -1,14 +1,9 @@
 defmodule LucidboardWeb.DashboardLive do
   @moduledoc "The LiveView for the dashboard page"
   use Phoenix.LiveView
-  # alias Ecto.Changeset
-  # alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, Twiddler}
-  alias Lucidboard.Twiddler
+  alias Lucidboard.{ShortBoard, Twiddler}
   alias LucidboardWeb.DashboardView
-  # alias LucidboardWeb.Router.Helpers, as: Routes
   alias LucidboardWeb.Router.Helpers, as: Routes
-  # alias Phoenix.LiveView.Socket
-  # alias Phoenix.Socket.Broadcast
 
   def render(assigns) do
     DashboardView.render("index.html", assigns)
@@ -25,11 +20,19 @@ defmodule LucidboardWeb.DashboardLive do
 
   def mount(%{user_id: _user_id}, socket) do
     # user = user_id && Account.get_user(user_id)
+    Lucidboard.subscribe("short_boards")
+
+    short_boards = Enum.map(Twiddler.boards(), &ShortBoard.from_board/1)
 
     socket =
       socket
-      |> assign(:boards, Twiddler.boards())
+      |> assign(:short_boards, short_boards)
 
     {:ok, socket}
+  end
+
+  def handle_info({:new, short_board}, socket) do
+    short_boards = List.insert_at(socket.assigns.short_boards, 0, short_board)
+    {:noreply, assign(socket, :short_boards, short_boards)}
   end
 end

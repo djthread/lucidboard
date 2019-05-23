@@ -1,6 +1,6 @@
 defmodule LucidboardWeb.BoardController do
   use LucidboardWeb, :controller
-  alias Lucidboard.{Board, Column, LiveBoard, Twiddler}
+  alias Lucidboard.{Board, Column, LiveBoard, ShortBoard, Twiddler}
   alias LucidboardWeb.BoardLive
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Controller, as: LiveViewController
@@ -40,7 +40,8 @@ defmodule LucidboardWeb.BoardController do
 
     board = Board.new(title: title, columns: columns, user: conn.assigns[:user])
 
-    with {:ok, %Board{id: id}} <- Twiddler.insert(board) do
+    with {:ok, %Board{id: id} = board} <- Twiddler.insert(board) do
+      Lucidboard.broadcast("short_boards", {:new, ShortBoard.from_board(board)})
       {:see_other, Routes.board_path(conn, :index, id)}
     end
   end
