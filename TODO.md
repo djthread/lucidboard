@@ -1,17 +1,31 @@
 Lucidboard Features
 ===================
 
-Pile flipping
-Event Feed
-Network Logins
+## Needed before pilot
 
-## Improve look & feel of
+### Backend
 
-board options pane
-locked card
-all of the things
+* Network Logins
 
-## maybes
+### Frontend
+
+* pile controls css
+  * consider where one drags from on it. might need a special grip area?
+* board options pane
+* locked card
+* home page (hero)
+* all of the things
+
+#### other things to check
+
+* dashboard listing
+* drag/drop junctions
+* events
+
+## Ideas and Nice-to-haves
+
+
+### maybes
 
 Reorder columns
 board list a liveview?
@@ -20,7 +34,7 @@ delete board?
 freeze board?
 
 
-## future things?
+### future things?
 
 fancy guid or whatever-based board urls
 permissions and board ownership
