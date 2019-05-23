@@ -8,13 +8,13 @@
       <h2 class="subtitle"><%= column.title %></h2>
 
       <%= for pile <- column.piles do %>
-
         <div
           data-pos="<%= pile.pos %>"
           class="cardjunction"
           onDragOver="dnd.allowDrop(event)"
           onDragLeave="dnd.dragLeave(event)"
           onDrop="dnd.dropIntoJunction(event)">
+          &nbsp;
         </div>
 
         <%= render(
@@ -26,7 +26,6 @@
             locked_card_ids: locked_card_ids,
           })
         ) %>
-
       <% end %>
 
       <div
@@ -35,6 +34,7 @@
         onDragOver="dnd.allowDrop(event)"
         onDragLeave="dnd.dragLeave(event)"
         onDrop="dnd.dropIntoJunction(event)">
+        &nbsp;
       </div>
 
       <p class="has-text-grey-light u-Mbm">

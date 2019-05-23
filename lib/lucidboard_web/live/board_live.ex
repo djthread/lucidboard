@@ -2,7 +2,7 @@ defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
   use Phoenix.LiveView
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, Twiddler}
+  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, TimeMachine}
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.{BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
@@ -25,13 +25,15 @@ defmodule LucidboardWeb.BoardLive do
   def mount(%{id: board_id, user_id: user_id}, socket) do
     user = user_id && Account.get_user(user_id)
 
-    case Twiddler.by_id(board_id) do
-      nil ->
-        {:stop, put_flash(socket, :error, "Board not found")}
+    case LiveBoard.call(String.to_integer(board_id), :state) do
+      {:error, error} ->
+        {:stop,
+         socket
+         |> put_flash(:error, error)
+         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
 
-      board ->
+      {:ok, %{board: board, events: events}} ->
         identifier = "board:#{board.id}"
-        LiveBoard.start(board.id)
         Lucidboard.subscribe(identifier)
         presence_meta = %{lv_ref: socket.id, name: user.name}
         Presence.track(self(), identifier, user.id, presence_meta)
@@ -39,6 +41,7 @@ defmodule LucidboardWeb.BoardLive do
         socket =
           socket
           |> assign(:board, board)
+          |> assign(:events, events)
           |> assign(:user, user)
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
@@ -182,7 +185,19 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
-  def handle_info({:board, board}, socket) do
+  def handle_info({:update, board, event}, socket) do
+    events =
+      if event do
+        Enum.slice([event | socket.assigns.events], 0, TimeMachine.page_size())
+      else
+        socket.assigns.events
+      end
+
+    socket =
+      socket
+      |> assign(:board, board)
+      |> assign(:events, events)
+
     {:noreply, assign(socket, :board, board)}
   end
 
@@ -251,11 +266,11 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   defp live_board_action(action, %Socket{} = socket) do
-    live_board_action(action, socket.assigns.board.id)
+    live_board_action(action, socket.assigns.board.id, socket.assigns.user)
   end
 
-  defp live_board_action(action, board_id) do
-    {:ok, _} = LiveBoard.call(board_id, {:action, action})
+  defp live_board_action(action, board_id, user) do
+    {:ok, _} = LiveBoard.call(board_id, {:action, action, user: user})
   end
 
   defp new_column_changeset do

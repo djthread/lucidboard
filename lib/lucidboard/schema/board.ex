@@ -10,7 +10,7 @@ defmodule Lucidboard.Board do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lucidboard.{BoardSettings, Column, User}
+  alias Lucidboard.{BoardSettings, Column, Event, User}
 
   @derive {Jason.Encoder, only: ~w(id title settings columns)a}
 
@@ -18,6 +18,7 @@ defmodule Lucidboard.Board do
     field(:title, :string)
     embeds_one(:settings, BoardSettings)
     has_many(:columns, Column)
+    has_many(:events, Event)
     belongs_to(:user, User)
 
     field(:inserted_at, :utc_datetime)

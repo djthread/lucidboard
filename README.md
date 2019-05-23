@@ -1,15 +1,11 @@
 # Lucidboard
 
-A kanban tool.
+A realtime, collaborative kanban tool, built on Elixir, Phoenix, and
+[LiveView](https://dockyard.com/blog/2018/12/12/phoenix-liveview-interactive-real-time-apps-no-need-to-write-javascript).
 
-**Status:** Many basic board features work! [Phoenix
-LiveView](https://dockyard.com/blog/2018/12/12/phoenix-liveview-interactive-real-time-apps-no-need-to-write-javascript)
-is awesome! Still plenty of work yet to go, but things are done, too!
+**Status:** Still need a proper auth solution, but we are very close to being ready to share!
 
 **CI:** [Lucidboard on CircleCI](https://circleci.com/gh/djthread/lucidboard) [![CircleCI](https://circleci.com/gh/djthread/lucidboard.svg?style=svg)](https://circleci.com/gh/djthread/lucidboard)
-
-**Chat:** [Lucidboard on
-Zulip](https://z.impulsedetroit.net/#narrow/stream/16-lucidboard)
 
 To start your Phoenix development environment:
 

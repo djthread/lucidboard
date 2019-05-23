@@ -11,6 +11,7 @@ alias Lucidboard.{
   LiveBoard,
   Pile,
   Presence,
+  TimeMachine,
   User,
   UserSettings,
   CardSettings

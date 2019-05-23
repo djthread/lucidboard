@@ -67,11 +67,23 @@ defmodule Lucidboard.LiveBoard do
     end
   end
 
-  @doc "Uses GenServer.call to act upon a LiveBoard Agent"
+  @doc """
+  Uses GenServer.call to act upon a LiveBoard Agent, starting it if it
+  doesn't already exist
+  """
+  @spec call(integer, any, keyword) :: {:ok, any} | {:error, String.t()}
   def call(board_id, msg, opts \\ []) do
-    board_id
-    |> via_agent(Keyword.get(opts, :registry, BoardRegistry))
-    |> GenServer.call(msg)
+    existing_pid =
+      board_id
+      |> via_agent(Keyword.get(opts, :registry, BoardRegistry))
+      |> GenServer.whereis()
+
+    with {:ok, pid} <- (existing_pid && {:ok, existing_pid}) || start(board_id),
+         {:ok, ret} <- GenServer.call(pid, msg) do
+      {:ok, ret}
+    else
+      unwrapped -> {:ok, unwrapped}
+    end
   end
 
   @doc "Returns the via tuple for accessing the Agent process."

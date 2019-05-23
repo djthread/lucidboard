@@ -218,7 +218,7 @@ defmodule Lucidboard.Twiddler.Actions do
   end
 
   defp event(msg) when is_binary(msg) do
-    %Event{desc: msg}
+    Event.new(desc: msg)
   end
 
   # defp event(msg, keyword) when is_binary(msg) and is_list(keyword) do

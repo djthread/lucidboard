@@ -58,5 +58,13 @@ defmodule Lucidboard.Repo.Migrations.Initial do
         null: false
       )
     end
+
+    create table(:events) do
+      add(:user_id, references(:users), null: false)
+      add(:board_id, references(:boards), null: false)
+      add(:desc, :string, null: false)
+
+      timestamps()
+    end
   end
 end

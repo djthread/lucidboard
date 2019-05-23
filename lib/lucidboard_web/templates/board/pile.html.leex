@@ -42,9 +42,7 @@
       class="c-Card card u-Mbm"
       data-card-id="<%= card.id %>"
       draggable="true"
-      onDragStart="dnd.drag(event)"
-      onDragOver="dnd.allowDrop(event)"
-      onDrop="dnd.dropIntoPile(event)">
+      onDragStart="dnd.drag(event)">
       <%= rendered_card %>
     </div>
     <div class="c-Card__footer--extra card-footer">

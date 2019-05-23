@@ -26,18 +26,19 @@ span.onlinedot {
 
 section.board {
     .cardjunction {
-        height: 0;
-    }
-
-    .dnd-dragging .cardjunction {
-        height: 10px;
-        margin-bottom: 12px;
-        border: 2px dashed gray;
+        line-height: 0;
     }
 
     .cardjunction.active {
+        line-height: 1.5em;
         border: 2px dashed red;
     }
+}
+
+.dnd-dragging .cardjunction {
+    height: 10px;
+    margin-bottom: 12px;
+    border: 2px dashed gray;
 }
 
 section.events {
