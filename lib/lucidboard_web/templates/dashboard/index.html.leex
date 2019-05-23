@@ -1,5 +1,5 @@
 <div class="o-CenteredColumn">
-  <a href="<%= Routes.board_path(@conn, :create) %>"
+  <a href="<%= Routes.board_path(LucidboardWeb.Endpoint, :create) %>"
     class="button is-primary is-outlined is-pulled-right">
     <%= fas("plus") %><span>Create Board</span>
   </a>
@@ -7,7 +7,8 @@
   <h2 class="title">All Lucidboards</h2>
 
   <%= for board <- @boards do %>
-    <a class="card is-block c-Card u-Mbm" href="<%= Routes.board_path(@conn, :index, board.id) %>">
+    <a class="card is-block c-Card u-Mbm"
+      href="<%= Routes.board_path(LucidboardWeb.Endpoint, :index, board.id) %>">
       <div class="c-Card__content card-content">
         <div class="content">
           <h3 class="b-Subtitle subtitle is-marginless">
