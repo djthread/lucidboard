@@ -203,6 +203,13 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do
     id = socket.assigns.board.id
+    users = online_users(id)
+
+    socket =
+      socket
+      |> assign(:online_users, users)
+      |> assign(:online_count, users |> Map.keys() |> length())
+
     {:noreply, assign(socket, :online_users, Presence.list("board:#{id}"))}
   end
 
