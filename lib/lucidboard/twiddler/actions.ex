@@ -98,6 +98,24 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  def move_column_up(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, col} <- Op.column_by_id(board, id),
+         true <- col.pos > 0 || :noop do
+      pos = col.pos - 1
+      move_column(board, %{id: id, pos: pos})
+    end
+  end
+
+  def move_column_down(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, col} <- Op.column_by_id(board, id),
+         true <- col.pos < length(board.columns) - 1 || :noop do
+      pos = col.pos + 1
+      move_column(board, %{id: id, pos: pos})
+    end
+  end
+
   @spec move_pile_to_junction(Board.t(), map) :: Twiddler.action_ok_or_error()
   def move_pile_to_junction(board, args) do
     with [id, col_id, pos] <- grab(args, ~w/id col_id pos/a),
@@ -128,14 +146,11 @@ defmodule Lucidboard.Twiddler.Actions do
     with [id, pile_id] <- grab(args, ~w/id pile_id/a),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
          {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
-         true <- pile_id != card.pile_id || :wth_same_pile,
+         true <- pile_id != card.pile_id || :noop,
          {:ok, pile_lens} <- Glass.pile_by_id(new_board, pile_id),
          {:ok, new_board2, add_fn} <-
            Op.add_card_to_pile(new_board, card, pile_lens) do
       {:ok, new_board2, [add_fn, cut_fn], %{}, event("has moved a card.")}
-    else
-      :wth_same_pile -> {:ok, board, nil, %{}, nil}
-      other -> other
     end
   end
 

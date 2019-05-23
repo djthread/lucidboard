@@ -24,9 +24,12 @@ defmodule Lucidboard.Twiddler do
          {:ok, _, _, _, _} = res <- apply(Actions, action_name, [board, args]) do
       res
     else
+      :noop ->
+        {:ok, board, nil, nil, nil}
+
       :no_action ->
         IO.puts("Action not implemented: #{inspect(action_name)}")
-        {:ok, board, nil, nil}
+        {:ok, board, nil, nil, nil}
 
       %Changeset{} = cs ->
         {:error, changeset_to_string(cs)}

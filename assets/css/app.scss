@@ -6,8 +6,34 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "objects/stack";
 @import "utilities/utilities";
 
-.cardjunction { height: 0; }
+.cardjunction {
+    height: 0;
+}
 
-.dnd-dragging .cardjunction { height: 15px; border: 2px dashed pink; }
+.dnd-dragging .cardjunction {
+    height: 10px;
+    margin-bottom: 12px;
+    border: 2px dashed gray;
+}
 
-.cardjunction.active { border: 2px dashed red; }
+.cardjunction.active {
+    border: 2px dashed red;
+}
+
+section.column-manager {
+    width: 28em;
+}
+
+.col-edit-item {
+    line-height: 1.5em;
+    padding: 0.2em;
+    margin: 0.2em;
+    border: 1px solid darkgray;
+
+    .controls {
+        float: right;
+        padding: 3px;
+        span { width: 2em; }
+
+    }
+}

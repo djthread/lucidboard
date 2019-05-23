@@ -170,6 +170,16 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("col_up", col_id, socket) do
+    live_board_action({:move_column_up, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("col_down", col_id, socket) do
+    live_board_action({:move_column_down, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
   def handle_info({:board, board}, socket) do
     {:noreply, assign(socket, :board, board)}
   end
