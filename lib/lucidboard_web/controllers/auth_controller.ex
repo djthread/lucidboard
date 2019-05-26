@@ -2,7 +2,6 @@ defmodule LucidboardWeb.AuthController do
   @moduledoc """
   Auth controller responsible for handling Ueberauth responses
   """
-
   use LucidboardWeb, :controller
   plug(Ueberauth)
 

@@ -82,5 +82,4 @@ config :ueberauth, Ueberauth.Strategy.Github.OAuth,
 #authorize_url: "https://git.rockfin.com/login/oauth/authorize",
 #token_url: "https://git.rockfin.com/login/oauth/access_token"
 
-
 import_config "dev.secret.exs"
