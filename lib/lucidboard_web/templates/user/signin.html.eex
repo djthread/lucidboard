@@ -4,10 +4,16 @@
       <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
     </div>
 
-    <div class="form-label-group">
-      <%= text_input f, :username, class: "form-control", placeholder: "Username", required: true, autofocus: true %>
-      <%= label f, :username, "Username", class: "control-label" %>
-    </div>
+  <%= if @user do %>
+    <h2>Welcome, <%= @user.name %>!</h2>
+    <img src="<%= @user.avatar %>" class="img-circle"/>
+    <%= button "Logout", to: auth_path(@conn, :delete), method: :post, class: "btn btn-danger" %>
+    <br>
+  <% else %>
+    <a class="btn btn-primary btn-lg" href="/auth/github">
+      <i class="fa fa-github"></i>
+      Sign in with GitHub
+    </a>
 
     <%= submit "Sign in" %>
   <% end %>
