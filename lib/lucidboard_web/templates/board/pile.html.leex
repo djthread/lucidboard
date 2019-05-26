@@ -13,17 +13,43 @@
 %>
 
 <%= if length(@pile.cards) == 1 do %>
-  <div class="c-Card card u-Mbm">
-    <%= rendered_card %>
+  <div
+    data-pile-id="<%= @pile.id %>">
+    <div
+      class="c-Card card u-Mbm"
+      data-card-id="<%= card.id %>"
+      draggable="true"
+      onDragStart="dnd.drag(event)"
+      onDragOver="dnd.allowDrop(event)"
+      onDrop="dnd.dropIntoPile(event)">
+      <%= rendered_card %>
+    </div>
   </div>
 <% else %>
-  <div class="c-Card card u-Mbm">
-    <%= rendered_card %>
+  <%
+    pile_like_count =
+      Enum.reduce(@pile.cards, 0, fn %{likes: likes}, acc ->
+        acc + length(likes)
+      end)
+  %>
+  <div
+    data-pile-id="<%= @pile.id %>"
+    draggable="true"
+    onDragStart="dnd.drag(event)"
+    onDragOver="dnd.allowDrop(event)"
+    onDrop="dnd.dropIntoPile(event)">
+    <div
+      class="c-Card card u-Mbm"
+      data-card-id="<%= card.id %>"
+      draggable="true"
+      onDragStart="dnd.drag(event)">
+      <%= rendered_card %>
+    </div>
     <div class="c-Card__footer--extra card-footer">
       <span class="card-footer-item has-text-grey-lighter">of <%= length(@pile.cards) %></span>
-      <span class="card-footer-item has-text-grey-lighter"><%= fas("heart") %> 10</span>
-      <a href="#" class="card-footer-item"><%= fas("angle-left") %></a>
-      <a href="#" class="card-footer-item"><%= fas("angle-right") %></a>
+      <span class="card-footer-item has-text-grey-lighter"><%= fas("heart") %> <%= pile_like_count %></span>
+      <a phx-click="unflip_pile" phx-value="<%= @pile.id %>" href="#" class="card-footer-item"><%= fas("angle-left") %></a>
+      <a phx-click="flip_pile" phx-value="<%= @pile.id %>" href="#" class="card-footer-item"><%= fas("angle-right") %></a>
     </div>
   </div>
 <% end %>

@@ -8,7 +8,6 @@ defmodule Lucidboard.Twiddler.Op do
   """
   import Ecto.Query
   alias Ecto.UUID
-  # alias Lucidboard.{Card, Column, Like, Pile, Twiddler, User}
   alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
   alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler.Glass
@@ -117,12 +116,11 @@ defmodule Lucidboard.Twiddler.Op do
       {:ok, col_pos} = find_pos_by_id(board.columns, col.id)
       new_columns = List.replace_at(board.columns, col_pos, new_col)
       new_board = Map.put(board, :columns, new_columns)
+      q = from(p in Pile, where: p.pos > ^pile_pos and p.column_id == ^col.id)
 
       tx_fn = fn ->
-        in_col = from(p in Pile, where: p.column_id == ^col.id)
-        q = from(p in in_col, where: p.pos > ^pile_pos)
         Repo.update_all(q, inc: [pos: -1])
-        Repo.delete(Repo.one!(from(p in Pile, where: p.id == ^pile.id)))
+        repo_delete_pile(new_pile)
       end
 
       {:ok, new_board, card, tx_fn}
@@ -153,6 +151,34 @@ defmodule Lucidboard.Twiddler.Op do
     end
 
     {:ok, new_board, tx_fn}
+  end
+
+  @doc """
+  Add a card (already existing in the db) to a column by creating the
+  intermediate pile
+  """
+  @spec add_card_to_column(Board.t(), Card.t(), Lens.t(), integer) ::
+          {:ok, Board.t(), Scribe.tx_fn()}
+  def add_card_to_column(board, card, col_lens, pos) do
+    pile_uuid = UUID.generate()
+    col_id = Focus.view(col_lens, board).id
+    new_card = %{card | pile_id: pile_uuid, pos: 0}
+
+    new_pile =
+      Pile.new(id: pile_uuid, column_id: col_id, pos: pos, cards: [new_card])
+
+    insert_pile_fn = fn ->
+      Repo.insert!(new_pile)
+
+      card
+      |> Card.changeset(%{pile_id: new_pile.id})
+      |> Repo.update!()
+    end
+
+    {:ok, new_board, add_pile_fn} =
+      add_pile_to_column(board, mark_loaded(new_pile), col_lens, pos)
+
+    {:ok, new_board, [insert_pile_fn, add_pile_fn]}
   end
 
   @doc "Add a pile (already existing in the db) to a column"
@@ -209,6 +235,44 @@ defmodule Lucidboard.Twiddler.Op do
     {:ok, built_col, loaded_col, %{card: new_card}}
   end
 
+  @doc "Move the top card to the bottom of a pile"
+  def flip_pile(board, pile_lens) do
+    %{cards: [top_card | cards]} = pile = Focus.view(board, pile_lens)
+    new_cards = cards |> List.insert_at(-1, top_card) |> renumber_positions()
+    new_pile = %{pile | cards: new_cards}
+
+    cs =
+      Card.changeset(top_card, %{pos: new_cards |> List.last() |> Map.get(:pos)})
+
+    tx_fn = fn ->
+      q = from(c in Card, where: c.pile_id == ^pile.id and c.pos > 0)
+      Repo.update_all(q, inc: [pos: -1])
+      Repo.update(cs)
+    end
+
+    {:ok, Focus.set(pile_lens, board, new_pile), tx_fn}
+  end
+
+  @doc "Move the last card to the top of a pile"
+  def unflip_pile(board, pile_lens) do
+    pile = Focus.view(board, pile_lens)
+    {last_card, cards} = List.pop_at(pile.cards, -1)
+    new_cards = cards |> List.insert_at(0, last_card) |> renumber_positions()
+    new_pile = %{pile | cards: new_cards}
+
+    cs = Card.changeset(last_card, %{pos: 0})
+
+    tx_fn = fn ->
+      q =
+        from(c in Card, where: c.pile_id == ^pile.id and c.pos < ^last_card.pos)
+
+      Repo.update_all(q, inc: [pos: 1])
+      Repo.update(cs)
+    end
+
+    {:ok, Focus.set(pile_lens, board, new_pile), tx_fn}
+  end
+
   @doc "Create a like"
   def like(%Card{id: card_id} = card, %User{id: user_id}) do
     built_like = Like.new(card_id: card_id, user_id: user_id)
@@ -237,10 +301,47 @@ defmodule Lucidboard.Twiddler.Op do
     %{card | likes: new_likes}
   end
 
+  @doc """
+  Recalculate the target position for a pile in a column
+
+  This is important because if a pile is moved lower in the same column, the
+  fact that the pile is being removed (and lower piles renumbered) has an
+  affect on the actual position we want to then splice it into.
+
+  Note that this is only important if a pile is being dragged. If a card from
+  a pile is moved, the pile will still remain, and this logic does not apply.
+
+  The original board (that the user's command is based on) should be passed
+  in here since that is what `target_pos` is based on.
+  """
+  def calculate_pile_pos(board, card_or_pile_path, target_col_id, target_pos) do
+    moving_a_pile? = Glass.pile_path?(card_or_pile_path)
+    pile = Glass.pile_by_path(board, card_or_pile_path)
+
+    if target_col_id == Glass.column_by_path(board, card_or_pile_path).id and
+         pile.pos < target_pos and
+         (moving_a_pile? or length(pile.cards) == 1) do
+      target_pos - 1
+    else
+      target_pos
+    end
+  end
+
   defp renumber_positions(items) do
     items
     |> Enum.with_index()
     |> Enum.map(fn {i, pos} -> Map.put(i, :pos, pos) end)
+  end
+
+  # This seems necessary because `on_delete: :delete_all` does not cascade to
+  # children. So, if a pile is deleted, we need to first delete all its cards
+  # because those cards may, in turn, contain likes.
+  defp repo_delete_pile(pile) do
+    Enum.each(pile.cards, fn card ->
+      Repo.delete(card)
+    end)
+
+    Repo.delete(pile)
   end
 
   # This is important to mark the metadata on our schema structs so they seem

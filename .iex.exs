@@ -6,10 +6,12 @@ alias Lucidboard.{
   Column,
   Card,
   Event,
+  Glass,
   Like,
   LiveBoard,
   Pile,
   Presence,
+  TimeMachine,
   User,
   UserSettings,
   CardSettings

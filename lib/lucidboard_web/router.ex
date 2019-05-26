@@ -1,5 +1,9 @@
 defmodule LucidboardWeb.Router do
+
   use LucidboardWeb, :router
+
+  require Ueberauth
+
   alias LucidboardWeb.LayoutView
 
   pipeline :browser do
@@ -45,6 +49,9 @@ defmodule LucidboardWeb.Router do
     post("/create-board", BoardController, :create)
 
     get("/boards/:id", BoardController, :index)
+
+    post("/boards/:id/dnd-into-junction", BoardController, :dnd_into_junction)
+    post("/boards/:id/dnd-into-pile", BoardController, :dnd_into_pile)
   end
 
   # Other scopes may use custom stacks.

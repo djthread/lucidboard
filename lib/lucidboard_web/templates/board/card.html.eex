@@ -1,16 +1,3 @@
-<!--
-<header class="card-header">
-  <p class="card-header-title">
-    Component
-  </p>
-  <a href="#" class="card-header-icon" aria-label="more options">
-    <span class="icon">
-      <i class="fas fa-angle-down" aria-hidden="true"></i>
-    </span>
-  </a>
-</header>
--->
-
 <div class="c-Card__content card-content u-Pan">
   <%= cond do %>
   <% @locked_by_user? -> %>
@@ -32,13 +19,16 @@
       class="content is-size-<%= card_body_size_by_copy(@card.body) %> js-inlineEdit u-Pam">
       <%= @card.body %>
     </p>
+
   <% end %>
 </div>
+
 <footer class="card-footer">
   <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card-footer-item"><%= fas("heart") %>&nbsp;<%= length(@card.likes) %></a>
   <a phx-click="modal_card_edit" phx-value="<%= @card.id %>" href="#" class="card-footer-item" data-modal="trigger"><%= fas("edit") %></a>
   <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item"><%= fas("trash-alt") %></a>
 </footer>
+
 <%= if @delete_confirming_card_id == @card.id do %>
 <div class="u-Pam">
   <p class="u-Mbm">

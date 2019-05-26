@@ -1,27 +1,30 @@
 <div class="o-CenteredColumn o-CenteredColumn--wide">
-  <div style="float:right;margin:0 5px">
-    <div class="tabs is-toggle">
-      <ul>
-        <li class="<%= if @tab == :board, do: "is-active" %>">
-          <a phx-click="tab" phx-value="board">
-            <span class="icon is-small"><%= fas("grip-vertical") %></span>
-            <span>Board</span>
-          </a>
-        </li>
-        <li class="<%= if @tab == :events, do: "is-active" %>">
-          <a phx-click="tab" phx-value="events">
-            <span class="icon is-small"><%= fas("calendar-alt") %></span>
-            <span>Events</span>
-          </a>
-        </li>
-        <li class="<%= if @tab == :options, do: "is-active" %>">
-          <a phx-click="tab" phx-value="options">
-            <span class="icon is-small"><%= fas("cog") %></span>
-            <span>Options</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+  <div class="right-panel tabs is-toggle">
+    <ul>
+      <li class="online-short">
+        <a phx-click="tab" phx-value="events" href="#">
+          <span class="onlinedot">&bull;</span> &nbsp; <%= @online_count %> Online
+        </a>
+      </li>
+      <li class="<%= if @tab == :board, do: "is-active" %>">
+        <a phx-click="tab" phx-value="board" href="#">
+          <span class="icon is-small"><%= fas("grip-vertical") %></span>
+          <span>Board</span>
+        </a>
+      </li>
+      <li class="<%= if @tab == :events, do: "is-active" %>">
+        <a phx-click="tab" phx-value="events" href="#">
+          <span class="icon is-small"><%= fas("calendar-alt") %></span>
+          <span>Events</span>
+        </a>
+      </li>
+      <li class="<%= if @tab == :options, do: "is-active" %>">
+        <a phx-click="tab" phx-value="options" href="#">
+          <span class="icon is-small"><%= fas("cog") %></span>
+          <span>Options</span>
+        </a>
+      </li>
+    </ul>
   </div>
 
   <h1 class="title"><%= @board.title %></h1>

@@ -1,16 +1,29 @@
+<section class="column-manager clearpls">
 <h2>Manage Columns</h2>
 
 <ul>
-<%= for %{id: id, title: title} <- @board.columns do %>
-  <li phx-click="column_edit" phx-value="<%= id %>">
+<%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
+  <li class="col-edit-item" phx-click="column_edit" phx-value="<%= id %>">
+    <div class="controls">
+      <%= if pos > 0 do %>
+        <a phx-click="col_up" phx-value="<%= id %>" href="#">
+          <%= fas("angle-up") %>
+        </a>
+      <% end %>
+      <%= if pos < length(@board.columns) - 1 do %>
+        <a phx-click="col_down" phx-value="<%= id %>" href="#">
+          <%= fas("angle-down") %>
+        </a>
+      <% end %>
+    </div>
     <%= title %>
   </li>
 <% end %>
 </ul>
 
-<% cs_data = Ecto.Changeset.apply_changes(@column_changeset) %>
-
 <%
+  cs_data = Ecto.Changeset.apply_changes(@column_changeset)
+
   {button_txt, title} =
     if cs_data.id,
       do: {"Update", "Editing Column: #{cs_data.title}"},
@@ -24,3 +37,4 @@
   <%= error_tag f, :title %>
   <%= submit button_txt, phx_disable_with: "Saving..." %>
 <% end %>
+</section>

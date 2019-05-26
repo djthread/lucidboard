@@ -87,7 +87,7 @@ defmodule Lucidboard.Twiddler.Actions do
   def move_column(board, args) do
     queryable = from(c in Column, where: c.board_id == ^board.id)
 
-    with [id, new_pos] <- grab(args, ~w/id new_pos/a),
+    with [id, new_pos] <- grab(args, ~w/id pos/a),
          pos <- Enum.find(board.columns, fn c -> c.id == id end).pos,
          {:ok, col, new_cols} <- Op.move_item(board.columns, pos, new_pos),
          tx_fn <- QueryBuilder.move_item(queryable, id, pos, new_pos) do
@@ -98,26 +98,75 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec move_pile(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def move_pile(board, args) do
-    with [id, col_id, new_pos] <- grab(args, ~w/id col_id new_pos/a),
+  def move_column_up(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, col} <- Op.column_by_id(board, id),
+         true <- col.pos > 0 || :noop do
+      pos = col.pos - 1
+      move_column(board, %{id: id, pos: pos})
+    end
+  end
+
+  def move_column_down(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, col} <- Op.column_by_id(board, id),
+         true <- col.pos < length(board.columns) - 1 || :noop do
+      pos = col.pos + 1
+      move_column(board, %{id: id, pos: pos})
+    end
+  end
+
+  @spec move_pile_to_junction(Board.t(), map) :: Twiddler.action_ok_or_error()
+  def move_pile_to_junction(board, args) do
+    with [id, col_id, pos] <- grab(args, ~w/id col_id pos/a),
          {:ok, pile_path} <- Glass.pile_path_by_id(board, id),
          {:ok, dest_col_lens} <- Glass.column_by_id(board, col_id),
          {:ok, new_board, pile, reflow_fn} <- Op.cut_pile(board, pile_path),
+         actual_pos <- Op.calculate_pile_pos(board, pile_path, col_id, pos),
          {:ok, new_board2, readd_fn} <-
-           Op.add_pile_to_column(new_board, pile, dest_col_lens, new_pos) do
+           Op.add_pile_to_column(new_board, pile, dest_col_lens, actual_pos) do
       {:ok, new_board2, [reflow_fn, readd_fn], %{}, event("has moved a pile.")}
     end
   end
 
+  # Moves a card to an empty space in a column, creating a new, 1-card pile
+  def move_card_to_junction(board, args) do
+    with [id, col_id, pos] <- grab(args, ~w/id col_id pos/a),
+         {:ok, card_path} <- Glass.card_path_by_id(board, id),
+         {:ok, col_lens} <- Glass.column_by_id(board, col_id),
+         {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
+         actual_pos <- Op.calculate_pile_pos(board, card_path, col_id, pos),
+         {:ok, new_board2, paste_fn} <-
+           Op.add_card_to_column(new_board, card, col_lens, actual_pos) do
+      {:ok, new_board2, [paste_fn, cut_fn], %{}, event("has moved a card.")}
+    end
+  end
+
   def move_card_to_pile(board, args) do
-    with [id, pile_id] <- grab(args, ~w(id pile_id)a),
+    with [id, pile_id] <- grab(args, ~w/id pile_id/a),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
          {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
-         {:ok, pile_lens} <- Glass.pile_by_id(board, pile_id),
+         true <- pile_id != card.pile_id || :noop,
+         {:ok, pile_lens} <- Glass.pile_by_id(new_board, pile_id),
          {:ok, new_board2, add_fn} <-
            Op.add_card_to_pile(new_board, card, pile_lens) do
       {:ok, new_board2, [add_fn, cut_fn], %{}, event("has moved a card.")}
+    end
+  end
+
+  def flip_pile(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, pile_lens} <- Glass.pile_by_id(board, id),
+         {:ok, new_board, tx_fn} <- Op.flip_pile(board, pile_lens) do
+      {:ok, new_board, tx_fn, %{}, nil}
+    end
+  end
+
+  def unflip_pile(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, pile_lens} <- Glass.pile_by_id(board, id),
+         {:ok, new_board, tx_fn} <- Op.unflip_pile(board, pile_lens) do
+      {:ok, new_board, tx_fn, %{}, nil}
     end
   end
 
@@ -165,11 +214,11 @@ defmodule Lucidboard.Twiddler.Actions do
     end)
     |> Enum.reverse()
   catch
-    k -> {:error, "Missing required argument #{k}"}
+    k -> {:error, "Missing required argument: #{k}"}
   end
 
   defp event(msg) when is_binary(msg) do
-    %Event{desc: msg}
+    Event.new(desc: msg)
   end
 
   # defp event(msg, keyword) when is_binary(msg) and is_list(keyword) do

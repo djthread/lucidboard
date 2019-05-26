@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/#{@conn.assigns[:theme_css]}") %>">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>">
     <link href="<%= Routes.static_path(@conn, "/fonts/Arsenal-Regular.ttf") %>">
+    <meta name="board_id" content="2">
+    <meta name="csrf" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   </head>
   <body>
     <%= render("header/header.html", assigns) %>

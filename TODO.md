@@ -1,15 +1,45 @@
 Lucidboard Features
 ===================
-* Implement social login, then Ping Federate -- Igor
-* Notifications on a board events
-* Event viewer
-* Voting
-* Timer?
-* Single-column view (+Trash)
+
+## Needed before pilot
+
+### Backend
+
+* Network Logins
+
+### Frontend
+
+* pile controls css
+  * consider where one drags from on it. might need a special grip area?
+* board options pane
+* locked card
+* home page (hero)
+* all of the things
+
+#### other things to check
+
+* dashboard listing
+* drag/drop junctions
+* events
+
+## Ideas and Nice-to-haves
 
 
-Twiddler Actions
-================
-* :delete_card
-  * inputs: card_id
-  * :delete_column
+### maybes
+
+Reorder columns
+board list a liveview?
+rename board
+delete board?
+freeze board?
+
+
+### future things?
+
+fancy guid or whatever-based board urls
+permissions and board ownership
+private boards
+auto groups
+starred board
+timer maybe ?
+search

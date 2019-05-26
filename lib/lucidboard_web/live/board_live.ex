@@ -2,7 +2,7 @@ defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
   use Phoenix.LiveView
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, Twiddler}
+  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, TimeMachine}
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.{BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
@@ -25,31 +25,36 @@ defmodule LucidboardWeb.BoardLive do
   def mount(%{id: board_id, user_id: user_id}, socket) do
     user = user_id && Account.get_user(user_id)
 
-    case Twiddler.by_id(board_id) do
-      nil ->
-        {:stop, put_flash(socket, :error, "Board not found")}
+    case LiveBoard.call(String.to_integer(board_id), :state) do
+      {:error, error} ->
+        {:stop,
+         socket
+         |> put_flash(:error, error)
+         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
 
-      board ->
+      {:ok, %{board: board, events: events}} ->
         identifier = "board:#{board.id}"
-        LiveBoard.start(board.id)
         Lucidboard.subscribe(identifier)
-        Presence.track(self(), identifier, user.id, %{lv_ref: socket.id})
+        presence_meta = %{lv_ref: socket.id, name: user.name}
+        Presence.track(self(), identifier, user.id, presence_meta)
 
         socket =
           socket
           |> assign(:board, board)
+          |> assign(:events, events)
           |> assign(:user, user)
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
           |> assign(:column_changeset, new_column_changeset())
           |> assign(:delete_confirming_card_id, nil)
+          |> assign(:online_count, online_count(board.id))
 
         {:ok, socket}
     end
   end
 
   def terminate(_reason, socket) do
-    if 1 == socket |> topic() |> Presence.list() |> Map.keys() |> length() do
+    if 1 == online_count(socket) do
       LiveBoard.stop(socket.assigns.board.id)
     end
   end
@@ -160,12 +165,51 @@ defmodule LucidboardWeb.BoardLive do
     end
   end
 
-  def handle_info({:board, board}, socket) do
+  def handle_event("flip_pile", pile_id, socket) do
+    live_board_action({:flip_pile, id: pile_id, user: user(socket)}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("unflip_pile", pile_id, socket) do
+    live_board_action({:unflip_pile, id: pile_id, user: user(socket)}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("col_up", col_id, socket) do
+    live_board_action({:move_column_up, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("col_down", col_id, socket) do
+    live_board_action({:move_column_down, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_info({:update, board, event}, socket) do
+    events =
+      if event do
+        Enum.slice([event | socket.assigns.events], 0, TimeMachine.page_size())
+      else
+        socket.assigns.events
+      end
+
+    socket =
+      socket
+      |> assign(:board, board)
+      |> assign(:events, events)
+
     {:noreply, assign(socket, :board, board)}
   end
 
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do
     id = socket.assigns.board.id
+    users = online_users(id)
+
+    socket =
+      socket
+      |> assign(:online_users, users)
+      |> assign(:online_count, users |> Map.keys() |> length())
+
     {:noreply, assign(socket, :online_users, Presence.list("board:#{id}"))}
   end
 
@@ -229,14 +273,22 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   defp live_board_action(action, %Socket{} = socket) do
-    live_board_action(action, socket.assigns.board.id)
+    live_board_action(action, socket.assigns.board.id, socket.assigns.user)
   end
 
-  defp live_board_action(action, board_id) do
-    {:ok, _} = LiveBoard.call(board_id, {:action, action})
+  defp live_board_action(action, board_id, user) do
+    {:ok, _} = LiveBoard.call(board_id, {:action, action, user: user})
   end
 
   defp new_column_changeset do
     Column.changeset(%Column{}, %{})
+  end
+
+  defp online_count(socket_or_board_id) do
+    socket_or_board_id |> online_users() |> Map.keys() |> length()
+  end
+
+  defp online_users(socket_or_board_id) do
+    socket_or_board_id |> topic() |> Presence.list()
   end
 end

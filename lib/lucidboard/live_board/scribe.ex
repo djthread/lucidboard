@@ -30,19 +30,26 @@ defmodule Lucidboard.LiveBoard.Scribe do
   def handle_cast(tx_fn, state) do
     case execute_tx_fn(tx_fn) do
       {:ok, _struct} -> nil
+      nil -> nil
       bad -> Logger.error("Repo.update on changeset failed: #{inspect(bad)}")
     end
 
     {:noreply, state}
   end
 
-  def execute_tx_fn(functions) when is_list(functions) do
-    execute_tx_fn(fn ->
-      Enum.each(functions, fn fun -> fun.() end)
-    end)
+  def execute_tx_fn(functions, tx \\ true)
+
+  def execute_tx_fn(functions, tx) when is_list(functions) do
+    go = fn ->
+      Enum.each(functions, fn fun -> execute_tx_fn(fun, false) end)
+    end
+
+    if tx, do: Repo.transaction(go), else: go.()
   end
 
-  def execute_tx_fn(fun) do
-    Repo.transaction(fun)
+  def execute_tx_fn(nil, _), do: nil
+
+  def execute_tx_fn(fun, tx) do
+    if tx, do: Repo.transaction(fun), else: fun.()
   end
 end
