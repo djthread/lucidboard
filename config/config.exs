@@ -42,15 +42,15 @@ config :logger, :console,
 
 config :ueberauth, Ueberauth,
   providers: [
-    github: {Ueberauth.Strategy.Github, []}
+    github: {Ueberauth.Strategy.Github, [ default_scope: "user:email" ]}
   ]
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
   client_id: System.get_env("GITHUB_CLIENT_ID"),
-  client_secret: System.get_env("GITHUB_CLIENT_SECRET"),
-  site: "https://git.rockfin.com",
-  authorize_url: "https://git.rockfin.com/login/oauth/authorize",
-  token_url: "https://git.rockfin.com/login/oauth/access_token"
+  client_secret: System.get_env("GITHUB_CLIENT_SECRET") #,
+  #site: "https://git.rockfin.com",
+  #authorize_url: "https://git.rockfin.com/login/oauth/authorize",
+  #token_url: "https://git.rockfin.com/login/oauth/access_token"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
