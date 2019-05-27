@@ -7,6 +7,7 @@ defmodule UserFromAuth do
   alias Ueberauth.Auth
 
   def find_or_create(%Auth{provider: :identity} = auth) do
+    Logger.warn("From Provider Identity -> " <> inspect(auth))
     case validate_pass(auth.credentials) do
       :ok -> {:ok, basic_info(auth)}
       {:error, reason} -> {:error, reason}
@@ -30,8 +31,11 @@ defmodule UserFromAuth do
     nil
   end
 
+  # github does it this way
+  defp nickname_from_auth(%{info: %{nickname: nickname }}), do: nickname
+
   defp basic_info(auth) do
-    %{id: auth.uid, name: name_from_auth(auth), avatar: avatar_from_auth(auth)}
+    %{id: auth.uid, nickname: nickname_from_auth(auth), name: name_from_auth(auth), avatar: avatar_from_auth(auth)}
   end
 
   defp name_from_auth(auth) do

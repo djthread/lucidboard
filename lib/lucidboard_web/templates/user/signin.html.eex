@@ -1,9 +1,4 @@
-<div class="auth-form-wrapper">
-  <%= form_for @conn, Routes.user_path(@conn, :signin), [as: :signin], fn f -> %>
-    <div class="text-center mb-4">
-      <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
-    </div>
-
+<div class="jumbotron">
   <%= if @user do %>
     <h2>Welcome, <%= @user.name %>!</h2>
     <img src="<%= @user.avatar %>" class="img-circle"/>
