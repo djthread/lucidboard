@@ -1,7 +1,11 @@
 <div id="usermenu" class="dropdown is-hoverable is-right">
   <div class="dropdown-trigger">
     <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-      <%= fas("user-circle") %>
+      <%= if @user.avatar_url do %>
+        <div class="avatar" style="background-image:url('<%= @user.avatar_url %>')"></div>
+      <% else %>
+        <%= fas("user-circle") %>
+      <% end %>
       <span><%= @user.name %></span>
       <%= fas("angle-down", "is-small") %>
     </button>

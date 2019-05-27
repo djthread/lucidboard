@@ -7,7 +7,8 @@ defmodule Lucidboard.Account.Github do
     user =
       User.new(
         name: nickname_from_auth(auth),
-        full_name: name_from_auth(auth)
+        full_name: name_from_auth(auth),
+        avatar_url: avatar_from_auth(auth)
       )
 
     {:ok, user}
@@ -28,4 +29,7 @@ defmodule Lucidboard.Account.Github do
       end
     end
   end
+
+  defp avatar_from_auth(%{info: %{urls: %{avatar_url: image}}}), do: image
+  defp avatar_from_auth(_), do: nil
 end
