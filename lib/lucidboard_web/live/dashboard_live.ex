@@ -13,13 +13,13 @@ defmodule LucidboardWeb.DashboardLive do
     socket =
       socket
       |> put_flash(:error, "You must be signed in")
-      |> redirect(to: Routes.user_path(Endpoint, :signin_page))
+      |> redirect(to: Routes.user_path(Endpoint, :signin))
 
     {:stop, socket}
   end
 
   def mount(%{user_id: _user_id}, socket) do
-    # user = user_id && Account.get_user(user_id)
+    # user = user_id && Account.get(user_id)
     Lucidboard.subscribe("short_boards")
 
     short_boards = Enum.map(Twiddler.boards(), &ShortBoard.from_board/1)

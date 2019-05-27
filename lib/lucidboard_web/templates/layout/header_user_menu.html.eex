@@ -12,7 +12,7 @@
         Settings
       </a>
       <%# <hr class="dropdown-divider"> %>
-      <a href="<%= Routes.user_path(@conn, :signout) %>" class="dropdown-item">
+      <a href="<%= Routes.auth_path(@conn, :signout) %>" class="dropdown-item">
         Sign Out
       </a>
     </div>

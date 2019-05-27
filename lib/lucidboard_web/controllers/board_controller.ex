@@ -17,7 +17,7 @@ defmodule LucidboardWeb.BoardController do
   end
 
   def create_form(%{assigns: %{user: nil}} = conn, _) do
-    {:see_other, Routes.user_path(conn, :signin_page)}
+    {:see_other, Routes.user_path(conn, :signin)}
   end
 
   def create_form(conn, _params) do
@@ -47,7 +47,7 @@ defmodule LucidboardWeb.BoardController do
   end
 
   def dnd_into_junction(%{body_params: p} = conn, %{"id" => board_id}) do
-    user = conn |> get_session(:user_id) |> Account.get_user!()
+    user = conn |> get_session(:user_id) |> Account.get!()
 
     args = %{
       id: p["what_id"],
@@ -69,7 +69,7 @@ defmodule LucidboardWeb.BoardController do
   # When a pile is dragged onto a pile, p["what"] is "pile", and we straight
   # ignore it. Unsupported action.
   def dnd_into_pile(%{body_params: p} = conn, %{"id" => board_id}) do
-    user = conn |> get_session(:user_id) |> Account.get_user!()
+    user = conn |> get_session(:user_id) |> Account.get!()
 
     if "card" == p["what"] do
       action = {:move_card_to_pile, id: p["what_id"], pile_id: p["pile_id"]}
