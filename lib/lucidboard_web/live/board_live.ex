@@ -17,13 +17,13 @@ defmodule LucidboardWeb.BoardLive do
     socket =
       socket
       |> put_flash(:error, "You must be signed in")
-      |> redirect(to: Routes.user_path(Endpoint, :signin_page))
+      |> redirect(to: Routes.user_path(Endpoint, :signin))
 
     {:stop, socket}
   end
 
   def mount(%{id: board_id, user_id: user_id}, socket) do
-    user = user_id && Account.get_user(user_id)
+    user = user_id && Account.get(user_id)
 
     case LiveBoard.call(String.to_integer(board_id), :state) do
       {:error, error} ->
