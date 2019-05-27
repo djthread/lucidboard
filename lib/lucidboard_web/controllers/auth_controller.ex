@@ -15,9 +15,10 @@ defmodule LucidboardWeb.AuthController do
 
   def signout(conn, _params) do
     conn
-    |> put_flash(:info, "You have been signed out!")
+    |> put_flash(:info, "You have been signed out.")
     |> configure_session(drop: true)
-    |> redirect(to: "/")
+    |> put_status(:see_other)
+    |> redirect(to: Routes.page_path(conn, :index))
   end
 
   def callback(%{assigns: %{ueberauth_failure: _fails}} = conn, _params) do
