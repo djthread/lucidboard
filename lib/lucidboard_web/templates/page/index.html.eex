@@ -12,6 +12,13 @@
 </section>
 
 <main role="main" class="container content">
+  <p>
+    <a class="button is-link" href="/auth/github">
+      <%= fab("github") %>&nbsp;
+      Sign in with GitHub
+    </a>
+  </p>
+
   <h3 class="subtitle is-3">A tool...</h3>
 
   <p>Lucidboard is a tool for teams or individuals looking to:</p>

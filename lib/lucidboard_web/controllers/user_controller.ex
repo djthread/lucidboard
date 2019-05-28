@@ -7,7 +7,13 @@ defmodule LucidboardWeb.UserController do
   @themes Application.get_env(:lucidboard, :themes)
 
   def signin(conn, _params) do
-    render(conn, "signin.html")
+    if signed_in?(conn) do
+      conn
+      |> put_status(:see_other)
+      |> redirect(to: Routes.dashboard_path(conn, :index))
+    else
+      render(conn, "signin.html")
+    end
   end
 
   def settings(conn, _params) do
