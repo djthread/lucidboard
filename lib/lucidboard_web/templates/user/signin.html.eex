@@ -1,14 +1,10 @@
 <div class="jumbotron">
-  <%= if @user do %>
-    <h2>Welcome, <%= @user.name %>!</h2>
-    <%= button "Logout", to: Routes.auth_path(@conn, :signout), method: :post, class: "btn btn-danger" %>
-    <br>
-  <% else %>
-    <%# <a class="btn btn-primary btn-lg" href="/auth/github"> %>
-    <a class="button is-link" href="/auth/github">
-      <%= fab("github") %>&nbsp;
-      Sign in with GitHub
-    </a>
+  <a class="button is-link" href="/auth/github">
+    <span class="icon">
+      <%= fab("github") %>
+    </span>
+    <span>Sign in with GitHub</span>
+  </a>
 
 <%#
     <a class="btn btn-primary btn-lg" href="/auth/identity">
@@ -16,5 +12,4 @@
       Sign in with Username/Password
     </a>
     %>
-  <% end %>
 </div>
