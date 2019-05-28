@@ -27,7 +27,7 @@ defmodule LucidboardWeb.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-    case Account.from_auth(auth) do
+    case Account.auth_to_user(auth) do
       {:ok, user} ->
         conn
         |> put_session(:user_id, user.id)

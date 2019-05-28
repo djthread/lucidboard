@@ -23,8 +23,8 @@ defmodule Lucidboard.Account do
 
   If one does not exist, it will be created.
   """
-  @spec from_auth(Auth.t()) :: {:ok, User.t()} | {:error, String.t()}
-  def from_auth(auth) do
+  @spec auth_to_user(Auth.t()) :: {:ok, User.t()} | {:error, String.t()}
+  def auth_to_user(auth) do
     with {:ok, user} <- apply(@providers[auth.provider], :to_user, [auth]) do
       case Repo.one(from(u in User, where: u.name == ^user.name)) do
         nil -> Repo.insert(user)

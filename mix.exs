@@ -53,8 +53,7 @@ defmodule Lucidboard.MixProject do
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:toml_transformer,
        git: "https://github.com/djthread/toml_transformer.git", app: false},
-      {:ueberauth_github, "~> 0.7"},
-      {:poison, "~> 4.0"}
+      {:ueberauth_github, "~> 0.7"}
     ]
   end
 
