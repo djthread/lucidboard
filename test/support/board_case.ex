@@ -21,7 +21,8 @@ defmodule LucidboardWeb.BoardCase do
       Sandbox.mode(Repo, {:shared, self()})
     end
 
-    user = Repo.insert!(User.new(name: "jeff-#{UUID.generate()}"))
+    user =
+      Repo.insert!(User.new(name: "jeff-#{UUID.generate()}", full_name: "Jeff"))
 
     %{id: board_id} = Repo.insert!(Seeds.board(user))
     board = Twiddler.by_id(board_id)
