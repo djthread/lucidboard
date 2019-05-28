@@ -5,7 +5,7 @@ defmodule LucidboardWeb.DashboardController do
   alias Phoenix.LiveView.Controller, as: LiveViewController
 
   def index(%{assigns: %{user: nil}} = conn, _) do
-    {:see_other, Routes.user_path(conn, :signin_page)}
+    {:see_other, Routes.user_path(conn, :signin)}
   end
 
   def index(conn, _params) do

@@ -1,45 +1,19 @@
 defmodule LucidboardWeb.UserController do
   use LucidboardWeb, :controller
-  import Ecto.Query
   alias Ecto.Changeset
   alias Lucidboard.{Repo, User}
   alias LucidboardWeb.Router.Helpers, as: Routes
 
   @themes Application.get_env(:lucidboard, :themes)
 
-  def signin_page(conn, _params) do
-    render(conn, "signin.html")
-  end
-
-  def signin(conn, %{"signin" => %{"username" => username}}) do
-    case Repo.one(from(u in User, where: u.name == ^username)) do
-      nil ->
-        {:ok, user} = Repo.insert(User.new(name: username))
-
-        conn
-        |> put_session(:user_id, user.id)
-        |> put_flash(:info, """
-        We've created your account and you're now signed in!
-        """)
-        |> redirect(to: Routes.dashboard_path(conn, :index))
-
-      # |> put_flash(:error, "Invalid Email or Password")
-      # |> render("signin.html")
-
-      user ->
-        conn
-        |> put_session(:user_id, user.id)
-        |> put_flash(:info, "You have successfully signed in!")
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+  def signin(conn, _params) do
+    if signed_in?(conn) do
+      conn
+      |> put_status(:see_other)
+      |> redirect(to: Routes.dashboard_path(conn, :index))
+    else
+      render(conn, "signin.html")
     end
-  end
-
-  def signout(conn, _params) do
-    conn
-    |> delete_session(:user_id)
-    |> put_flash(:info, "You have been signout out.")
-    |> put_status(:see_other)
-    |> redirect(to: Routes.page_path(conn, :index))
   end
 
   def settings(conn, _params) do

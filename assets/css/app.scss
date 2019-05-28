@@ -1,10 +1,23 @@
 $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
 @import "../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/brands";
 
 @import "objects/column";
 @import "objects/stack";
 @import "utilities/utilities";
+
+.avatar {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  margin-right: 0.5em;
+
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
 
 .clearpls {
     clear: both;

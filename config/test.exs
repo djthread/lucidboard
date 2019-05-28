@@ -6,8 +6,7 @@ config :lucidboard, LucidboardWeb.Endpoint,
   http: [port: 8801],
   server: false
 
-config :lucidboard, Lucidboard.Repo,
-  pool: Ecto.Adapters.SQL.Sandbox
+config :lucidboard, Lucidboard.Repo, pool: Ecto.Adapters.SQL.Sandbox
 
 # Print only warnings and errors during test
 config :logger, level: :warn
@@ -19,3 +18,7 @@ config :lucidboard, Lucidboard.Repo,
   database: System.get_env("PG_DB") || "lucidboard_test",
   hostname: System.get_env("PG_HOST") || "localhost",
   pool_size: 10
+
+config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+  client_id: System.get_env("GITHUB_CLIENT_ID"),
+  client_secret: System.get_env("GITHUB_CLIENT_SECRET")

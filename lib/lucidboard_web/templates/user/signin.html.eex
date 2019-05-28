@@ -1,14 +1,15 @@
-<div class="auth-form-wrapper">
-  <%= form_for @conn, Routes.user_path(@conn, :signin), [as: :signin], fn f -> %>
-    <div class="text-center mb-4">
-      <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
-    </div>
+<div class="jumbotron">
+  <a class="button is-link" href="/auth/github">
+    <span class="icon">
+      <%= fab("github") %>
+    </span>
+    <span>Sign in with GitHub</span>
+  </a>
 
-    <div class="form-label-group">
-      <%= text_input f, :username, class: "form-control", placeholder: "Username", required: true, autofocus: true %>
-      <%= label f, :username, "Username", class: "control-label" %>
-    </div>
-
-    <%= submit "Sign in" %>
-  <% end %>
+<%#
+    <a class="btn btn-primary btn-lg" href="/auth/identity">
+      <i class="fa fa-user"></i>
+      Sign in with Username/Password
+    </a>
+    %>
 </div>

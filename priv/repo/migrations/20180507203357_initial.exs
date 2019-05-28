@@ -5,7 +5,9 @@ defmodule Lucidboard.Repo.Migrations.Initial do
   def change do
     create table(:users) do
       add(:name, :string, null: false)
+      add(:full_name, :string, null: false)
       add(:settings, :jsonb, null: false, default: "{}")
+      add(:avatar_url, :string)
 
       timestamps()
     end

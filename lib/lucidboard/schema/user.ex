@@ -6,8 +6,10 @@ defmodule Lucidboard.User do
 
   schema "users" do
     field(:name)
+    field(:full_name)
+    field(:avatar_url)
     embeds_one(:settings, UserSettings, on_replace: :delete)
-    many_to_many :cards_liked, Card, join_through: Like
+    many_to_many(:cards_liked, Card, join_through: Like)
 
     timestamps()
   end

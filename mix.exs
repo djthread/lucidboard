@@ -52,8 +52,8 @@ defmodule Lucidboard.MixProject do
       {:distillery, "~> 2.0"},
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:toml_transformer,
-       git: "https://github.com/djthread/toml_transformer.git",
-       app: false}
+       git: "https://github.com/djthread/toml_transformer.git", app: false},
+      {:ueberauth_github, "~> 0.7"}
     ]
   end
 
