@@ -5,7 +5,7 @@ defmodule Lucidboard.Seeds do
 
   def get_user do
     Repo.one(from(u in User, where: u.name == "bob")) ||
-      Repo.insert!(User.new(name: "bob"))
+      Repo.insert!(User.new(name: "bob", full_name: "Mister Bob"))
   end
 
   def insert!(user \\ nil) do

@@ -12,6 +12,17 @@
 </section>
 
 <main role="main" class="container content">
+  <%= unless signed_in?(@conn) do %>
+  <p>
+    <a class="button is-link" href="/auth/github">
+      <span class="icon">
+        <%= fab("github") %>
+      </span>
+      <span>Sign in with GitHub</span>
+    </a>
+  </p>
+  <% end %>
+
   <h3 class="subtitle is-3">A tool...</h3>
 
   <p>Lucidboard is a tool for teams or individuals looking to:</p>

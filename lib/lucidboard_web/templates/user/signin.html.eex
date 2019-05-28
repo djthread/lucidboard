@@ -1,25 +1,15 @@
 <div class="jumbotron">
-  <h2>Überauth + Google</h2>
-  <p class="lead">
-  This is an application to show an example of how to wire up
-  <a href="https://github.com/ueberauth/ueberauth">Überauth</a> with
-  <a href="https://github.com/phoenixframework/phoenix">Phoenix</a>.
-  </p>
+  <a class="button is-link" href="/auth/github">
+    <span class="icon">
+      <%= fab("github") %>
+    </span>
+    <span>Sign in with GitHub</span>
+  </a>
 
-  <%= if @user do %>
-    <h2>Welcome, <%= @user.name %>!</h2>
-    <img src="<%= @user.avatar %>" class="img-circle"/>
-    <%= button "Logout", to: auth_path(@conn, :delete), method: :post, class: "btn btn-danger" %>
-    <br>
-  <% else %>
-    <a class="btn btn-primary btn-lg" href="/auth/github">
-      <i class="fa fa-github"></i>
-      Sign in with GitHub
-    </a>
-
+<%#
     <a class="btn btn-primary btn-lg" href="/auth/identity">
       <i class="fa fa-user"></i>
       Sign in with Username/Password
     </a>
-  <% end %>
+    %>
 </div>

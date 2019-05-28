@@ -22,6 +22,7 @@ defmodule LucidboardWeb do
       use Phoenix.Controller, namespace: LucidboardWeb
       import Plug.Conn
       import LucidboardWeb.Gettext
+      import unquote(__MODULE__), only: [signed_in?: 1]
       alias LucidboardWeb.Router.Helpers, as: Routes
 
       action_fallback(LucidboardWeb.FallbackController)
@@ -34,6 +35,8 @@ defmodule LucidboardWeb do
         root: "lib/lucidboard_web/templates",
         pattern: "**/*",
         namespace: LucidboardWeb
+
+      import unquote(__MODULE__), only: [signed_in?: 1]
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
@@ -72,5 +75,10 @@ defmodule LucidboardWeb do
   """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
+  end
+
+  @doc "Returns true if user is signed in"
+  def signed_in?(conn) do
+    not is_nil(Map.get(conn.assigns, :user))
   end
 end

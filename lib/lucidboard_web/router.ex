@@ -1,10 +1,7 @@
 defmodule LucidboardWeb.Router do
-
   use LucidboardWeb, :router
-
-  require Ueberauth
-
   alias LucidboardWeb.LayoutView
+  # require Ueberauth
 
   pipeline :browser do
     plug(:accepts, ["html"])
@@ -26,8 +23,6 @@ defmodule LucidboardWeb.Router do
 
     get("/:provider", AuthController, :request)
     get("/:provider/callback", AuthController, :callback)
-    post("/:provider/callback", AuthController, :callback)
-    post("/logout", AuthController, :delete)
   end
 
   scope "/", LucidboardWeb do
@@ -35,9 +30,9 @@ defmodule LucidboardWeb.Router do
 
     get("/", PageController, :index)
 
-    get("/signin", UserController, :signin_page)
-    post("/signin", UserController, :signin)
-    get("/signout", UserController, :signout)
+    get("/signin", UserController, :signin)
+    post("/signin", AuthController, :signin)
+    get("/signout", AuthController, :signout)
 
     get("/user-settings", UserController, :settings)
     post("/user-settings", UserController, :update_settings)
