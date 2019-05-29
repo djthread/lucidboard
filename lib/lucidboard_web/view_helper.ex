@@ -26,6 +26,10 @@ defmodule LucidboardWeb.ViewHelper do
     end
   end
 
+  def display_date_time(datetime, mode \\ :short) do
+    Lucidboard.utc_to_formatted(datetime, mode)
+  end
+
   defp fa(family, name, class) do
     extra = if is_nil(class), do: [], else: [class]
     full_class = Enum.join(["icon"] ++ extra, " ")

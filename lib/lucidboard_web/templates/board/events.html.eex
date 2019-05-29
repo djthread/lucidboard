@@ -13,7 +13,7 @@
   <ul>
     <%= for event <- Enum.reverse(@events) do %>
       <li>
-        <%= event.inserted_at %>
+        <%= display_date_time(event.inserted_at) %>
         <strong><%= event.user.name %></strong>
         <%= event.desc %>
       </li>
