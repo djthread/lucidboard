@@ -1,135 +1,79 @@
 .c-Card {
-    transition: background-color .2s ease-in-out;
-}
-
-.c-Card__labels {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.c-Card__label {
-    border-radius: 3px;
-    color: white;
-    cursor: pointer;
-    max-height: 8px;
-    margin: 0 0.55rem 0.25rem 0;
-    min-width: 40px;
-    width: auto;
-    line-height: 100px;
-    overflow: hidden;
-    max-width: 40px;
-    transition: max-width 1s ease-in-out,
-    max-height .5s ease-in-out;;
-}
-
-// if they click on a label that has content, add this class
-.c-Card__label--active {
-    overflow: hidden;
-    white-space: nowrap;
-    max-height: 25px;
-    line-height: 16px;
-    max-width: 20rem;
-    padding: 0.25rem 0.5rem;
-    text-overflow: ellipsis;
-    font-size: 1rem;
-    display: inline-block;
-
-    @media all and (min-width: $desktop) {
-        max-width: 20rem;
-    }
-}
-
-.c-CardModal__label {
-    border-radius: 3px;
-    box-sizing: border-box;
-    display: inline-block;
-    height: 32px;
-    line-height: 32px;
-    margin: 0 4px 4px 0;
-    min-width: 40px;
-    padding: 0 12px;
-    width: auto;
-}
-
-.c-Card__label--turquoise,
-.c-DropDown__item--turquoise {
-    background-color: $turquoise;
-
-    &:hover,
-    &:focus {
-        background-color: darken($turquoise, 15%);
-    }
-}
-
-.c-Card__label--red,
-.c-DropDown__item--red {
-    background-color: $red;
-
-    &:hover,
-    &:focus {
-        background-color: darken($red, 15%);
-    }
-}
-
-.c-Card__label--purple,
-.c-DropDown__item--purple {
-    background-color: $purple;
-
-    &:hover,
-    &:focus {
-        background-color: darken($purple, 15%);
-    }
-}
-
-.c-Card__label--cyan,
-.c-DropDown__item--cyan {
-    background-color: $cyan;
-
-    &:hover,
-    &:focus {
-        background-color: darken($cyan, 15%);
-    }
-}
-
-.c-DropDown__menu {
-    left: -4.75rem;
-    position: relative;
-    top: 2rem;
-}
-
-.c-DropDown__item {
-    width: 100%;
-    display: block;
+  transition: all .2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  cursor: grab;
+    
+    // &:hover {
+    //   .c-Card__actions {
+    //     opacity: 1;
+    //   }
+    // }
 }
 
 .c-Card__content {
-    cursor: pointer;
 }
 
-.t-default {
-    .c-Card:hover {
-        background-color: darken($white, 5%);
+// .t-minty {
+//     .c-Card:hover {
+//         background-color: darken($white, 5%);
+// 
+//         .b-Subtitle {
+//             color: $primary;
+//         }
+//     }
+// 
+//     .card-footer-item:hover {
+//         color: $primary;
+//     }
+// }
 
-        .b-Subtitle {
-            color: $primary;
-        }
-    }
+.c-Card__actions {
+  display: flex;
+  transition: all .2s ease-in-out;
+  // opacity: 0;
+  transition: all .2s ease-in-out;
+  align-self: flex-end;
+  justify-content: space-between;
+}
 
-    .card-footer-item:hover {
-        color: $primary;
-    }
+.c-Card__footer--extra {
+  display: flex;
+  border: 2px solid #343c3d;
+  border-top: 0;
+}
+
+.c-Card__modal {
+  background-color: #282f2f;
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 
 .t-darkly {
-    .c-Card:hover {
-        background-color: darken(#282f2f, 5%);
+  .c-Card {
+    box-shadow: none;
+    border: 2px solid #343c3d;
+    background-color: #282f2f;
+    border-radius: 0;
+    color: #fff;
+    max-width: 100%;
+    position: relative;
+  }
+  
+  .c-Card:hover {
+      background-color: darken(#282f2f, 5%);
 
-        .b-Subtitle {
-            color: lighten($primary, 25%);
-        }
-    }
+      .b-Subtitle {
+          color: lighten($primary, 25%);
+      }
+  }
 
-    .card-footer-item:hover {
-        color: lighten($primary, 25%);
-    }
+  .c-Card__link:hover {
+      color: #cd59d1;
+  }
+}
+
+.js-card-delete .icon {
+  pointer-events: none;
 }

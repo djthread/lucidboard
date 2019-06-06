@@ -1,0 +1,25 @@
+.c-DropDown__button {
+  -webkit-appearance: none;
+  border: 0;
+  font-size: 1rem;
+  background-color: #282f2f;
+  height: 100%;
+  padding: 0.25rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.c-DropDown__button .icon {
+  margin-left: 1rem;
+}
+
+.c-DropDown__menu {
+  width: 100%;
+  padding: 0;
+}
+
+.c-DropDown__content {
+  box-shadow: none;
+}

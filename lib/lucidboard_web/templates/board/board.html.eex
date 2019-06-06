@@ -4,10 +4,10 @@
   {user_locked_card_id, locked_card_ids} =
     locked_cards(@user.id, board.id, @socket.id)
 %>
-<section class="board clearpls columns is-desktop">
+<section class="board u-Width--100 columns is-desktop">
   <%= for column <- board.columns do %>
     <div class="column" data-col-id="<%= column.id %>">
-      <h2 class="subtitle"><%= column.title %></h2>
+      <h2 class="b-TypeHeading--secondary b-TypeHeading--divider"><%= column.title %></h2>
 
       <div class="dropdown is-hoverable <%=
         if column.pos == 0, do: "is-left", else: "is-right"
@@ -63,7 +63,7 @@
       <a href="#"
         phx-click="add_card"
         phx-value="<%= column.id %>"
-        class="is-primary icon-padder">
+        class="is-primary icon-padder js-addCard">
         <%= fas("plus") %><span>Add Card</span>
       </a>
     </div>

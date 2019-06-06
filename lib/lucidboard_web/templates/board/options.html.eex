@@ -1,40 +1,44 @@
-<section class="column-manager clearpls">
-<h2>Manage Columns</h2>
+<section class="column-manager">
+  <div class="">
+    <h2 class="b-TypeHeading--divider subtitle">Manage Columns</h2>
 
-<ul>
-<%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
-  <li class="col-edit-item" phx-click="column_edit" phx-value="<%= id %>">
-    <div class="controls">
-      <%= if pos > 0 do %>
-        <a phx-click="col_up" phx-value="<%= id %>" href="#">
-          <%= fas("angle-up") %>
-        </a>
-      <% end %>
-      <%= if pos < length(@board.columns) - 1 do %>
-        <a phx-click="col_down" phx-value="<%= id %>" href="#">
-          <%= fas("angle-down") %>
-        </a>
-      <% end %>
-    </div>
-    <%= title %>
-  </li>
-<% end %>
-</ul>
+    <ul>
+    <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
+      <li class="c-Card u-Pam u-Mvm" phx-click="column_edit" phx-value="<%= id %>">
+        <%= title %>
+        <div class="controls">
+          <%= if pos > 0 do %>
+            <a phx-click="col_up" phx-value="<%= id %>" href="#" class="c-Card__link">
+              <%= fas("angle-up") %>
+            </a>
+          <% end %>
+          <%= if pos < length(@board.columns) - 1 do %>
+            <a phx-click="col_down" phx-value="<%= id %>" href="#" class="c-Card__link">
+              <%= fas("angle-down") %>
+            </a>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+  
+  <div class="">
+    <%
+      cs_data = Ecto.Changeset.apply_changes(@column_changeset)
 
-<%
-  cs_data = Ecto.Changeset.apply_changes(@column_changeset)
+      {button_txt, title} =
+        if cs_data.id,
+          do: {"Update", "Editing Column: #{cs_data.title}"},
+          else: {"Create", "Create Column"}
+    %>
 
-  {button_txt, title} =
-    if cs_data.id,
-      do: {"Update", "Editing Column: #{cs_data.title}"},
-      else: {"Create", "Create Column"}
-%>
+    <h3><%= title %></h3>
 
-<h3><%= title %></h3>
-
-<%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
-  <%= text_input f, :title, placeholder: "New column title..." %>
-  <%= error_tag f, :title %>
-  <%= submit button_txt, phx_disable_with: "Saving..." %>
-<% end %>
+    <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
+      <%= text_input f, :title, placeholder: "New column title..." %>
+      <%= error_tag f, :title %>
+      <%= submit button_txt, phx_disable_with: "Saving..." %>
+    <% end %>
+  </div>
 </section>

@@ -23,18 +23,20 @@
   <% end %>
 </div>
 
-<footer class="card-footer">
-  <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card-footer-item"><%= fas("heart") %>&nbsp;<%= length(@card.likes) %></a>
-  <a phx-click="modal_card_edit" phx-value="<%= @card.id %>" href="#" class="card-footer-item" data-modal="trigger"><%= fas("edit") %></a>
-  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item"><%= fas("trash-alt") %></a>
+<footer class="c-Card__actions">
+  <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item"><%= fas("heart") %>&nbsp;<%= length(@card.likes) %></a>
+  <!-- <a phx-click="modal_card_edit" phx-value="<%= @card.id %>" href="#" class="card-footer-item" data-modal="trigger"><%= fas("edit") %></a> -->
+  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item"><%= fas("trash-alt") %></a>
 </footer>
 
 <%= if @delete_confirming_card_id == @card.id do %>
-<div class="u-Pam">
-  <p class="u-Mbm">
-  Are you super duper sure?
-  </p>
-  <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button is-primary">Confirm</button>
-  <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button">Cancel</button>
+<div class="c-Card__modal u-Pam">
+  <div class="">
+    <p class="u-Mbm">
+      Are you super duper sure?
+    </p>
+    <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button is-primary">Confirm</button>
+    <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button">Cancel</button>
+  </div>
 </div>
 <% end %>

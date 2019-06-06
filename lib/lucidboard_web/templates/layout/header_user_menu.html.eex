@@ -1,6 +1,6 @@
 <div id="usermenu" class="dropdown is-hoverable is-right">
   <div class="dropdown-trigger">
-    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+    <button class="c-DropDown__button" aria-haspopup="true" aria-controls="dropdown-menu">
       <%= if @user.avatar_url do %>
         <div class="avatar" style="background-image:url('<%= @user.avatar_url %>')"></div>
       <% else %>
@@ -10,8 +10,8 @@
       <%= fas("angle-down", "is-small") %>
     </button>
   </div>
-  <div class="dropdown-menu" id="dropdown-menu" role="menu">
-    <div class="dropdown-content">
+  <div class="c-DropDown__menu dropdown-menu" id="dropdown-menu" role="menu">
+    <div class="c-DropDown__content dropdown-content">
       <a href="<%= Routes.user_path(@conn, :settings) %>" class="dropdown-item">
         Settings
       </a>

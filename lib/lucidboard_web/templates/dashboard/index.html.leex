@@ -7,19 +7,17 @@
   <h2 class="title">All Lucidboards</h2>
 
   <%= for short_board <- @short_boards do %>
-    <a class="card is-block c-Card u-Mbm"
+    <a class="c-Card u-Pal u-Mbm"
       href="<%= Routes.board_path(LucidboardWeb.Endpoint, :index, short_board.id) %>">
-      <div class="c-Card__content card-content">
-        <div class="content">
-          <h3 class="b-Subtitle subtitle is-marginless">
-            <%= short_board.title %>
-          </h3>
-          Created by <strong><%= short_board.username %></strong>.
-          Last updated at
-          <strong title="<%= display_date_time(short_board.updated_at, :long) %>">
-            <%= display_date_time(short_board.updated_at, :short) %>
-          </strong>
-        </div>
+      <div class="content">
+        <h3 class="b-Subtitle subtitle u-Mbs">
+          <%= short_board.title %>
+        </h3>
+        Created by <strong><%= short_board.username %></strong>.
+        Last updated at
+        <strong title="<%= display_date_time(short_board.updated_at, :long) %>">
+          <%= display_date_time(short_board.updated_at, :short) %>
+        </strong>
       </div>
       <%# <footer class="card-footer">
         <a href="#" class="card-footer-item">Settings</a>
