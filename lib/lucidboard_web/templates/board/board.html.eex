@@ -1,9 +1,11 @@
 <%
+  board = if @search, do: @search.board, else: @board
+
   {user_locked_card_id, locked_card_ids} =
-    locked_cards(@user.id, @board.id, @socket.id)
+    locked_cards(@user.id, board.id, @socket.id)
 %>
 <section class="board clearpls columns is-desktop">
-  <%= for column <- @board.columns do %>
+  <%= for column <- board.columns do %>
     <div class="column" data-col-id="<%= column.id %>">
       <h2 class="subtitle"><%= column.title %></h2>
 

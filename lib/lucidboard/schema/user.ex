@@ -22,7 +22,7 @@ defmodule Lucidboard.User do
 
   def changeset(card, attrs) do
     card
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :full_name])
     |> validate_required([:name])
     |> unique_constraint(:name)
   end

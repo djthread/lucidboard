@@ -1,6 +1,20 @@
 Lucidboard Features
 ===================
 
+## Hack Week TODOs
+
+- Column deleting
+- Sort columns by votes, username, date added, date updated
+
+- Send messages into a board event feed
+- Assign colors to cards
+
+- Search cards on a board (realtime)
+
+- Dashboard
+  - search (craheb)
+  - pagination (craheb)
+
 ## Needed before pilot
 
 ### Backend
