@@ -8,8 +8,7 @@ Lucidboard Features
 
 - Send messages into a board event feed
 - Assign colors to cards
-
-- Search cards on a board (realtime)
+- Unvoting
 
 - Dashboard
   - search (craheb)

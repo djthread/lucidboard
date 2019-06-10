@@ -197,6 +197,11 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, assign(socket, :search, search)}
   end
 
+  def handle_event("sortby_votes", col_id, socket) do
+    live_board_action({:sortby_votes, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
   def handle_info({:update, board, event}, socket) do
     events =
       if event do

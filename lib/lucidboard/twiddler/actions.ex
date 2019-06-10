@@ -194,6 +194,23 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  def sortby_votes(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, col_lens} <- Glass.column_by_id(board, id),
+         column <- Focus.view(col_lens, board) do
+      {sorted_piles, tx_fn} =
+        column
+        |> Map.get(:piles)
+        |> Enum.sort(fn p1, p2 -> Op.likes(p1) > Op.likes(p2) end)
+        |> Op.renumber_piles()
+
+      new_board = Focus.set(col_lens, board, %{column | piles: sorted_piles})
+
+      {:ok, new_board, tx_fn, %{},
+       event("Sorted `#{column.title}` column by votes.")}
+    end
+  end
+
   # Ex. Given `%{a: 1}` and `[:a, :b?]`, return `[1, nil]`. The trailing `?`
   # indicates that the field is required. Without it, an error will be returned
   # if the key is not found in args.

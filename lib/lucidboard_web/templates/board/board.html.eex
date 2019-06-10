@@ -9,6 +9,21 @@
     <div class="column" data-col-id="<%= column.id %>">
       <h2 class="subtitle"><%= column.title %></h2>
 
+      <div class="dropdown is-hoverable is-right">
+        <div class="dropdown-trigger">
+          <button class="button" aria-haspopup="true" aria-controls="column-menu">
+            <%= fas("ellipsis-h") %>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="column-menu" role="menu">
+          <div class="dropdown-content">
+            <a href="#" phx-click="sortby_votes" phx-value="<%= column.id %>" class="dropdown-item">
+              Sort by Votes
+            </a>
+          </div>
+        </div>
+      </div>
+
       <%= for pile <- column.piles do %>
         <div
           data-pos="<%= pile.pos %>"

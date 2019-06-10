@@ -235,6 +235,23 @@ defmodule Lucidboard.Twiddler.Op do
     {:ok, built_col, loaded_col, %{card: new_card}}
   end
 
+  @doc """
+  Given a list of reordered piles, renumber the `:pos` fields and build a
+  tx_fn to sync the database
+  """
+  def renumber_piles(piles) do
+    renumbered = renumber_positions(piles)
+
+    tx_fn = fn ->
+      Enum.each(renumbered, fn pile ->
+        from(p in Pile, where: p.id == ^pile.id)
+        |> Repo.update_all(set: [pos: pile.pos])
+      end)
+    end
+
+    {renumbered, tx_fn}
+  end
+
   @doc "Move the top card to the bottom of a pile"
   def flip_pile(board, pile_lens) do
     %{cards: [top_card | cards]} = pile = Focus.view(board, pile_lens)
@@ -325,6 +342,14 @@ defmodule Lucidboard.Twiddler.Op do
     else
       target_pos
     end
+  end
+
+  @doc "Calculate the number of likes"
+  @spec likes(Pile.t()) :: integer
+  def likes(%Pile{cards: cards}) do
+    Enum.reduce(cards, 0, fn %{likes: likes}, acc ->
+      acc + length(likes)
+    end)
   end
 
   defp renumber_positions(items) do
