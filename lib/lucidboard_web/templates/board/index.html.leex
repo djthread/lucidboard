@@ -1,7 +1,7 @@
 <div class="o-CenteredColumn o-CenteredColumn--wide">
   <div class="right-panel tabs is-toggle">
     <ul>
-      <li class="boardsearch">
+      <li class="boardsearch <%= if @search, do: ~s(active) %>">
         <form phx-change="search_key">
           <input type="text" name="q" list="matches" placeholder="Search...">
         </form>

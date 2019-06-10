@@ -9,7 +9,9 @@
     <div class="column" data-col-id="<%= column.id %>">
       <h2 class="subtitle"><%= column.title %></h2>
 
-      <div class="dropdown is-hoverable is-right">
+      <div class="dropdown is-hoverable <%=
+        if column.pos == 0, do: "is-left", else: "is-right"
+      %>">
         <div class="dropdown-trigger">
           <button class="button" aria-haspopup="true" aria-controls="column-menu">
             <%= fas("ellipsis-h") %>

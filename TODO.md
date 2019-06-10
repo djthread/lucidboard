@@ -3,12 +3,15 @@ Lucidboard Features
 
 ## Hack Week TODOs
 
+- disable board features when search is active
+
 - Column deleting
-- Sort columns by votes, username, date added, date updated
 
 - Send messages into a board event feed
 - Assign colors to cards
 - Unvoting
+- Board freezing
+- Private boards
 
 - Dashboard
   - search (craheb)
