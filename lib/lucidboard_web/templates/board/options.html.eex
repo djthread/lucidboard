@@ -39,3 +39,28 @@
   <%= submit button_txt, phx_disable_with: "Saving..." %>
 <% end %>
 </section>
+
+<h2>Board Options</h2>
+
+<%# TODO: fix validation output. hints at https://elixirforum.com/t/dynamic-nested-forms/13765/7 %>
+<%= form_for @board_changeset, "#", [phx_submit: :board_options_save], fn f -> %>
+  <ul>
+  <%= inputs_for f, :options, fn o -> %>
+    <li>
+    <%= label o, :votes_per_user do %>
+      Votes per User
+      <%= text_input o, :votes_per_user %>
+      <%= error_tag o, :votes_per_user %>
+    <% end %>
+    </li>
+    <li>
+    <%= label o, :votes_per_user_per_card do %>
+      Votes per User per Card
+      <%= text_input o, :votes_per_user_per_card %>
+      <%= error_tag o, :votes_per_user_per_card %>
+    <% end %>
+    </li>
+  <% end %>
+  </ul>
+  <%= submit "Save", phx_disable_with: "Saving..." %>
+<% end %>

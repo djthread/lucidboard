@@ -16,7 +16,7 @@ defmodule Lucidboard.Repo.Migrations.Initial do
 
     create table(:boards) do
       add(:title, :string, null: false)
-      add(:settings, :jsonb, null: false, default: "{}")
+      add(:options, :jsonb, null: false, default: "{}")
       add(:user_id, references(:users), null: false)
 
       timestamps()

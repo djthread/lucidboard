@@ -7,7 +7,7 @@
 
       <div class="field">
         <div class="control is-medium">
-          <%= text_input f, :title, class: "input is-medium", placeholder: "Title" %>
+          <%= text_input f |> IO.inspect    , :title, class: "input is-medium", placeholder: "Title" %>
         </div>
       </div>
 

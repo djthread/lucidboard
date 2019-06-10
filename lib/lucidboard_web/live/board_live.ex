@@ -3,7 +3,16 @@ defmodule LucidboardWeb.BoardLive do
   use Phoenix.LiveView
   import LucidboardWeb.BoardLive.Helper
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Column, LiveBoard, Presence, TimeMachine}
+
+  alias Lucidboard.{
+    Account,
+    Board,
+    Column,
+    LiveBoard,
+    Presence,
+    TimeMachine
+  }
+
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.{BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
@@ -46,7 +55,14 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:user, user)
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
-          |> assign(:column_changeset, new_column_changeset())
+          |> assign(
+            :board_changeset,
+            board |> Map.delete(:columns) |> Board.changeset(%{})
+          )
+          |> assign(
+            :column_changeset,
+            Column.changeset(%Column{}, %{})
+          )
           |> assign(:delete_confirming_card_id, nil)
           |> assign(:online_count, online_count(board.id))
           |> assign(:search, nil)
@@ -160,10 +176,29 @@ defmodule LucidboardWeb.BoardLive do
 
         live_board_action(action, socket)
 
-        {:noreply, assign(socket, column_changeset: new_column_changeset())}
+        {:noreply,
+         assign(socket, column_changeset: Column.changeset(%Column{}, %{}))}
 
       invalid_changeset ->
         {:noreply, assign(socket, column_changeset: invalid_changeset)}
+    end
+  end
+
+  def handle_event("board_options_save", form_data, socket) do
+    case Board.changeset(socket.assigns.board_changeset, form_data["board"]) do
+      %{valid?: true} = changeset ->
+        {:update_board,
+         options:
+           changeset
+           |> Changeset.apply_changes()
+           |> Map.get(:options)
+           |> Map.from_struct()}
+        |> live_board_action(socket)
+
+        {:noreply, socket}
+
+      invalid_changeset ->
+        {:noreply, assign(socket, board_changeset: invalid_changeset)}
     end
   end
 
@@ -215,6 +250,10 @@ defmodule LucidboardWeb.BoardLive do
       |> assign(:board, board)
       |> assign(:events, events)
       |> assign(:search, get_search_assign(socket.assigns.search, board))
+      |> assign(
+        :board_changeset,
+        board |> Map.delete(:columns) |> Board.changeset(%{})
+      )
 
     {:noreply, socket}
   end

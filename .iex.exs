@@ -2,7 +2,7 @@ import Ecto.Query
 alias Ecto.{Changeset, UUID}
 alias Lucidboard.{
   Board,
-  BoardSettings,
+  BoardOptions,
   Column,
   Card,
   Event,
