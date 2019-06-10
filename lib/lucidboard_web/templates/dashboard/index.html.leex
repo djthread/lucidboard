@@ -14,8 +14,11 @@
           <h3 class="b-Subtitle subtitle is-marginless">
             <%= short_board.title %>
           </h3>
-          Created by <strong><%= short_board.username %></strong>,
-          Last updated at <strong><%= short_board.updated_at %></strong>
+          Created by <strong><%= short_board.username %></strong>.
+          Last updated at
+          <strong title="<%= display_date_time(short_board.updated_at, :long) %>">
+            <%= display_date_time(short_board.updated_at, :short) %>
+          </strong>
         </div>
       </div>
       <%# <footer class="card-footer">

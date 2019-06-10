@@ -33,6 +33,8 @@ config :lucidboard, :default_theme, "minty"
 
 config :lucidboard, :themes, ~w(minty darkly)
 
+config :lucidboard, :timezone, "America/Detroit"
+
 config :phoenix, :json_library, Jason
 
 # Configures Elixir's Logger
