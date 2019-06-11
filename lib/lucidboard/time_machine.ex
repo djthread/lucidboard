@@ -13,11 +13,11 @@ defmodule Lucidboard.TimeMachine do
 
     Repo.all(
       from(e in Event,
-        preload: [:user],
         where: e.board_id == ^board_id,
         order_by: [desc: e.inserted_at],
         limit: ^size,
-        offset: ^((page - 1) * size)
+        offset: ^((page - 1) * size),
+        preload: [:user]
       )
     )
   end

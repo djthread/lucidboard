@@ -1,6 +1,7 @@
 defmodule LucidboardWeb.ViewHelper do
   @moduledoc "Helper functions for all views"
   import Phoenix.HTML, only: [raw: 1]
+  alias Lucidboard.Event
 
   @doc "Create a font-awesome icon by name"
   def fas(name, class \\ nil), do: fa("fas", name, class)
@@ -28,6 +29,18 @@ defmodule LucidboardWeb.ViewHelper do
 
   def display_date_time(datetime, mode \\ :short) do
     Lucidboard.utc_to_formatted(datetime, mode)
+  end
+
+  def display_event(%Event{
+        inserted_at: inserted_at,
+        user: %{name: name},
+        desc: desc
+      }) do
+    raw("""
+    #{display_date_time(inserted_at)} \
+    <strong>#{name}</strong> \
+    #{desc}\
+    """)
   end
 
   defp fa(family, name, class) do

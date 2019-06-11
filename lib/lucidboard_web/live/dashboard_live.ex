@@ -19,18 +19,16 @@ defmodule LucidboardWeb.DashboardLive do
   end
 
   def mount(%{user_id: _user_id}, socket) do
-    # user = user_id && Account.get(user_id)
     Lucidboard.subscribe("short_boards")
 
     board_pagination = Twiddler.boards()
-
     short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
 
     socket =
-      socket
-      |> assign(:short_boards, short_boards)
-      |> assign(:board_pagination, board_pagination)
-      |> assign(:search_key, nil)
+      assign(socket,
+        short_boards: short_boards,
+        board_pagination: board_pagination,
+        search_key: nil)
 
     {:ok, socket}
   end
