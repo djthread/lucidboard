@@ -194,7 +194,7 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  def sortby_votes(board, args) do
+  def sortby_likes(board, args) do
     with [id] <- grab(args, [:id]),
          {:ok, col_lens} <- Glass.column_by_id(board, id),
          column <- Focus.view(col_lens, board) do
@@ -207,7 +207,7 @@ defmodule Lucidboard.Twiddler.Actions do
       new_board = Focus.set(col_lens, board, %{column | piles: sorted_piles})
 
       {:ok, new_board, tx_fn, %{},
-       event("Sorted `#{column.title}` column by votes.")}
+       event("Sorted `#{column.title}` column by likes.")}
     end
   end
 
