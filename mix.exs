@@ -25,7 +25,13 @@ defmodule Lucidboard.MixProject do
   def application do
     [
       mod: {Lucidboard.Application, []},
-      extra_applications: [:logger, :runtime_tools, :toml, :toml_transformer]
+      extra_applications: [
+        :logger,
+        :runtime_tools,
+        :toml,
+        :toml_transformer,
+        :scrivener_ecto
+      ]
     ]
   end
 
@@ -54,7 +60,8 @@ defmodule Lucidboard.MixProject do
       {:toml_transformer,
        git: "https://github.com/djthread/toml_transformer.git", app: false},
       {:ueberauth_github, "~> 0.7"},
-      {:timex, "~> 3.1"}
+      {:timex, "~> 3.1"},
+      {:scrivener_ecto, "~> 2.0"}
     ]
   end
 
