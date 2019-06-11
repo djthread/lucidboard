@@ -1,6 +1,11 @@
 <div class="o-CenteredColumn o-CenteredColumn--wide">
   <div class="right-panel tabs is-toggle">
     <ul>
+      <li class="boardsearch <%= if @search, do: ~s(active) %>">
+        <form phx-change="search_key">
+          <input type="text" name="q" list="matches" placeholder="Search...">
+        </form>
+      </li>
       <li class="online-short">
         <a phx-click="tab" phx-value="events" href="#">
           <span class="onlinedot">&bull;</span> &nbsp; <%= @online_count %> Online

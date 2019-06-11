@@ -1,9 +1,11 @@
 defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
   use Phoenix.LiveView
+  import LucidboardWeb.BoardLive.Helper
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, TimeMachine}
+  alias Lucidboard.{Account, Column, LiveBoard, Presence, TimeMachine}
   alias Lucidboard.Twiddler.Op
+  alias LucidboardWeb.BoardLive.Search
   alias LucidboardWeb.{BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Socket
@@ -48,6 +50,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:column_changeset, new_column_changeset())
           |> assign(:delete_confirming_card_id, nil)
           |> assign(:online_count, online_count(board.id))
+          |> assign(:search, nil)
 
         {:ok, socket}
     end
@@ -185,6 +188,20 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("search_key", %{"q" => q}, socket) do
+    search =
+      if "" == q,
+        do: nil,
+        else: %Search{q: q, board: Search.query(socket.assigns.board, q)}
+
+    {:noreply, assign(socket, :search, search)}
+  end
+
+  def handle_event("sortby_votes", col_id, socket) do
+    live_board_action({:sortby_votes, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
   def handle_info({:update, board, event}, socket) do
     events =
       if event do
@@ -215,80 +232,4 @@ defmodule LucidboardWeb.BoardLive do
 
   def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"
   def topic(board_id), do: "board:#{board_id}"
-
-  def user(%Socket{assigns: %{user: user}}), do: user
-
-  def user_id(%Socket{assigns: %{user: %{id: id}}}), do: id
-
-  defp finish_card_edit(socket) do
-    Presence.update(
-      self(),
-      topic(socket),
-      socket.assigns.user.id,
-      &Map.drop(&1, [:locked_card_id])
-    )
-
-    assigns = Map.drop(socket.assigns, [:card_changeset])
-    Map.put(socket, :assigns, assigns)
-  end
-
-  defp presence_lock_card(socket, card) do
-    Presence.update(
-      self(),
-      topic(socket),
-      socket.assigns.user.id,
-      &Map.put(&1, :locked_card_id, card.id)
-    )
-
-    assign(socket, :card_changeset, Card.changeset(card))
-  end
-
-  @spec save_card(Socket.t(), map) :: {:ok | :invalid, Socket.t()}
-  defp save_card(socket, form_data) do
-    card = Changeset.apply_changes(socket.assigns.card_changeset)
-
-    case Card.changeset(card, form_data["card"]) do
-      %{valid?: true} = changeset ->
-        card = Changeset.apply_changes(changeset)
-
-        unless delete_card_if_empty(socket, card) do
-          {:update_card, %{id: card.id, body: String.trim(card.body)}}
-          |> live_board_action(socket)
-        end
-
-        {:ok, finish_card_edit(socket)}
-
-      invalid_changeset ->
-        {:invalid, assign(socket, card_changeset: invalid_changeset)}
-    end
-  end
-
-  defp delete_card_if_empty(socket, card) do
-    if "" == String.trim(card.body || "") do
-      live_board_action({:delete_card, %{id: card.id}}, socket)
-      true
-    else
-      false
-    end
-  end
-
-  defp live_board_action(action, %Socket{} = socket) do
-    live_board_action(action, socket.assigns.board.id, socket.assigns.user)
-  end
-
-  defp live_board_action(action, board_id, user) do
-    {:ok, _} = LiveBoard.call(board_id, {:action, action, user: user})
-  end
-
-  defp new_column_changeset do
-    Column.changeset(%Column{}, %{})
-  end
-
-  defp online_count(socket_or_board_id) do
-    socket_or_board_id |> online_users() |> Map.keys() |> length()
-  end
-
-  defp online_users(socket_or_board_id) do
-    socket_or_board_id |> topic() |> Presence.list()
-  end
 end

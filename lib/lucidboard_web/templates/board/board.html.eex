@@ -1,11 +1,30 @@
 <%
+  board = if @search, do: @search.board, else: @board
+
   {user_locked_card_id, locked_card_ids} =
-    locked_cards(@user.id, @board.id, @socket.id)
+    locked_cards(@user.id, board.id, @socket.id)
 %>
 <section class="board clearpls columns is-desktop">
-  <%= for column <- @board.columns do %>
+  <%= for column <- board.columns do %>
     <div class="column" data-col-id="<%= column.id %>">
       <h2 class="subtitle"><%= column.title %></h2>
+
+      <div class="dropdown is-hoverable <%=
+        if column.pos == 0, do: "is-left", else: "is-right"
+      %>">
+        <div class="dropdown-trigger">
+          <button class="button" aria-haspopup="true" aria-controls="column-menu">
+            <%= fas("ellipsis-h") %>
+          </button>
+        </div>
+        <div class="dropdown-menu" id="column-menu" role="menu">
+          <div class="dropdown-content">
+            <a href="#" phx-click="sortby_votes" phx-value="<%= column.id %>" class="dropdown-item">
+              Sort by Votes
+            </a>
+          </div>
+        </div>
+      </div>
 
       <%= for pile <- column.piles do %>
         <div
