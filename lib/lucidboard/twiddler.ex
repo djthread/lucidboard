@@ -32,7 +32,7 @@ defmodule Lucidboard.Twiddler do
         {:ok, board, nil, nil, nil}
 
       %Changeset{} = cs ->
-        {:error, changeset_to_string(cs)}
+        {:error, cs}
     end
   end
 
@@ -101,12 +101,12 @@ defmodule Lucidboard.Twiddler do
           {:ok, Board.t()} | {:error, Ecto.Changeset.t(Board.t())}
   def insert(%Board{} = board), do: Repo.insert(board)
 
-  defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do
-    msg =
-      errs
-      |> Enum.map(fn {k, err} -> "#{k}: #{err}" end)
-      |> Enum.join(", ")
+  # defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do
+  #   msg =
+  #     errs
+  #     |> Enum.map(fn {k, err} -> "#{k}: #{err}" end)
+  #     |> Enum.join(", ")
 
-    "Error: #{msg}"
-  end
+  #   "Error: #{msg}"
+  # end
 end

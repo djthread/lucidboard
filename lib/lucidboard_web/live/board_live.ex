@@ -49,23 +49,19 @@ defmodule LucidboardWeb.BoardLive do
         Presence.track(self(), identifier, user.id, presence_meta)
 
         socket =
-          socket
-          |> assign(:board, board)
-          |> assign(:events, events)
-          |> assign(:user, user)
-          |> assign(:modal_open?, false)
-          |> assign(:tab, :board)
-          |> assign(
-            :board_changeset,
-            board |> Map.delete(:columns) |> Board.changeset(%{})
+          assign(socket,
+            board: board,
+            events: events,
+            user: user,
+            modal_open?: false,
+            tab: :board,
+            board_changeset:
+              board |> Map.delete(:columns) |> Board.changeset(%{}),
+            column_changeset: Column.changeset(%Column{}, %{}),
+            delete_confirming_card_id: nil,
+            online_count: online_count(board.id),
+            search: nil
           )
-          |> assign(
-            :column_changeset,
-            Column.changeset(%Column{}, %{})
-          )
-          |> assign(:delete_confirming_card_id, nil)
-          |> assign(:online_count, online_count(board.id))
-          |> assign(:search, nil)
 
         {:ok, socket}
     end
@@ -185,21 +181,13 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("board_options_save", form_data, socket) do
-    case Board.changeset(socket.assigns.board_changeset, form_data["board"]) do
-      %{valid?: true} = changeset ->
-        {:update_board,
-         options:
-           changeset
-           |> Changeset.apply_changes()
-           |> Map.get(:options)
-           |> Map.from_struct()}
-        |> live_board_action(socket)
+    socket =
+      case live_board_action({:update_board, form_data["board"]}, socket) do
+        {:ok, _} -> socket
+        {:error, cs} -> assign(socket, board_changeset: cs)
+      end
 
-        {:noreply, socket}
-
-      invalid_changeset ->
-        {:noreply, assign(socket, board_changeset: invalid_changeset)}
-    end
+    {:noreply, socket}
   end
 
   def handle_event("flip_pile", pile_id, socket) do
@@ -254,6 +242,10 @@ defmodule LucidboardWeb.BoardLive do
         :board_changeset,
         board |> Map.delete(:columns) |> Board.changeset(%{})
       )
+    # |> assign(
+    #   :board_changeset,
+    #   board |> Map.delete(:columns) |> Board.changeset(%{})
+    # )
 
     {:noreply, socket}
   end

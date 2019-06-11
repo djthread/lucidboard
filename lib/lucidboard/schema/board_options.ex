@@ -20,15 +20,13 @@ defmodule Lucidboard.BoardOptions do
   @doc false
   def changeset(options, attrs) do
     per_user =
-      with num when not is_nil(num) <- attrs["votes_per_user"] || attrs[:votes_per_user] do
-        String.to_integer(num)
+      case attrs["votes_per_user"] || options.votes_per_user do
+        str when is_binary(str) -> String.to_integer(str)
+        int when is_integer(int) -> int
       end
 
-    IO.inspect({options, attrs})
     options
     |> cast(attrs, [:votes_per_user, :votes_per_user_per_card])
-    |> validate_number(:votes_per_user_per_card,
-      less_than: IO.inspect(per_user)
-    )
+    |> validate_number(:votes_per_user_per_card, less_than: per_user)
   end
 end

@@ -68,7 +68,8 @@ defmodule LucidboardWeb.BoardLive.Helper do
   end
 
   def live_board_action(action, board_id, user) do
-    {:ok, _} = LiveBoard.call(board_id, {:action, action, user: user})
+    {:ok, result} = LiveBoard.call(board_id, {:action, action, user: user})
+    result
   end
 
   def online_count(socket_or_board_id) do
