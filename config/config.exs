@@ -47,7 +47,8 @@ config :oauth2, serializers: %{"application/json" => Jason}
 config :ueberauth, Ueberauth,
   providers: [
     github: {Ueberauth.Strategy.Github, [default_scope: "user:email"]},
-    pingfed: {Ueberauth.Strategy.PingFed, [default_scope: "profile", send_redirect_uri: false]}
+    pingfed: {Ueberauth.Strategy.PingFed, [default_scope: "openid profile email", send_redirect_uri: false]}
+    # TODO find out why send_redirect_uri: false
   ]
 
 # Import environment specific config. This must remain at the bottom
