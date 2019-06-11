@@ -27,6 +27,16 @@
     </a>
   <% end %>
 
+  <%= if @board_pagination.page_number > 1 do %>
+    <button phx-click="paginate" phx-value="prev">Previous</button>
+  <% end %>
+
+  <%= if @board_pagination.page_number < @board_pagination.total_pages do %>
+    <button phx-click="paginate" phx-value="next">Next</button>
+  <% end %>
+  Showing page <%= @board_pagination.page_number %> of <%= @board_pagination.total_pages %><br />
+  Total boards: <%= @board_pagination.total_entries %>
+
   <%= if @short_boards == [] do %>
     <em>No Lucidboards!</em>
   <% end %>

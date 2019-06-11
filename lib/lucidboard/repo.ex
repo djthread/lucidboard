@@ -3,6 +3,8 @@ defmodule Lucidboard.Repo do
     otp_app: :lucidboard,
     adapter: Ecto.Adapters.Postgres
 
+  use Scrivener, page_size: 10
+
   @doc """
   Dynamically loads the repository url from the
   DATABASE_URL environment variable.

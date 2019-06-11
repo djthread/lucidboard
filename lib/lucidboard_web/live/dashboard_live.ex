@@ -22,11 +22,14 @@ defmodule LucidboardWeb.DashboardLive do
     # user = user_id && Account.get(user_id)
     Lucidboard.subscribe("short_boards")
 
-    short_boards = Enum.map(Twiddler.boards(), &ShortBoard.from_board/1)
+    board_pagination = Twiddler.boards()
+
+    short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
 
     socket =
       socket
       |> assign(:short_boards, short_boards)
+      |> assign(:board_pagination, board_pagination)
 
     {:ok, socket}
   end
@@ -34,5 +37,23 @@ defmodule LucidboardWeb.DashboardLive do
   def handle_info({:new, short_board}, socket) do
     short_boards = List.insert_at(socket.assigns.short_boards, 0, short_board)
     {:noreply, assign(socket, :short_boards, short_boards)}
+  end
+
+  def handle_event("paginate", direction, socket) do
+    paginate_direction = if direction == "prev", do: -1, else: 1
+
+    board_pagination =
+      Twiddler.boards(
+        socket.assigns.board_pagination.page_number + paginate_direction
+      )
+
+    short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
+
+    socket =
+      socket
+      |> assign(:short_boards, short_boards)
+      |> assign(:board_pagination, board_pagination)
+
+    {:noreply, socket}
   end
 end
