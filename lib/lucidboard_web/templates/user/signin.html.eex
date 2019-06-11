@@ -5,6 +5,12 @@
     </span>
     <span>Sign in with GitHub</span>
   </a>
+  <a class="button is-link" href="/auth/pingfed">
+      <span class="icon">
+          <%= fab("pingfed") %>
+      </span>
+      <span>Sign in with PingFed</span>
+  </a>
 
 <%#
     <a class="btn btn-primary btn-lg" href="/auth/identity">
