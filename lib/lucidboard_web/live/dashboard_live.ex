@@ -43,8 +43,9 @@ defmodule LucidboardWeb.DashboardLive do
     paginate_direction = if direction == "prev", do: -1, else: 1
 
     board_pagination =
-      (socket.assigns.board_pagination.page_number + paginate_direction)
-      |> Twiddler.boards()
+      Twiddler.boards(
+        socket.assigns.board_pagination.page_number + paginate_direction
+      )
 
     short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
 

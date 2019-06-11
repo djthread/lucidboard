@@ -82,12 +82,14 @@ defmodule Lucidboard.Twiddler do
   @doc "Get a list of board records"
   @spec boards(integer) :: [Board.t()]
   def boards(page_index \\ 1) do
-    from(b in Board,
-      left_join: u in assoc(b, :user),
-      order_by: [desc: b.updated_at],
-      preload: :user
-    )
-    |> Repo.paginate(page: page_index)
+    query =
+      from(b in Board,
+        left_join: u in assoc(b, :user),
+        order_by: [desc: b.updated_at],
+        preload: :user
+      )
+
+    Repo.paginate(query, page: page_index)
   end
 
   @doc "Insert a board record"
