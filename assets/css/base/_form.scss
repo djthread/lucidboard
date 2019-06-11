@@ -29,3 +29,19 @@
     min-height: 1.75rem;
     max-height: 1.75rem;
 }
+
+.button {
+  height: auto;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+  top: 60%;
+}
+
+.t-darkly .button.is-primary.is-outlined {
+  color: #afd6ff;
+
+  &:hover {
+    color: $white;
+  }
+}

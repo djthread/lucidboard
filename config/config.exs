@@ -29,9 +29,9 @@ config :lucidboard, :templates, %{
   }
 }
 
-config :lucidboard, :default_theme, "minty"
+config :lucidboard, :default_theme, "light"
 
-config :lucidboard, :themes, ~w(minty darkly)
+config :lucidboard, :themes, ~w(light dark)
 
 config :lucidboard, :timezone, "America/Detroit"
 
