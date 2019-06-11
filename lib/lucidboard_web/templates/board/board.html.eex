@@ -4,7 +4,7 @@
   {user_locked_card_id, locked_card_ids} =
     locked_cards(@user.id, board.id, @socket.id)
 %>
-<section class="board u-Width--100 columns is-desktop">
+<section class="board u-Width--100 columns is-desktop u-Man">
   <%= for column <- board.columns do %>
     <div class="column" data-col-id="<%= column.id %>">
       <h2 class="b-TypeHeading--secondary b-TypeHeading--divider"><%= column.title %></h2>

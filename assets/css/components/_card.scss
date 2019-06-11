@@ -4,14 +4,18 @@
   flex-direction: column;
   cursor: grab;
     
-    // &:hover {
     //   .c-Card__actions {
     //     opacity: 1;
     //   }
     // }
 }
 
-.c-Card__content {
+.c-Card--clickable {
+  &:hover {
+    .content {
+      color: #739ac2;
+    }
+  }
 }
 
 // .t-minty {
@@ -27,6 +31,10 @@
 //         color: $primary;
 //     }
 // }
+
+.c-Card__content {
+  word-wrap: break-word;
+}
 
 .c-Card__actions {
   display: flex;
@@ -67,10 +75,6 @@
       .b-Subtitle {
           color: lighten($primary, 25%);
       }
-  }
-
-  .c-Card__link:hover {
-      color: #cd59d1;
   }
 }
 

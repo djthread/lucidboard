@@ -1,6 +1,6 @@
-<section class="column-manager">
+<section class="column-manager u-Phm">
   <div class="">
-    <h2 class="b-TypeHeading--divider subtitle">Manage Columns</h2>
+    <h2 class="b-TypeHeading--secondary b-TypeHeading--divider">Manage Columns</h2>
 
     <ul>
     <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>

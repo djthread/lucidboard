@@ -1,4 +1,4 @@
-<section class="events">
+<section class="events u-Phm">
   <div class="event-list">
     <ul>
       <%= for event <- Enum.reverse(@events) do %>

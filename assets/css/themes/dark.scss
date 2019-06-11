@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
 @import "../../node_modules/bulmaswatch/darkly/variables";
 
+// $link-hover: #cd59d1;
+$link-hover: #0f96f0;
+
 @import "../settings/settings";
 $dropdown-item-hover-color: lighten($primary, 25%);
 

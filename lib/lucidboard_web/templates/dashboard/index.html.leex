@@ -7,7 +7,7 @@
   <h2 class="title">All Lucidboards</h2>
 
   <%= for short_board <- @short_boards do %>
-    <a class="c-Card u-Pal u-Mbm"
+    <a class="c-Card c-Card--clickable u-Pal u-Mbm"
       href="<%= Routes.board_path(LucidboardWeb.Endpoint, :index, short_board.id) %>">
       <div class="content">
         <h3 class="b-Subtitle subtitle u-Mbs">
