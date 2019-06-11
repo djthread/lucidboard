@@ -98,6 +98,11 @@ Grant owner access to <input type="text" name="user" list="matches" placeholder=
       <%= avatar(role.user) %>
       <%= display_name(role.user) %>
       (<%= role.role %>)
+      <%#= unless role.user.id == @user.id do %>
+      <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
+        <%= fas("user-minus") %>
+      </a>
+      <%# end %>
     </li>
   <% end %>
 </ul>

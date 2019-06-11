@@ -248,6 +248,16 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("revoke", user_id, socket) do
+    live_board_action({:revoke, id: user_id}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("sortby_votes", col_id, socket) do
+    live_board_action({:sortby_votes, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
   def handle_event("delete_column", col_id, socket) do
     live_board_action({:delete_column, id: col_id}, socket)
     {:noreply, socket}

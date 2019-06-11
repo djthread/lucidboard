@@ -20,7 +20,7 @@ defmodule Lucidboard.Account do
   end
 
   @spec has_role?(User.t(), Board.t(), atom) :: boolean
-  def has_role?(%User{id: user_id}, %Board{board_roles: roles}, role \\ :owner) do
+  def has_role?(%User{id: user_id}, %Board{board_roles: roles}, role) do
     Enum.any?(roles, fn
       %{user_id: ^user_id, role: ^role} -> true
       _ -> false
@@ -36,17 +36,33 @@ defmodule Lucidboard.Account do
     )
   end
 
+  @spec grant(integer, integer, atom) :: :ok | :error
   def grant(user_id, board_id, role) do
     with %User{id: user_id} <- Repo.get(User, user_id),
          %Board{id: board_id} = board <-
-           Board |> Repo.get(board_id) |> Repo.preload(:board_roles) do
-      new_role = BoardRole.new(user_id: user_id, board_id: board_id, role: role)
-
-      board
-      |> Board.changeset()
-      |> Changeset.put_assoc(:board_roles, [new_role | board.board_roles])
-      |> Repo.update()
+           Board |> Repo.get(board_id) |> Repo.preload(:board_roles),
+         new_role <-
+           BoardRole.new(user_id: user_id, board_id: board_id, role: role),
+         {:ok, _} <-
+           board
+           |> Board.changeset()
+           |> Changeset.put_assoc(:board_roles, [new_role | board.board_roles])
+           |> Repo.update() do
+      :ok
+    else
+      _ -> :error
     end
+  end
+
+  @spec revoke(integer, integer) :: :ok
+  def revoke(user_id, board_id) do
+    Repo.delete_all(
+      from(r in BoardRole,
+        where: r.user_id == ^user_id and r.board_id == ^board_id
+      )
+    )
+
+    :ok
   end
 
   @doc """
