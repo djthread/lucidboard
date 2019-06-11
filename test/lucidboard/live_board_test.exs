@@ -14,7 +14,7 @@ defmodule Lucidboard.LiveBoardTest do
         columns: [Column.new(title: "foo", pos: 0)]
       ]
       |> Board.new()
-      |> Twiddler.insert()
+      |> Twiddler.insert(user)
 
     # Start a liveboard based on it
     {:ok, pid} = LiveBoard.start(board_id)

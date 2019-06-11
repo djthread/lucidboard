@@ -107,12 +107,20 @@ defmodule Lucidboard.Twiddler do
 
   @doc "Insert a board record"
   @spec insert(Board.t() | Ecto.Changeset.t(Board.t()), User.t()) ::
-          {:ok, Board.t()} | {:error, Ecto.Changeset.t(Board.t())}
+          {:ok, Board.t()} | {:error, any}
   def insert(%Board{} = board, %{id: user_id} = _user) do
-    Repo.transaction(fn ->
-      {:ok, new_board} = Repo.insert(board)
-      {:ok, _} = Account.grant(user_id, new_board.id, :owner)
-    end)
+    with {:ok, the_board} <-
+           Repo.transaction(fn ->
+             {:ok, new_board} = Repo.insert(board)
+
+             {:ok, really_new_board} =
+               Account.grant(user_id, new_board.id, :owner)
+
+             really_new_board
+           end),
+         %Board{} = board <- Repo.preload(the_board, :user) do
+      {:ok, board}
+    end
   end
 
   defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do

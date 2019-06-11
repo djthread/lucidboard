@@ -32,9 +32,7 @@ defmodule Lucidboard.Account do
     q = "%#{query}%"
 
     Repo.all(
-      from(u in User,
-        where: like(u.name, ^q) or like(u.full_name, ^q)
-      )
+      from(u in User, where: ilike(u.name, ^q) or ilike(u.full_name, ^q))
     )
   end
 
