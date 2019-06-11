@@ -244,8 +244,8 @@ defmodule Lucidboard.Twiddler.Op do
 
     tx_fn = fn ->
       Enum.each(renumbered, fn pile ->
-        from(p in Pile, where: p.id == ^pile.id)
-        |> Repo.update_all(set: [pos: pile.pos])
+        q = from(p in Pile, where: p.id == ^pile.id)
+        Repo.update_all(q, set: [pos: pile.pos])
       end)
     end
 
