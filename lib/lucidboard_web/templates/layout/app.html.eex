@@ -14,7 +14,7 @@
     %>
     <meta name="csrf" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   </head>
-  <body class="t-<%= @user.settings.theme %>">
+  <body class="<%= body_class(@user) %>">
     <%= render("header/header.html", assigns) %>
 
     <%= Map.get(assigns, :inner_layout)
