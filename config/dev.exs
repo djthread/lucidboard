@@ -77,7 +77,9 @@ config :ueberauth, Ueberauth.Strategy.Github.OAuth,
 
 config :ueberauth, Ueberauth.Strategy.PingFed.OAuth,
   #redirect_uri: System.get_env("PINGFED_REDIRECT_URI"),
-  #site: System.get_env("PINGFED_SITE"),
+  site: System.get_env("PINGFED_SITE"),
+  client_id: System.get_env("PINGFED_CLIENT_ID"),
+  client_secret: System.get_env("PINGFED_CLIENT_SECRET"),
   ## TODO is this a good place to have groups?
   relevant_groups: [ "CN=IT Team App Core,OU=Ad-Hoc,OU=Role Groups,OU=Groups,DC=mi,DC=corp,DC=rockfin,DC=com",
 		                 ## This should not appear in the list of user groups
