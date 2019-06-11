@@ -9,17 +9,19 @@ defmodule Lucidboard.Twiddler.Actions do
   alias Lucidboard.Twiddler.{Glass, Op, QueryBuilder}
   import Ecto.Query
 
-  @spec update_board(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def update_board(board, args) do
-    with %Changeset{valid?: true} = cs <- Board.changeset(board, args),
+  @spec update_board(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
+  def update_board(board, args, opts) do
+    with true <-
+           Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
+         %Changeset{valid?: true} = cs <- Board.changeset(board, args),
          new_board <- Changeset.apply_changes(cs) do
       {:ok, new_board, fn -> Repo.update(cs) end, %{},
        event("has updated the board settings.")}
     end
   end
 
-  @spec add_column(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def add_column(board, args) do
+  @spec add_column(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
+  def add_column(board, args, opts \\ []) do
     args =
       args
       |> Enum.into([])
@@ -27,7 +29,9 @@ defmodule Lucidboard.Twiddler.Actions do
       |> Column.new()
       |> Map.from_struct()
 
-    with %Changeset{valid?: true} = cs <- Column.changeset(%Column{}, args),
+    with true <-
+           Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
+         %Changeset{valid?: true} = cs <- Column.changeset(%Column{}, args),
          new_col <- Changeset.apply_changes(cs) do
       new_board = %{board | columns: List.insert_at(board.columns, -1, new_col)}
 
@@ -36,9 +40,11 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec update_column(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def update_column(board, args) do
-    with [id] <- grab(args, [:id]),
+  @spec update_column(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
+  def update_column(board, args, opts \\ []) do
+    with true <-
+           Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
+         [id] <- grab(args, [:id]),
          {:ok, lens} <- Glass.column_by_id(board, id),
          %Changeset{valid?: true} = cs <-
            lens |> Focus.view(board) |> Column.changeset(args),
@@ -50,8 +56,8 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec update_card(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def update_card(board, args) do
+  @spec update_card(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
+  def update_card(board, args, _opts \\ []) do
     with [id] <- grab(args, [:id]),
          {:ok, lens} <- Glass.card_by_id(board, id),
          %Changeset{valid?: true} = cs <-
@@ -61,8 +67,8 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec delete_card(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def delete_card(board, args) do
+  @spec delete_card(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
+  def delete_card(board, args, _opts \\ []) do
     with [id] <- grab(args, [:id]),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
          {:ok, new_board, card, tx_fn} <- Op.cut_card(board, card_path) do
@@ -88,8 +94,9 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec add_and_lock_card(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def add_and_lock_card(board, args) do
+  @spec add_and_lock_card(Board.t(), map, keyword) ::
+          Twiddler.action_ok_or_error()
+  def add_and_lock_card(board, args, _opts \\ []) do
     with [col_id, user_id] <- grab(args, [:col_id, :user_id]),
          {:ok, col_lens} <- Glass.column_by_id(board, col_id),
          {:ok, built_col, loaded_col, meta} <-
@@ -100,11 +107,13 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec move_column(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def move_column(board, args) do
+  @spec move_column(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
+  def move_column(board, args, opts \\ []) do
     queryable = from(c in Column, where: c.board_id == ^board.id)
 
-    with [id, new_pos] <- grab(args, ~w/id pos/a),
+    with true <-
+           Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
+         [id, new_pos] <- grab(args, ~w/id pos/a),
          pos <- Enum.find(board.columns, fn c -> c.id == id end).pos,
          {:ok, col, new_cols} <- Op.move_item(board.columns, pos, new_pos),
          tx_fn <- QueryBuilder.move_item(queryable, id, pos, new_pos) do
@@ -115,8 +124,10 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  def move_column_up(board, args) do
-    with [id] <- grab(args, [:id]),
+  def move_column_up(board, args, opts \\ []) do
+    with true <-
+           Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
+         [id] <- grab(args, [:id]),
          {:ok, col} <- Op.column_by_id(board, id),
          true <- col.pos > 0 || :noop do
       pos = col.pos - 1
@@ -124,8 +135,10 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  def move_column_down(board, args) do
-    with [id] <- grab(args, [:id]),
+  def move_column_down(board, args, opts \\ []) do
+    with true <-
+           Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
+         [id] <- grab(args, [:id]),
          {:ok, col} <- Op.column_by_id(board, id),
          true <- col.pos < length(board.columns) - 1 || :noop do
       pos = col.pos + 1
@@ -133,8 +146,9 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec move_pile_to_junction(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def move_pile_to_junction(board, args) do
+  @spec move_pile_to_junction(Board.t(), map, keyword) ::
+          Twiddler.action_ok_or_error()
+  def move_pile_to_junction(board, args, _opts \\ []) do
     with [id, col_id, pos] <- grab(args, ~w/id col_id pos/a),
          {:ok, pile_path} <- Glass.pile_path_by_id(board, id),
          {:ok, dest_col_lens} <- Glass.column_by_id(board, col_id),
@@ -147,7 +161,7 @@ defmodule Lucidboard.Twiddler.Actions do
   end
 
   # Moves a card to an empty space in a column, creating a new, 1-card pile
-  def move_card_to_junction(board, args) do
+  def move_card_to_junction(board, args, _opts \\ []) do
     with [id, col_id, pos] <- grab(args, ~w/id col_id pos/a),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
          {:ok, col_lens} <- Glass.column_by_id(board, col_id),
@@ -159,7 +173,7 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  def move_card_to_pile(board, args) do
+  def move_card_to_pile(board, args, _opts \\ []) do
     with [id, pile_id] <- grab(args, ~w/id pile_id/a),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
          {:ok, new_board, card, cut_fn} <- Op.cut_card(board, card_path),
@@ -171,7 +185,7 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  def flip_pile(board, args) do
+  def flip_pile(board, args, _opts \\ []) do
     with [id] <- grab(args, [:id]),
          {:ok, pile_lens} <- Glass.pile_by_id(board, id),
          {:ok, new_board, tx_fn} <- Op.flip_pile(board, pile_lens) do
@@ -179,7 +193,7 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  def unflip_pile(board, args) do
+  def unflip_pile(board, args, _opts \\ []) do
     with [id] <- grab(args, [:id]),
          {:ok, pile_lens} <- Glass.pile_by_id(board, id),
          {:ok, new_board, tx_fn} <- Op.unflip_pile(board, pile_lens) do
@@ -188,7 +202,7 @@ defmodule Lucidboard.Twiddler.Actions do
   end
 
   @spec like(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def like(board, args) do
+  def like(board, args, _opts \\ []) do
     with [id, user] <- grab(args, ~w/id user/a),
          {:ok, card_lens} <- Glass.card_by_id(board, id),
          card <- Focus.view(card_lens, board),
@@ -201,8 +215,8 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  @spec unlike(Board.t(), map) :: Twiddler.action_ok_or_error()
-  def unlike(board, args) do
+  @spec unlike(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
+  def unlike(board, args, _opts \\ []) do
     with [id, user] <- grab(args, ~w/id user/a),
          {:ok, card_lens} <- Glass.card_by_id(board, id) do
       card = Focus.view(card_lens, board)
@@ -213,7 +227,11 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+<<<<<<< HEAD
   def sortby_likes(board, args) do
+=======
+  def sortby_votes(board, args, _opts \\ []) do
+>>>>>>> wip
     with [id] <- grab(args, [:id]),
          {:ok, col_lens} <- Glass.column_by_id(board, id),
          column <- Focus.view(col_lens, board) do
@@ -230,8 +248,10 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  def grant(board, args) do
-    with [id, role] <- grab(args, [:id, :role]) do
+  def grant(board, args, opts \\ []) do
+    with true <-
+           Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
+         [id, role] <- grab(args, [:id, :role]) do
       Account.grant(id, board.id, role)
     end
   end

@@ -53,4 +53,16 @@ defmodule LucidboardWeb.ViewHelper do
     </span>
     """)
   end
+
+  def display_name(%{name: name, full_name: full_name} = _user) do
+    "#{name} (#{full_name})"
+  end
+
+  def avatar(%{avatar_url: nil} = _user) do
+    "user-circle" |> fas() |> raw()
+  end
+
+  def avatar(%{avatar_url: url}) do
+    raw(~s[<div class="avatar" style="background-image:url('#{url}')"></div>])
+  end
 end

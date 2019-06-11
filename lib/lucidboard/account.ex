@@ -19,8 +19,12 @@ defmodule Lucidboard.Account do
     Repo.get(User, user_id)
   end
 
-  def display_name(%User{name: name, full_name: full_name}) do
-    "#{name} (#{full_name})"
+  @spec has_role?(User.t(), Board.t(), atom) :: boolean
+  def has_role?(%User{id: user_id}, %Board{board_roles: roles}, role \\ :owner) do
+    Enum.any?(roles, fn
+      %{user_id: ^user_id, role: ^role} -> true
+      _ -> false
+    end)
   end
 
   @spec suggest_users(String.t()) :: [User.t()]

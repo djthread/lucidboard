@@ -83,3 +83,22 @@
     <% end %>
   </div>
 </section>
+
+<h2>Manage Board Roles</h2>
+<form phx-change="role_suggest" phx-submit="grant">
+Grant owner access to <input type="text" name="user" list="matches" placeholder="Find User...">
+<datalist id="matches">
+  <%= for user <- @role_users_suggest do %>
+    <option value="<%= user.id %>"><%= display_name(user) %></option>
+  <% end %>
+</datalist>
+<ul>
+  <%= for role <- @board.board_roles do %>
+    <li>
+      <%= avatar(role.user) %>
+      <%= display_name(role.user) %>
+      (<%= role.role %>)
+    </li>
+  <% end %>
+</ul>
+</form>

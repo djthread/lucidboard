@@ -49,7 +49,6 @@ defmodule LucidboardWeb do
       import LucidboardWeb.Gettext
       import LucidboardWeb.ViewHelper
       import Phoenix.LiveView, only: [live_render: 2, live_render: 3]
-      alias Lucidboard.Account
       alias Lucidboard.Twiddler.Op
       alias LucidboardWeb.BoardLive
       alias LucidboardWeb.Router.Helpers, as: Routes
