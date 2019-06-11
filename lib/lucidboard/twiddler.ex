@@ -81,9 +81,10 @@ defmodule Lucidboard.Twiddler do
 
   @doc "Get a list of board records"
   @spec boards(integer) :: [Board.t()]
-  def boards(page_index \\ 1) do
+  def boards(page_index \\ 1, search_key \\ "") do
     query =
       from(b in Board,
+        where: ilike(b.title,  ^("%#{search_key}%")),
         left_join: u in assoc(b, :user),
         order_by: [desc: b.updated_at],
         preload: :user

@@ -4,7 +4,11 @@
     <%= fas("plus") %><span>Create Board</span>
   </a>
 
-  <h2 class="title">All Lucidboards</h2>
+  <h2 class="title">Lucidboards</h2>
+
+  <form phx-change="search">
+    <input type="text" name="q" value="<%= @search_key %>" />
+  </form>
 
   <%= for short_board <- @short_boards do %>
     <a class="card is-block c-Card u-Mbm"
@@ -27,15 +31,17 @@
     </a>
   <% end %>
 
-  <%= if @board_pagination.page_number > 1 do %>
-    <button phx-click="paginate" phx-value="prev">Previous</button>
-  <% end %>
+  <%= if  @board_pagination.total_entries > 0 do %>
+    <%= if @board_pagination.page_number > 1 do %>
+      <button phx-click="paginate" phx-value="prev">Previous</button>
+    <% end %>
 
-  <%= if @board_pagination.page_number < @board_pagination.total_pages do %>
-    <button phx-click="paginate" phx-value="next">Next</button>
+    <%= if @board_pagination.page_number < @board_pagination.total_pages do %>
+      <button phx-click="paginate" phx-value="next">Next</button>
+    <% end %>
+    Showing page <%= @board_pagination.page_number %> of <%= @board_pagination.total_pages %><br />
+    Total boards: <%= @board_pagination.total_entries %>
   <% end %>
-  Showing page <%= @board_pagination.page_number %> of <%= @board_pagination.total_pages %><br />
-  Total boards: <%= @board_pagination.total_entries %>
 
   <%= if @short_boards == [] do %>
     <em>No Lucidboards!</em>
