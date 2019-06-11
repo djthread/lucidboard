@@ -53,10 +53,19 @@ defmodule Lucidboard.Repo.Migrations.Initial do
 
     create table(:likes, primary_key: false) do
       add(:id, :uuid, primary_key: true)
-      # add(:count, :integer, default: 1, null: false)
       add(:user_id, references(:users), null: false)
 
       add(:card_id, references(:cards, type: :uuid, on_delete: :delete_all),
+        null: false
+      )
+    end
+
+    create table(:board_roles, primary_key: false) do
+      add(:id, :uuid, primary_key: true)
+      add(:role, BoardRoleEnum.type(), null: false)
+      add(:user_id, references(:users), null: false)
+
+      add(:board_id, references(:boards, on_delete: :delete_all),
         null: false
       )
     end

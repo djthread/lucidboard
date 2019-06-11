@@ -3,7 +3,7 @@ defmodule Lucidboard.Twiddler.Actions do
   Core logic responsible for handling different lucidboard changes.
   """
   alias Ecto.Changeset
-  alias Lucidboard.{Board, Card, Column, Event}
+  alias Lucidboard.{Account, Board, Card, Column, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler
   alias Lucidboard.Twiddler.{Glass, Op, QueryBuilder}
@@ -227,6 +227,12 @@ defmodule Lucidboard.Twiddler.Actions do
 
       {:ok, new_board, tx_fn, %{},
        event("Sorted `#{column.title}` column by likes.")}
+    end
+  end
+
+  def grant(board, args) do
+    with [id, role] <- grab(args, [:id, :role]) do
+      Account.grant(id, board.id, role)
     end
   end
 

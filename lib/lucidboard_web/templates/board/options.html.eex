@@ -30,6 +30,28 @@
           else: {"Create", "Create Column"}
     %>
 
+<div style="width:45%;float:right">
+  <h2>Manage Board Roles</h2>
+  <form phx-change="role_suggest" phx-submit="grant">
+  <input type="text" name="user" list="matches" placeholder="Find User...">
+  [Owner]
+  <datalist id="matches">
+    <%= for user <- @role_users_suggest do %>
+      <option value="<%= user.id %>"><%= Account.display_name(user) %></option>
+    <% end %>
+  </datalist>
+  <ul>
+    <%= for role <- @board.board_roles do %>
+      <li><%= inspect role %></li>
+    <% end %>
+  </ul>
+  </form>
+</div>
+
+<!--
+<section class="column-manager clearpls">
+<h2>Manage Columns</h2>
+
     <h3 class="subtitle u-Mbm"><%= title %></h3>
     <%
       cs_data = Ecto.Changeset.apply_changes(@column_changeset)
@@ -48,6 +70,7 @@
       <%= submit button_txt, phx_disable_with: "Saving...", class: "button is-primary" %>
     <% end %>
   </div>
+  -->
   
   <div class="o-Stack__item u-Phm">
     <h2 class="b-TypeHeading--secondary b-TypeHeading--divider">Board Settings</h2>

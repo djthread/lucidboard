@@ -43,12 +43,15 @@ defmodule Lucidboard.Twiddler do
       Repo.one(
         from(board in Board,
           where: board.id == ^id,
+          left_join: board_roles in assoc(board, :board_roles),
+          left_join: role_users in assoc(board_roles, :user),
           left_join: columns in assoc(board, :columns),
           left_join: piles in assoc(columns, :piles),
           left_join: cards in assoc(piles, :cards),
           left_join: likes in assoc(cards, :likes),
           preload: [
-            columns: {columns, piles: {piles, cards: {cards, likes: likes}}}
+            columns: {columns, piles: {piles, cards: {cards, likes: likes}}},
+            board_roles: {board_roles, user: role_users}
           ]
         )
       )

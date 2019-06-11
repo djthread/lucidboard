@@ -61,7 +61,8 @@ defmodule Lucidboard.MixProject do
        git: "https://github.com/djthread/toml_transformer.git", app: false},
       {:ueberauth_github, "~> 0.7"},
       {:timex, "~> 3.1"},
-      {:scrivener_ecto, "~> 2.0"}
+      {:scrivener_ecto, "~> 2.0"},
+      {:ecto_enum, "~> 1.2"}
     ]
   end
 

@@ -13,6 +13,8 @@ Lucidboard Features
 
 - investigate db indexes
 
+- investigate db indexes
+
 ## Needed before pilot
 
 ### Backend
