@@ -19,5 +19,5 @@ config :lucidboard, Lucidboard.Repo,
   hostname: System.get_env("PG_HOST") || "localhost",
   pool_size: 10
 
-import_config "#{Mix.env}.secret.exs"
+#import_config "#{Mix.env}.secret.exs"
 
