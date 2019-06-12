@@ -24,6 +24,7 @@
 </div>
 
 <footer class="card-footer">
+Color: <%= @card.settings.color %>
   <%= if count_user_likes(@card.likes, @user.id) < @board.settings.likes_per_user do %>
     <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
       <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
