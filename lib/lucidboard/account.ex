@@ -1,8 +1,8 @@
 defmodule Lucidboard.Account do
   @moduledoc "Context for user things"
   import Ecto.Query
-  alias Lucidboard.Account.PingFed
   alias Lucidboard.Account.Github
+  alias Lucidboard.Account.PingFed
   alias Lucidboard.{Repo, User}
   alias Ueberauth.Auth
 

@@ -46,7 +46,7 @@ defmodule UserFromAuth do
         [auth.info.first_name, auth.info.last_name]
         |> Enum.filter(&(&1 != nil and &1 != ""))
 
-      if name |> Enum.empty?()  do
+      if name |> Enum.empty?() do
         auth.info.nickname
       else
         Enum.join(name, " ")

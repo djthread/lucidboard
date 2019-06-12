@@ -25,10 +25,11 @@ defmodule Lucidboard.LiveBoardTest do
     LiveBoard.call(board_id, {:action, action, user: user})
 
     # Get the board state from the liveboard
-    {:ok, %{
-      board: %Board{columns: [%Column{title: from_live_board}]},
-      events: _events
-    }} = LiveBoard.call(board_id, :state)
+    {:ok,
+     %{
+       board: %Board{columns: [%Column{title: from_live_board}]},
+       events: _events
+     }} = LiveBoard.call(board_id, :state)
 
     # Ensure it's the new title
     assert "the new title" == from_live_board

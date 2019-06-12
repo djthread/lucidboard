@@ -27,10 +27,6 @@ defmodule LucidboardWeb.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-
-    #require Logger
-    #Logger.warn("#{inspect auth}")
-    IO.inspect(auth)
     case Account.auth_to_user(auth) do
       {:ok, user} ->
         conn

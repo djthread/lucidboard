@@ -39,6 +39,7 @@ defmodule Lucidboard.Card do
   def changeset(card, attrs \\ %{}) do
     card
     |> cast(attrs, [:body, :pile_id, :pos])
+
     # |> validate_required([:body])
     # |> cast_assoc(:users_liked)
   end

@@ -61,7 +61,8 @@ defmodule Lucidboard.MixProject do
       {:toml_transformer,
        git: "https://github.com/djthread/toml_transformer.git", app: false},
       {:ueberauth_github, "~> 0.7"},
-      {:ueberauth_pingfed, git: "https://github.com/borodark/ueberauth_pingfed.git"},
+      {:ueberauth_pingfed,
+       git: "https://github.com/borodark/ueberauth_pingfed.git"},
       {:poison, "~> 4.0"},
       {:timex, "~> 3.1"},
       {:scrivener_ecto, "~> 2.0"}

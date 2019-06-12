@@ -74,7 +74,6 @@ config :ueberauth, Ueberauth.Strategy.Github.OAuth,
   client_id: System.get_env("GITHUB_CLIENT_ID"),
   client_secret: System.get_env("GITHUB_CLIENT_SECRET")
 
-
 config :ueberauth, Ueberauth.Strategy.PingFed.OAuth,
   site: System.get_env("PINGFED_SITE"),
   client_id: System.get_env("PINGFED_CLIENT_ID"),
