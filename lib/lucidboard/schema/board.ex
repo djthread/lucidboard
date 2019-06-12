@@ -1,10 +1,10 @@
-defimpl Inspect, for: Lucidboard.Board do
-  import Inspect.Algebra
+# defimpl Inspect, for: Lucidboard.Board do
+#   import Inspect.Algebra
 
-  def inspect(_dict, _opts) do
-    concat(["#Board<>"])
-  end
-end
+#   def inspect(_dict, _opts) do
+#     concat(["#Board<>"])
+#   end
+# end
 
 defmodule Lucidboard.Board do
   @moduledoc "Schema for a board record"
@@ -42,6 +42,7 @@ defmodule Lucidboard.Board do
   @doc false
   def changeset(board, attrs \\ %{}) do
     board
+    |> IO.inspect(label: "one")
     |> cast(attrs, [:title])
     |> validate_required([:title])
     |> cast_assoc(:columns)
