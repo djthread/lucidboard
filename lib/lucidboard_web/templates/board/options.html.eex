@@ -1,7 +1,6 @@
 <section class="column-manager u-Phm">
   <div class="">
     <h2 class="b-TypeHeading--secondary b-TypeHeading--divider">Manage Columns</h2>
-
     <ul>
     <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
       <li class="c-Card o-Stack o-Stack--spaceBetween u-Pam u-Mvm" phx-click="column_edit" phx-value="<%= id %>">
@@ -18,6 +17,7 @@
             </a>
           <% end %>
         </div>
+        <a href="#" phx-click="delete_column" phx-value="<%= id %>">Delete column</a>
       </li>
     <% end %>
     </ul>
@@ -26,7 +26,6 @@
   <div class="">
     <%
       cs_data = Ecto.Changeset.apply_changes(@column_changeset)
-
       {button_txt, title} =
         if cs_data.id,
           do: {"Update", "Editing Column: #{cs_data.title}"},

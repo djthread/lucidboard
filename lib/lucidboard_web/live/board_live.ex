@@ -5,7 +5,6 @@ defmodule LucidboardWeb.BoardLive do
   alias Ecto.Changeset
   alias Lucidboard.{Account, Column, LiveBoard, Presence, TimeMachine}
   alias Lucidboard.Twiddler.Op
-  alias LucidboardWeb.BoardLive.Search
   alias LucidboardWeb.{BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Socket
@@ -189,16 +188,17 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("search_key", %{"q" => q}, socket) do
-    search =
-      if "" == q,
-        do: nil,
-        else: %Search{q: q, board: Search.query(socket.assigns.board, q)}
-
-    {:noreply, assign(socket, :search, search)}
+    {:noreply,
+     assign(socket, :search, get_search_assign(q, socket.assigns.board))}
   end
 
   def handle_event("sortby_votes", col_id, socket) do
     live_board_action({:sortby_votes, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("delete_column", col_id, socket) do
+    live_board_action({:delete_column, id: col_id}, socket)
     {:noreply, socket}
   end
 
@@ -214,8 +214,9 @@ defmodule LucidboardWeb.BoardLive do
       socket
       |> assign(:board, board)
       |> assign(:events, events)
+      |> assign(:search, get_search_assign(socket.assigns.search, board))
 
-    {:noreply, assign(socket, :board, board)}
+    {:noreply, socket}
   end
 
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do

@@ -32,9 +32,12 @@
         <div
           data-pos="<%= pile.pos %>"
           class="cardjunction"
+          <%= unless @search do %>
           onDragOver="dnd.allowDrop(event)"
           onDragLeave="dnd.dragLeave(event)"
-          onDrop="dnd.dropIntoJunction(event)">
+          onDrop="dnd.dropIntoJunction(event)"
+          <% end %>
+          >
           &nbsp;
         </div>
 
@@ -52,9 +55,12 @@
       <div
         data-pos="<%= length(column.piles) %>"
         class="cardjunction"
+        <%= unless @search do %>
         onDragOver="dnd.allowDrop(event)"
         onDragLeave="dnd.dragLeave(event)"
-        onDrop="dnd.dropIntoJunction(event)">
+        onDrop="dnd.dropIntoJunction(event)"
+        <% end %>
+        >
         &nbsp;
       </div>
 
@@ -62,12 +68,14 @@
         <%= show_card_count(column) %>
       </p>
 
+      <%= unless @search do %>
       <a href="#"
         phx-click="add_card"
         phx-value="<%= column.id %>"
         class="is-primary icon-padder js-addCard">
         <%= fas("plus") %><span>Add Card</span>
       </a>
+      <% end %>
     </div>
   <% end %>
 </section>

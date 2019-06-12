@@ -1,13 +1,9 @@
 <section class="events u-Phm">
   <div class="event-list">
     <ul>
-      <%= for event <- Enum.reverse(@events) do %>
-        <li>
-          <%= display_date_time(event.inserted_at) %>
-          <strong><%= event.user.name %></strong>
-          <%= event.desc %>
-        </li>
-      <% end %>
+    <%= for event <- Enum.reverse(@events) do %>
+      <li><%= display_event(event) %></li>
+    <% end %>
     </ul>
   </div>
   <div class="user-list">
@@ -20,4 +16,24 @@
       <% end %>
     </ul>
   </div>
+</section>
+=======
+<section class="events clearpls">
+<div class="user-list">
+  <h3>Users Online</h3>
+  <ul>
+    <%= for user <- @online_users do %>
+      <li>
+        <span class="onlinedot">&bull;</span> &nbsp; <%= online_indicator(user) %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+<div class="event-list">
+  <ul>
+    <%= for event <- Enum.reverse(@events) do %>
+      <li><%= display_event(event) %></li>
+    <% end %>
+  </ul>
+</div>
 </section>

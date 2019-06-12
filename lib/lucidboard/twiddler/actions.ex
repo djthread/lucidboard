@@ -71,6 +71,23 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  def delete_column(board, args) do
+    with [id] <- grab(args, [:id]),
+         {:ok, lens} <- Glass.column_by_id(board, id) do
+      column = Focus.view(lens, board)
+      new_columns = Op.remove_item(board.columns, column.pos)
+
+      tx_fn = fn ->
+        q = from(c in Column, where: c.pos > ^column.pos)
+        Repo.update_all(q, inc: [pos: -1])
+        Repo.delete(column)
+      end
+
+      {:ok, %{board | columns: new_columns}, tx_fn, %{},
+       event("has deleted the `#{column.title}` column.")}
+    end
+  end
+
   @spec add_and_lock_card(Board.t(), map) :: Twiddler.action_ok_or_error()
   def add_and_lock_card(board, args) do
     with [col_id, user_id] <- grab(args, [:col_id, :user_id]),

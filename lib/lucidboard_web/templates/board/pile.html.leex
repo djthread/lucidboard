@@ -18,26 +18,35 @@
     <div
       class="o-Stack o-Stack--column c-Card u-Mbm"
       data-card-id="<%= card.id %>"
+      <%= unless @search do %>
       draggable="true"
       onDragStart="dnd.drag(event)"
       onDragOver="dnd.allowDrop(event)"
-      onDrop="dnd.dropIntoPile(event)">
+      onDrop="dnd.dropIntoPile(event)"
+      <% end %>
+      >
       <%= rendered_card %>
     </div>
   </div>
 <% else %>
   <div
     data-pile-id="<%= @pile.id %>"
+    <%= unless @search do %>
     draggable="true"
     onDragStart="dnd.drag(event)"
     onDragOver="dnd.allowDrop(event)"
     onDrop="dnd.dropIntoPile(event)"
     class="u-Mbm">
+    <% end %>
+    >
     <div
       data-card-id="<%= card.id %>"
+      <%= unless @search do %>
       draggable="true"
       onDragStart="dnd.drag(event)"
       class="c-Card">
+      <% end %>
+      >
       <%= rendered_card %>
     </div>
     <div class="c-Card__footer--extra">

@@ -1,7 +1,10 @@
-
 <div class="o-Stack o-Stack--end-row u-Mbm">
   <form phx-change="search_key">
-    <input class="input" type="text" name="q" list="matches" placeholder="Search">
+    <input class="input" type="text" name="q" list="matches" placeholder="Search"
+    <%= if @search do %>
+    value="<%= @search.q %>"
+    <% end %>
+    >
   </form>
 </div>
 <div class="o-Stack o-Stack--medium o-Stack--split@m o-Stack--spaceBetween o-Stack--center-row@m u-Mbm u-Phm">
