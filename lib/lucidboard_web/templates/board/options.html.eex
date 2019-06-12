@@ -33,11 +33,32 @@
     %>
 
     <h3 class="b-TypeHeading--secondary b-TypeHeading--divider u-Mbm"><%= title %></h3>
+<%
+  cs_data = Ecto.Changeset.apply_changes(@column_changeset)
 
-    <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
-      <%= text_input f, :title, placeholder: "New column title", class: "input u-Mbm" %>
-      <%= error_tag f, :title %>
-      <%= submit button_txt, phx_disable_with: "Saving...", class: "button is-primary" %>
-    <% end %>
-  </div>
+  {button_txt, title} =
+    if cs_data.id,
+      do: {"Update", "Editing Column: #{cs_data.title}"},
+      else: {"Create", "Create Column"}
+%>
+
+<h3><%= title %></h3>
+
+<%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
+  <%= text_input f, :title, placeholder: "New column title", class:"input u-Mbm" %>
+  <%= error_tag f, :title %>
+  <%= submit button_txt, phx_disable_with: "Saving...", class: "button is-primary" %>
+<% end %>
+</section>
+
+<section class="clearpls">
+<br /><br />
+<h2>Board Settings</h2>
+<%= form_for @board_settings_changeset, "#", [phx_submit: :board_settings_save], fn f -> %>
+  <%= label(:likes_per_user, "Likes Per User") %>
+  <%= text_input f, :likes_per_user, value: @board.settings.likes_per_user, class: "input u-Mbm" %>
+  <%= error_tag f, :likes_per_user %>
+  <br />
+  <%= submit "Save", phx_disable_with: "Saving...", class: "button is-primary" %>
+<% end %>
 </section>

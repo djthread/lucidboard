@@ -10,9 +10,7 @@
       <div class="o-Stack o-Stack--spaceBetween b-TypeHeading--divider">
         <h2 class="b-TypeHeading--secondary"><%= column.title %></h2>
 
-        <div class="dropdown is-hoverable <%=
-          if column.pos == 0, do: "is-left", else: "is-right"
-        %>">
+        <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
             <button class="button button-plain" aria-haspopup="true" aria-controls="column-menu">
               <%= fas("ellipsis-h") %>
@@ -20,8 +18,8 @@
           </div>
           <div class="dropdown-menu" id="column-menu" role="menu">
             <div class="dropdown-content">
-              <a href="#" phx-click="sortby_votes" phx-value="<%= column.id %>" class="dropdown-item">
-                Sort by Votes
+              <a href="#" phx-click="sortby_likes" phx-value="<%= column.id %>" class="dropdown-item">
+                Sort by Likes
               </a>
             </div>
           </div>
@@ -45,7 +43,7 @@
           LucidboardWeb.BoardView,
           "pile.html",
           Map.merge(assigns, %{
-            pile: pile, 
+            pile: pile,
             locked_card_id: user_locked_card_id,
             locked_card_ids: locked_card_ids,
           })

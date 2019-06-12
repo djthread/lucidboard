@@ -3,7 +3,16 @@ defmodule LucidboardWeb.BoardLive do
   use Phoenix.LiveView
   import LucidboardWeb.BoardLive.Helper
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Column, LiveBoard, Presence, TimeMachine}
+
+  alias Lucidboard.{
+    Account,
+    BoardSettings,
+    Column,
+    LiveBoard,
+    Presence,
+    TimeMachine
+  }
+
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.{BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
@@ -47,6 +56,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
           |> assign(:column_changeset, new_column_changeset())
+          |> assign(:board_settings_changeset, new_board_settings_changeset())
           |> assign(:delete_confirming_card_id, nil)
           |> assign(:online_count, online_count(board.id))
           |> assign(:search, nil)
@@ -120,6 +130,11 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("unlike", card_id, socket) do
+    live_board_action({:unlike, id: card_id, user: user(socket)}, socket)
+    {:noreply, socket}
+  end
+
   def handle_event("card_delete", card_id, socket) do
     {:noreply, assign(socket, :delete_confirming_card_id, card_id)}
   end
@@ -167,6 +182,31 @@ defmodule LucidboardWeb.BoardLive do
     end
   end
 
+  def handle_event("board_settings_save", form_data, socket) do
+    cs = socket.assigns.board_settings_changeset
+
+    case BoardSettings.changeset(cs, form_data["board_settings"]) do
+      %{valid?: true} = changeset ->
+        board_settings = Changeset.apply_changes(changeset)
+
+        action =
+          {:update_board,
+           settings: %{likes_per_user: board_settings.likes_per_user}}
+
+        live_board_action(action, socket)
+
+        socket =
+          socket
+          |> assign(board_settings_changeset: new_board_settings_changeset())
+          |> put_flash(:info, "Settings were saved!")
+
+        {:noreply, socket}
+
+      invalid_changeset ->
+        {:noreply, assign(socket, board_settings_changeset: invalid_changeset)}
+    end
+  end
+
   def handle_event("flip_pile", pile_id, socket) do
     live_board_action({:flip_pile, id: pile_id, user: user(socket)}, socket)
     {:noreply, socket}
@@ -192,8 +232,8 @@ defmodule LucidboardWeb.BoardLive do
      assign(socket, :search, get_search_assign(q, socket.assigns.board))}
   end
 
-  def handle_event("sortby_votes", col_id, socket) do
-    live_board_action({:sortby_votes, id: col_id}, socket)
+  def handle_event("sortby_likes", col_id, socket) do
+    live_board_action({:sortby_likes, id: col_id}, socket)
     {:noreply, socket}
   end
 

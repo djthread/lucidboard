@@ -8,11 +8,12 @@ defmodule Lucidboard.TwiddlerTest do
   import Focus
 
   test "update_board", %{board: board} do
-    action = {:update_board, title: "CHANGED IT"}
+    action = {:update_board, title: "CHANGED IT", settings: %{likes_per_user: 3}}
     {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
 
     assert "has updated the board settings." == event.desc
     assert "CHANGED IT" == new_board.title
+    assert 3 == new_board.settings.likes_per_user
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
