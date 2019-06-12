@@ -3,8 +3,6 @@ Lucidboard Features
 
 ## Hack Week TODOs
 
-- disable board features when search is active
-
 - (finish) Column deleting
 
 - Send messages into a board event feed
