@@ -119,11 +119,11 @@ defmodule Lucidboard.Twiddler do
   defp create_board(board, user_id) do
     {:ok, new_board} = Repo.insert(board)
 
-    :ok =
-      board_role =
+    board_role =
       BoardRole.new(user_id: user_id, board_id: new_board.id, role: :owner)
 
-    Account.grant(new_board.id, board_role)
+    :ok = Account.grant(new_board.id, board_role)
+
     new_board
   end
 
