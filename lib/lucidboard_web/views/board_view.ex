@@ -62,4 +62,8 @@ defmodule LucidboardWeb.BoardView do
         end)
     end)
   end
+
+  def count_user_likes(likes, user_id) do
+    Enum.count(likes, fn like -> like.user_id == user_id end)
+  end
 end

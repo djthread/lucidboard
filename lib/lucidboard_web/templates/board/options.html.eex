@@ -39,3 +39,15 @@
   <%= submit button_txt, phx_disable_with: "Saving..." %>
 <% end %>
 </section>
+
+<section class="clearpls">
+<br /><br />
+<h2>Board Settings</h2>
+<%= form_for @board_settings_changeset, "#", [phx_submit: :board_settings_save], fn f -> %>
+  <%= label(:likes_per_user, "Likes Per User") %>
+  <%= text_input f, :likes_per_user, value: @board.settings.likes_per_user %>
+  <%= error_tag f, :likes_per_user %>
+  <br />
+  <%= submit "Save", phx_disable_with: "Saving..." %>
+<% end %>
+</section>

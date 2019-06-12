@@ -19,8 +19,8 @@
         </div>
         <div class="dropdown-menu" id="column-menu" role="menu">
           <div class="dropdown-content">
-            <a href="#" phx-click="sortby_votes" phx-value="<%= column.id %>" class="dropdown-item">
-              Sort by Votes
+            <a href="#" phx-click="sortby_likes" phx-value="<%= column.id %>" class="dropdown-item">
+              Sort by Likes
             </a>
           </div>
         </div>
@@ -43,7 +43,7 @@
           LucidboardWeb.BoardView,
           "pile.html",
           Map.merge(assigns, %{
-            pile: pile, 
+            pile: pile,
             locked_card_id: user_locked_card_id,
             locked_card_ids: locked_card_ids,
           })

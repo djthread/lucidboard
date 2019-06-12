@@ -190,7 +190,9 @@ defmodule Lucidboard.Twiddler.Actions do
   @spec like(Board.t(), map) :: Twiddler.action_ok_or_error()
   def like(board, args) do
     with [id, user] <- grab(args, ~w/id user/a),
-         {:ok, card_lens} <- Glass.card_by_id(board, id) do
+         {:ok, card_lens} <- Glass.card_by_id(board, id),
+         card <- Focus.view(card_lens, board),
+         true <- Op.user_can_like(board, user, card) || :noop do
       card = Focus.view(card_lens, board)
       {:ok, built_like, new_card} = Op.like(card, user)
       tx_fn = fn -> Repo.insert!(built_like) end
@@ -207,11 +209,11 @@ defmodule Lucidboard.Twiddler.Actions do
       {:ok, like_to_delete, new_card} = Op.unlike(card, user)
       tx_fn = fn -> Repo.delete!(like_to_delete) end
       new_board = Focus.set(card_lens, board, new_card)
-      {:ok, new_board, tx_fn, %{}, event("liked a card.")}
+      {:ok, new_board, tx_fn, %{}, event("unliked a card.")}
     end
   end
 
-  def sortby_votes(board, args) do
+  def sortby_likes(board, args) do
     with [id] <- grab(args, [:id]),
          {:ok, col_lens} <- Glass.column_by_id(board, id),
          column <- Focus.view(col_lens, board) do
@@ -224,7 +226,7 @@ defmodule Lucidboard.Twiddler.Actions do
       new_board = Focus.set(col_lens, board, %{column | piles: sorted_piles})
 
       {:ok, new_board, tx_fn, %{},
-       event("Sorted `#{column.title}` column by votes.")}
+       event("Sorted `#{column.title}` column by likes.")}
     end
   end
 
