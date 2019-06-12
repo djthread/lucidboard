@@ -4,6 +4,7 @@ defmodule LucidboardWeb.BoardLive.Helper do
   alias Ecto.Changeset
   alias Lucidboard.{Card, Column, LiveBoard, Presence}
   alias LucidboardWeb.BoardLive
+  alias LucidboardWeb.BoardLive.Search
   alias Phoenix.LiveView.Socket
 
   def user(%Socket{assigns: %{user: user}}), do: user
@@ -81,4 +82,11 @@ defmodule LucidboardWeb.BoardLive.Helper do
   def online_users(socket_or_board_id) do
     socket_or_board_id |> BoardLive.topic() |> Presence.list()
   end
+
+  def get_search_assign(q, _board) when q in ["", nil], do: nil
+
+  def get_search_assign(%Search{q: q}, board), do: get_search_assign(q, board)
+
+  def get_search_assign(q, board),
+    do: %Search{q: q, board: Search.query(q, board)}
 end
