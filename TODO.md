@@ -3,9 +3,7 @@ Lucidboard Features
 
 ## Hack Week TODOs
 
-- disable board features when search is active
-
-- Column deleting
+- (finish) Column deleting
 
 - Send messages into a board event feed
 - Assign colors to cards
@@ -13,9 +11,7 @@ Lucidboard Features
 - Board freezing
 - Private boards
 
-- Dashboard
-  - search (craheb)
-  - pagination (craheb)
+- investigate db indexes
 
 ## Needed before pilot
 

@@ -17,6 +17,7 @@
       <% end %>
     </div>
     <%= title %>
+    <a href="#" phx-click="delete_column" phx-value="<%= id %>">Delete column</a>
   </li>
 <% end %>
 </ul>

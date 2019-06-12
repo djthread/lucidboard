@@ -3,7 +3,11 @@
     <ul>
       <li class="boardsearch <%= if @search, do: ~s(active) %>">
         <form phx-change="search_key">
-          <input type="text" name="q" list="matches" placeholder="Search...">
+          <input type="text" name="q" list="matches" placeholder="Search..."
+          <%= if @search do %>
+          value="<%= @search.q %>"
+          <% end %>
+          >
         </form>
       </li>
       <li class="online-short">
