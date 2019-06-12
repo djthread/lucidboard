@@ -28,7 +28,8 @@ defmodule LucidboardWeb.DashboardLive do
       assign(socket,
         short_boards: short_boards,
         board_pagination: board_pagination,
-        search_key: nil)
+        search_key: nil
+      )
 
     {:ok, socket}
   end

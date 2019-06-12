@@ -110,17 +110,16 @@ defmodule Lucidboard.Twiddler do
           {:ok, Board.t()} | {:error, any}
   def insert(%Board{} = board, %{id: user_id} = _user) do
     with {:ok, the_board} <-
-           Repo.transaction(fn ->
-             {:ok, new_board} = Repo.insert(board)
-
-             {:ok, really_new_board} =
-               Account.grant(user_id, new_board.id, :owner)
-
-             really_new_board
-           end),
-         %Board{} = board <- Repo.preload(the_board, :user) do
-      {:ok, board}
+           Repo.transaction(fn -> create_board(board, user_id) end) do
+      {:ok, Repo.preload(the_board, :user)}
     end
+  end
+
+  # Creates 2 records: the Board and the BoardRole for the creator
+  defp create_board(board, user_id) do
+    {:ok, new_board} = Repo.insert(board)
+    :ok = Account.grant(user_id, new_board.id, :owner)
+    new_board
   end
 
   defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do

@@ -43,8 +43,10 @@ defmodule Lucidboard.Board do
   def changeset(board, attrs \\ %{}) do
     board
     |> cast(attrs, [:title])
-    |> put_change(:settings, attrs.settings)
-    |> cast_assoc(:columns)
     |> validate_required([:title])
+    |> cast_assoc(:columns)
+    |> put_change(:settings, attrs.settings)
+    # |> cast_embed(:settings, attrs.settings)
+    |> put_change(:settings, Map.get(attrs, "settings"))
   end
 end

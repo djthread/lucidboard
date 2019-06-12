@@ -54,7 +54,7 @@ defmodule Lucidboard.LiveBoard.Agent do
 
         Scribe.write(new_board.id, [
           tx_fn,
-          (if event, do: fn -> TimeMachine.commit(event) end)
+          if(event, do: fn -> TimeMachine.commit(event) end)
         ])
 
         ret =

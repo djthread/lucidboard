@@ -65,9 +65,7 @@ defmodule Lucidboard.Repo.Migrations.Initial do
       add(:role, BoardRoleEnum.type(), null: false)
       add(:user_id, references(:users), null: false)
 
-      add(:board_id, references(:boards, on_delete: :delete_all),
-        null: false
-      )
+      add(:board_id, references(:boards, on_delete: :delete_all), null: false)
     end
 
     create table(:events) do
