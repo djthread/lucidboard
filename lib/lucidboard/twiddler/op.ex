@@ -296,17 +296,13 @@ defmodule Lucidboard.Twiddler.Op do
             likes_per_user: votes_per_user
             # likes_per_user_per_card: likes_per_user_per_card
           }
-        } = board,
+        },
         %{id: user_id},
-        %{likes: _likes}
+        %{likes: likes}
       ) do
-    # likes_on_card = Enum.count(likes, fn l -> l.user_id == user_id end)
+    likes_on_card = Enum.count(likes, fn l -> l.user_id == user_id end)
 
-    # if likes_on_card >= likes_per_user_per_card do
-    #   false
-    # else
-    if likes_on_board(board, user_id) >= votes_per_user, do: false, else: true
-    # end
+    if likes_on_card >= votes_per_user, do: false, else: true
   end
 
   # credo:disable-for-lines:10 Credo.Check.Refactor.Nesting
