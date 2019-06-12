@@ -3,19 +3,17 @@ defmodule Lucidboard.BoardSettings do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @default_likes_per_user 1
   @primary_key false
   @derive {Jason.Encoder, only: ~w(likes_per_user)a}
 
   embedded_schema do
-    field(:likes_per_user, :integer)
+    field(:likes_per_user, :integer, default: 3)
     # field(:anonymous_cards, :boolean)
   end
 
   @spec new(keyword) :: BoardSettings.t()
   def new(fields \\ []) do
-    defaults = [likes_per_user: @default_likes_per_user]
-    struct(__MODULE__, Keyword.merge(defaults, fields))
+    struct(__MODULE__, fields)
   end
 
   @doc false

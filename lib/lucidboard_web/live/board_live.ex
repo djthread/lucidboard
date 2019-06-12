@@ -58,7 +58,6 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:tab, :board)
           |> assign(:column_changeset, new_column_changeset())
           |> assign(:board_settings_changeset, new_board_settings_changeset())
-          |> assign(:user_notification, nil)
           |> assign(:delete_confirming_card_id, nil)
           |> assign(:online_count, online_count(board.id))
           |> assign(:search, nil)
@@ -200,7 +199,7 @@ defmodule LucidboardWeb.BoardLive do
         socket =
           socket
           |> assign(board_settings_changeset: new_board_settings_changeset())
-          |> assign(user_notification: "Settings were saved!")
+          |> put_flash(:info, "Settings were saved!")
 
         {:noreply, socket}
 

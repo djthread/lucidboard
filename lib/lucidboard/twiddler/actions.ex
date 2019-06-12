@@ -173,7 +173,9 @@ defmodule Lucidboard.Twiddler.Actions do
   @spec like(Board.t(), map) :: Twiddler.action_ok_or_error()
   def like(board, args) do
     with [id, user] <- grab(args, ~w/id user/a),
-         {:ok, card_lens} <- Glass.card_by_id(board, id) do
+         {:ok, card_lens} <- Glass.card_by_id(board, id),
+         card <- Focus.view(card_lens, board),
+         true <- Op.user_can_like(board, user, card) || :noop do
       card = Focus.view(card_lens, board)
       {:ok, built_like, new_card} = Op.like(card, user)
       tx_fn = fn -> Repo.insert!(built_like) end
