@@ -3,7 +3,7 @@ defmodule Lucidboard.Twiddler.Actions do
   Core logic responsible for handling different lucidboard changes.
   """
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Board, Card, Column, Event}
+  alias Lucidboard.{Account, Board, BoardRole, Card, Column, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler
   alias Lucidboard.Twiddler.{Glass, Op, QueryBuilder}
@@ -244,28 +244,37 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
+  # This action hits the database because we have to
   def grant(board, args, opts \\ []) do
     with true <-
            Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
          [id, role] <- grab(args, [:id, :role]) do
-      tx_fn = fn ->
-        :ok = Account.grant(id, board.id, role)
-      end
+      board_role =
+        [user_id: id, board_id: board.id, role: role]
+        |> BoardRole.new()
+        |> Repo.preload(:user)
 
-      {:ok, board, tx_fn, %{}, nil}
+      {new_roles, revoke_tx_fn} = Op.revoke(id, board)
+      grant_tx_fn = fn -> :ok = Account.grant(board.id, board_role) end
+
+      {:ok, %{board | board_roles: [board_role | new_roles]},
+       [revoke_tx_fn, grant_tx_fn], %{},
+       event(
+         "granted #{role} access to #{Account.display_name(board_role.user)}"
+       )}
     end
   end
 
   def revoke(board, args, opts \\ []) do
     with [id] <- grab(args, [:id]),
          user <- Keyword.get(opts, :user),
-         false <- user.id == id && :unauthorized,
          true <- Account.has_role?(user, board, :owner) || :unauthorized do
-      tx_fn = fn ->
-        :ok = Account.revoke(id, board.id)
-      end
+      {new_roles, tx_fn} = Op.revoke(id, board)
+      board_role = Enum.find(board.board_roles, &(&1.user_id == id))
+      display_name = board_role |> Map.get(:user) |> Account.display_name()
 
-      {:ok, board, tx_fn, %{}, nil}
+      {:ok, %{board | board_roles: new_roles}, tx_fn, %{},
+       event("revoked #{board_role.role} access to #{display_name}")}
     end
   end
 

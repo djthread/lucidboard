@@ -1,7 +1,7 @@
 defmodule LucidboardWeb.ViewHelper do
   @moduledoc "Helper functions for all views"
   import Phoenix.HTML, only: [raw: 1]
-  alias Lucidboard.Event
+  alias Lucidboard.{Account, BoardRole, Event}
 
   @doc "Create a font-awesome icon by name"
   def fas(name, class \\ nil), do: fa("fas", name, class)
@@ -54,8 +54,8 @@ defmodule LucidboardWeb.ViewHelper do
     """)
   end
 
-  def display_name(%{name: name, full_name: full_name} = _user) do
-    "#{name} (#{full_name})"
+  def display_name(user) do
+    Account.display_name(user)
   end
 
   def avatar(%{avatar_url: nil} = _user) do
@@ -64,5 +64,15 @@ defmodule LucidboardWeb.ViewHelper do
 
   def avatar(%{avatar_url: url}) do
     raw(~s[<div class="avatar" style="background-image:url('#{url}')"></div>])
+  end
+
+  @spec more_than_one_owner([BoardRole.t()]) :: boolean
+  def more_than_one_owner(roles) do
+    true ==
+      Enum.reduce_while(roles, 0, fn
+        %{role: :owner}, 1 -> {:halt, true}
+        %{role: :owner}, acc -> {:cont, acc + 1}
+        _, acc -> {:cont, acc}
+      end)
   end
 end

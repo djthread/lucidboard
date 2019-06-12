@@ -4,7 +4,7 @@ defmodule Lucidboard.Twiddler do
   """
   import Ecto.Query
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Board, Event}
+  alias Lucidboard.{Account, Board, BoardRole, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.{Actions, Op}
 
@@ -118,7 +118,12 @@ defmodule Lucidboard.Twiddler do
   # Creates 2 records: the Board and the BoardRole for the creator
   defp create_board(board, user_id) do
     {:ok, new_board} = Repo.insert(board)
-    :ok = Account.grant(user_id, new_board.id, :owner)
+
+    :ok =
+      board_role =
+      BoardRole.new(user_id: user_id, board_id: new_board.id, role: :owner)
+
+    Account.grant(new_board.id, board_role)
     new_board
   end
 

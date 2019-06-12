@@ -244,12 +244,13 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("grant", %{"user" => user_id}, socket) do
-    live_board_action({:grant, id: user_id, role: :owner}, socket)
+    user = user_id |> String.to_integer() |> Account.get!()
+    live_board_action({:grant, id: user.id, role: :owner}, socket)
     {:noreply, socket}
   end
 
   def handle_event("revoke", user_id, socket) do
-    live_board_action({:revoke, id: user_id}, socket)
+    live_board_action({:revoke, id: String.to_integer(user_id)}, socket)
     {:noreply, socket}
   end
 

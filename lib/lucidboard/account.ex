@@ -19,6 +19,10 @@ defmodule Lucidboard.Account do
     Repo.get(User, user_id)
   end
 
+  def display_name(%User{name: name, full_name: full_name}) do
+    "#{name} (#{full_name})"
+  end
+
   @spec has_role?(User.t(), Board.t(), atom) :: boolean
   def has_role?(%User{id: user_id}, %Board{board_roles: roles}, role \\ :owner) do
     Enum.any?(roles, fn
@@ -36,17 +40,14 @@ defmodule Lucidboard.Account do
     )
   end
 
-  @spec grant(integer, integer, atom) :: :ok | :error
-  def grant(user_id, board_id, role) do
-    with %User{id: user_id} <- Repo.get(User, user_id),
-         %Board{id: board_id} = board <-
+  @spec grant(integer, BoardRole.t()) :: :ok | :error
+  def grant(board_id, board_role) do
+    with %Board{} = board <-
            Board |> Repo.get(board_id) |> Repo.preload(:board_roles),
-         new_role <-
-           BoardRole.new(user_id: user_id, board_id: board_id, role: role),
          {:ok, _} <-
            board
            |> Board.changeset()
-           |> Changeset.put_assoc(:board_roles, [new_role | board.board_roles])
+           |> Changeset.put_assoc(:board_roles, [board_role | board.board_roles])
            |> Repo.update() do
       :ok
     else
