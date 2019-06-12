@@ -38,7 +38,6 @@
     onDrop="dnd.dropIntoPile(event)"
     class="u-Mbm">
     <% end %>
-    >
     <div
       data-card-id="<%= card.id %>"
       <%= unless @search do %>
@@ -46,7 +45,6 @@
       onDragStart="dnd.drag(event)"
       class="c-Card">
       <% end %>
-      >
       <%= rendered_card %>
     </div>
     <div class="c-Card__footer--extra">
