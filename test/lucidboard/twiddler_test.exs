@@ -295,6 +295,15 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn3, new_board3)
   end
 
+  test "delete a column", %{board: board} do
+    action = {:delete_column, id: hd(board.columns).id}
+    {:ok, new_board, tx_fn, %{}, _event} = Twiddler.act(board, action)
+
+    assert "Col2" == hd(new_board.columns).title
+
+    execute_tx_and_assert_board_matches(tx_fn, new_board)
+  end
+
   # Execute the given transaction function and assert that the given board
   # state matches what was persisted to the database.
   defp execute_tx_and_assert_board_matches(tx_fn, live_board) do

@@ -197,6 +197,11 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("delete_column", col_id, socket) do
+    live_board_action({:delete_column, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
   def handle_info({:update, board, event}, socket) do
     events =
       if event do
