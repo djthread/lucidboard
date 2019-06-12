@@ -36,12 +36,7 @@ defmodule Lucidboard.Card do
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
-  def changeset(card) do
-    card
-    |> cast(%{}, [:body, :pile_id, :pos])
-  end
-
-  def changeset(card, attrs) do
+  def changeset(card, attrs \\ %{}) do
     settings =
       if attrs["color"] do
         %{color: attrs["color"]}
@@ -57,7 +52,6 @@ defmodule Lucidboard.Card do
       card
       |> cast(attrs, [:body, :pile_id, :pos])
     end
-
   end
 
   @doc "Get the number of likes on a card"

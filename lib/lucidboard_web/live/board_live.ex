@@ -60,6 +60,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:delete_confirming_card_id, nil)
           |> assign(:online_count, online_count(board.id))
           |> assign(:search, nil)
+          |> assign(:role_users_suggest, [])
 
         {:ok, socket}
     end
@@ -234,6 +235,27 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_event("sortby_likes", col_id, socket) do
     live_board_action({:sortby_likes, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("role_suggest", %{"user" => input}, socket) do
+    suggestions = Account.suggest_users(input)
+    {:noreply, assign(socket, :role_users_suggest, suggestions)}
+  end
+
+  def handle_event("grant", %{"user" => user_id}, socket) do
+    user = user_id |> String.to_integer() |> Account.get!()
+    live_board_action({:grant, id: user.id, role: :owner}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("revoke", user_id, socket) do
+    live_board_action({:revoke, id: String.to_integer(user_id)}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("sortby_votes", col_id, socket) do
+    live_board_action({:sortby_votes, id: col_id}, socket)
     {:noreply, socket}
   end
 

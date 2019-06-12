@@ -41,7 +41,7 @@ defmodule Lucidboard.LiveBoard.Agent do
 
   @impl true
   def handle_call({:action, action, opts}, _from, state) when is_list(opts) do
-    case Twiddler.act(state.board, action) do
+    case Twiddler.act(state.board, action, opts) do
       {:ok, new_board, tx_fn, meta, event} ->
         user = Keyword.get(opts, :user)
         {event, events} = add_event(state.events, event, new_board, user)
@@ -54,7 +54,7 @@ defmodule Lucidboard.LiveBoard.Agent do
 
         Scribe.write(new_board.id, [
           tx_fn,
-          (if event, do: fn -> TimeMachine.commit(event) end)
+          if(event, do: fn -> TimeMachine.commit(event) end)
         ])
 
         ret =

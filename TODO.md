@@ -13,6 +13,8 @@ Lucidboard Features
 
 - investigate db indexes
 
+- investigate db indexes
+
 ## Needed before pilot
 
 ### Backend
@@ -55,3 +57,12 @@ auto groups
 starred board
 timer maybe ?
 search
+
+## Permission notes
+
+- Roles
+  - Observer
+  - Contributor
+  - Owner
+---------------------------
+  - Admin? (Global)
