@@ -9,7 +9,7 @@ Lucidboard Features
 
 - Send messages into a board event feed
 - Assign colors to cards
-- Unvoting
+- Unliking
 - Board freezing
 - Private boards
 

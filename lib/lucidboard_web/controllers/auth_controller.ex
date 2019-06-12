@@ -21,8 +21,6 @@ defmodule LucidboardWeb.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_failure: _fails}} = conn, _params) do
-    require Logger
-    Logger.debug("...... before apply provider to #{inspect _fails}")
     conn
     |> put_flash(:error, "Failed to authenticate.")
     |> redirect(to: "/")

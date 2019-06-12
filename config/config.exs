@@ -29,9 +29,9 @@ config :lucidboard, :templates, %{
   }
 }
 
-config :lucidboard, :default_theme, "minty"
+config :lucidboard, :default_theme, "light"
 
-config :lucidboard, :themes, ~w(minty darkly)
+config :lucidboard, :themes, ~w(light dark)
 
 config :lucidboard, :timezone, "America/Detroit"
 
@@ -48,7 +48,6 @@ config :ueberauth, Ueberauth,
   providers: [
     github: {Ueberauth.Strategy.Github, [default_scope: "user:email"]},
     pingfed: {Ueberauth.Strategy.PingFed, [default_scope: "openid profile email", send_redirect_uri: false]}
-    # TODO find out why send_redirect_uri: false
   ]
 
 # Import environment specific config. This must remain at the bottom

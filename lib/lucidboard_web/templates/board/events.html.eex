@@ -12,11 +12,7 @@
 <div class="event-list">
   <ul>
     <%= for event <- Enum.reverse(@events) do %>
-      <li>
-        <%= display_date_time(event.inserted_at) %>
-        <strong><%= event.user.name %></strong>
-        <%= event.desc %>
-      </li>
+      <li><%= display_event(event) %></li>
     <% end %>
   </ul>
 </div>

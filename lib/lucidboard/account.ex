@@ -5,7 +5,6 @@ defmodule Lucidboard.Account do
   alias Lucidboard.Account.Github
   alias Lucidboard.{Repo, User}
   alias Ueberauth.Auth
-  require Logger
 
   @providers %{
     github: Github,
@@ -27,7 +26,6 @@ defmodule Lucidboard.Account do
   """
   @spec auth_to_user(Auth.t()) :: {:ok, User.t()} | {:error, String.t()}
   def auth_to_user(auth) do
-    Logger.debug("...... before apply provider to #{inspect auth}")
     with {:ok, user} <- apply(@providers[auth.provider], :to_user, [auth]) do
       case Repo.one(from(u in User, where: u.name == ^user.name)) do
         nil -> Repo.insert(user)
