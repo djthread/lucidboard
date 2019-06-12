@@ -13,9 +13,9 @@
       </div>
 
       <div class="is-block">
-      <%= radio_button f, :color, "FF0000" %> <label for="card_color_FF0000">- Red</label> <br/>
-      <%= radio_button f, :color, "FFFFFF" %> <label for="card_color_FFFFFF">- White</label> <br/>
-      <%= radio_button f, :color, "000000" %> <label for="card_color_000000">- Black</label> <br/>
+      <%= radio_button f, :color, "FF0000", checked: f.data.settings.color == "FF0000" %> <label for="card_color_FF0000">- Red</label> <br/>
+      <%= radio_button f, :color, "FFFFFF", checked: f.data.settings.color == "FFFFFF" %> <label for="card_color_FFFFFF">- White</label> <br/>
+      <%= radio_button f, :color, "000000", checked: f.data.settings.color == "000000" %> <label for="card_color_000000">- Black</label> <br/>
       </div>
     </section>
     <footer class="modal-card-foot">

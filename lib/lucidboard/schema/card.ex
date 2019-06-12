@@ -46,12 +46,18 @@ defmodule Lucidboard.Card do
       if attrs["color"] do
         %{color: attrs["color"]}
       else
-        attrs.settings
+        attrs[:settings]
       end
 
-    card
-    |> cast(attrs, [:body, :pile_id, :pos])
-    |> put_change(:settings, settings)
+    if settings do
+      card
+      |> cast(attrs, [:body, :pile_id, :pos])
+      |> put_change(:settings, settings)
+    else
+      card
+      |> cast(attrs, [:body, :pile_id, :pos])
+    end
+
   end
 
   @doc "Get the number of likes on a card"
