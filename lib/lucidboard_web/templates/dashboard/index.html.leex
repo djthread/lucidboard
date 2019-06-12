@@ -11,21 +11,19 @@
   </form>
 
   <%= for short_board <- @short_boards do %>
-    <a class="card is-block c-Card u-Mbm"
+    <a class="o-Stack c-Card c-Card--clickable u-Pal u-Mbm"
       href="<%= Routes.board_path(LucidboardWeb.Endpoint, :index, short_board.id) %>">
-      <div class="c-Card__content card-content">
-        <div class="content">
-          <h3 class="b-Subtitle subtitle is-marginless">
-            <%= short_board.title %>
-          </h3>
-          Created by <strong><%= short_board.username %></strong> at
-          <span title="<%= display_date_time(short_board.inserted_at, :long) %>">
-            <%= display_date_time(short_board.inserted_at, :short) %></span>.<br>
-          <%= if short_board.last_event do %>
-            <%= fas("clock") %>
-            <%= display_event(short_board.last_event) %>
-          <% end %>
-        </div>
+      <div class="content">
+        <h3 class="b-Subtitle subtitle is-marginless">
+          <%= short_board.title %>
+        </h3>
+        Created by <strong><%= short_board.username %></strong> at
+        <span title="<%= display_date_time(short_board.inserted_at, :long) %>">
+          <%= display_date_time(short_board.inserted_at, :short) %></span>.<br>
+        <%= if short_board.last_event do %>
+          <%= fas("clock") %>
+          <%= display_event(short_board.last_event) %>
+        <% end %>
       </div>
       <%# <footer class="card-footer">
         <a href="#" class="card-footer-item">Settings</a>

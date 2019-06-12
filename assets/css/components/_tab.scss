@@ -1,0 +1,25 @@
+.c-Tabs {
+  display: flex;
+}
+
+.c-Tab {
+  margin-right: 1rem;
+
+  &:last-child() {
+    margin-right: 0;
+  }
+}
+
+// .c-Tab__link {
+//   // &:hover {
+//   //   color: #0f96f0
+//   // }
+// }
+
+.c-Tab.is-active {
+  border-bottom: 2px solid #0f96f0;
+  
+  .c-Tab__link {
+    color: #0f96f0;
+  }
+}

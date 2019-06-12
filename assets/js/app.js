@@ -34,6 +34,8 @@ for (var edit = 0; edit < inlineEdit.length; edit++) {
     setTimeout(function () {
       var tx = document.getElementsByTagName('textarea');
       for (var i = 0; i < tx.length; i++) {
+        tx[i].focus();
+        console.log('hi');
         tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
         tx[i].addEventListener('input', OnInput, false);
       }
@@ -53,7 +55,9 @@ for (var a = 0; a < addCard.length; a++) {
   addCard[a].addEventListener('click', function () {
     setTimeout(function () {
       var tx = document.getElementsByTagName('textarea');
+
       for (var i = 0; i < tx.length; i++) {
+        tx[i].focus();
         tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
         tx[i].addEventListener('input', OnInput, false);
       }

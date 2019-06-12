@@ -16,7 +16,7 @@
   <% true -> %>
     <p phx-click="inline_edit"
       phx-value="<%= @card.id %>"
-      class="content is-size-<%= card_body_size_by_copy(@card.body) %> js-inlineEdit u-Pam">
+      class="content is-size-<%= card_body_size_by_copy(@card.body) %> js-inlineEdit u-Phm u-Ptm">
       <%= @card.body %>
     </p>
 
@@ -26,7 +26,7 @@
 <footer class="card-footer">
 Color: <%= @card.settings.color %>
   <%= if count_user_likes(@card.likes, @user.id) < @board.settings.likes_per_user do %>
-    <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
+    <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item">
       <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
     </a>
   <% else %>
@@ -36,7 +36,7 @@ Color: <%= @card.settings.color %>
   <% end %>
 
   <%= if count_user_likes(@card.likes, @user.id) > 0  do %>
-  <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
+  <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item">
     <%= fas("heart-broken") %>
   </a>
   <% end %>
@@ -44,21 +44,23 @@ Color: <%= @card.settings.color %>
   <a phx-click="modal_card_edit"
     phx-value="<%= @card.id %>"
     href="#"
-    class="card-footer-item"
+    class="c-Card__link card-footer-item"
     data-modal="trigger">
     <%= fas("edit") %>
   </a>
-  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
+  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item">
     <%= fas("trash-alt") %>
   </a>
 </footer>
 
 <%= if @delete_confirming_card_id == @card.id do %>
-<div class="u-Pam">
-  <p class="u-Mbm">
-  Are you super duper sure?
-  </p>
-  <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button is-primary">Confirm</button>
-  <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button">Cancel</button>
+<div class="c-Card__modal u-Pam">
+  <div class="">
+    <p class="u-Mbm">
+      Are you super duper sure?
+    </p>
+    <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button is-primary">Confirm</button>
+    <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button">Cancel</button>
+  </div>
 </div>
 <% end %>

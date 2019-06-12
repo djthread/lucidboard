@@ -1,6 +1,6 @@
-<div id="usermenu" class="dropdown is-hoverable is-right">
+<div id="usermenu" class="dropdown is-hoverable is-right u-Width--100">
   <div class="dropdown-trigger">
-    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+    <button class="dropdown-button" aria-haspopup="true" aria-controls="dropdown-menu">
       <%= if @user.avatar_url do %>
         <div class="avatar" style="background-image:url('<%= @user.avatar_url %>')"></div>
       <% else %>

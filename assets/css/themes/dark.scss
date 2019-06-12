@@ -1,7 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
 @import "../../node_modules/bulmaswatch/darkly/variables";
 
+// $link-hover: #cd59d1;
+$link-hover: #0f96f0;
+
 @import "../settings/settings";
+$body-size: 16px;
 $dropdown-item-hover-color: lighten($primary, 25%);
 
 @import "../../node_modules/bulma/bulma";
@@ -10,4 +14,9 @@ $dropdown-item-hover-color: lighten($primary, 25%);
 @import "../base/links";
 @import "../base/form";
 @import "../base/type";
+
+@import "../components/buttons";
 @import "../components/card";
+@import "../components/dragAndDrop";
+@import "../components/dropDown";
+@import "../components/tab";

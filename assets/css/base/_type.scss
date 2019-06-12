@@ -1,3 +1,11 @@
-.b-Subtitle {
-    color: inherit;
+.b-TypeHeading--secondary {
+  color: white;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 400;
+  font-size: 1.5rem;
+}
+
+.b-TypeHeading--divider {
+  border-bottom: 2px solid $white;
 }
