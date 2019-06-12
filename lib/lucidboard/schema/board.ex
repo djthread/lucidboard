@@ -16,7 +16,7 @@ defmodule Lucidboard.Board do
 
   schema "boards" do
     field(:title, :string)
-    embeds_one(:settings, BoardSettings)
+    embeds_one(:settings, BoardSettings, on_replace: :update)
     has_many(:columns, Column)
     has_many(:events, Event)
     belongs_to(:user, User)
@@ -42,6 +42,7 @@ defmodule Lucidboard.Board do
   def changeset(board, attrs) do
     board
     |> cast(attrs, [:title])
+    |> put_change(:settings, attrs.settings)
     |> cast_assoc(:columns)
     |> validate_required([:title])
   end

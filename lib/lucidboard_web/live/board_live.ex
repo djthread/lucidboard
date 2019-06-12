@@ -3,7 +3,7 @@ defmodule LucidboardWeb.BoardLive do
   use Phoenix.LiveView
   import LucidboardWeb.BoardLive.Helper
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Column, LiveBoard, Presence, TimeMachine}
+  alias Lucidboard.{Account, BoardSettings, Column, LiveBoard, Presence, TimeMachine}
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.BoardLive.Search
   alias LucidboardWeb.{BoardView, Endpoint}
@@ -48,6 +48,7 @@ defmodule LucidboardWeb.BoardLive do
           |> assign(:modal_open?, false)
           |> assign(:tab, :board)
           |> assign(:column_changeset, new_column_changeset())
+          |> assign(:board_settings_changeset, new_board_settings_changeset())
           |> assign(:delete_confirming_card_id, nil)
           |> assign(:online_count, online_count(board.id))
           |> assign(:search, nil)
@@ -165,6 +166,24 @@ defmodule LucidboardWeb.BoardLive do
 
       invalid_changeset ->
         {:noreply, assign(socket, column_changeset: invalid_changeset)}
+    end
+  end
+
+  def handle_event("board_settings_save", form_data, socket) do
+    cs = socket.assigns.board_settings_changeset
+
+    case BoardSettings.changeset(cs, form_data["board_settings"]) do
+      %{valid?: true} = changeset ->
+        board_settings = Changeset.apply_changes(changeset)
+
+        action = {:update_board, settings: %{likes_per_user: board_settings.likes_per_user}}
+
+        live_board_action(action, socket)
+
+        {:noreply, assign(socket, board_settings_changeset: new_board_settings_changeset())}
+
+      invalid_changeset ->
+        {:noreply, assign(socket, board_settings_changeset: invalid_changeset)}
     end
   end
 

@@ -2,7 +2,7 @@ defmodule LucidboardWeb.BoardLive.Helper do
   @moduledoc "Functionality to help the BoardLive"
   import Phoenix.LiveView, only: [assign: 2, assign: 3]
   alias Ecto.Changeset
-  alias Lucidboard.{Card, Column, LiveBoard, Presence}
+  alias Lucidboard.{BoardSettings, Card, Column, LiveBoard, Presence}
   alias LucidboardWeb.BoardLive
   alias Phoenix.LiveView.Socket
 
@@ -72,6 +72,10 @@ defmodule LucidboardWeb.BoardLive.Helper do
 
   def new_column_changeset do
     Column.changeset(%Column{}, %{})
+  end
+
+  def new_board_settings_changeset do
+    BoardSettings.changeset(%BoardSettings{}, %{})
   end
 
   def online_count(socket_or_board_id) do
