@@ -1,25 +1,50 @@
-.c-DropDown__button {
+.dropdown-button {
   -webkit-appearance: none;
   border: 0;
   font-size: 1rem;
-  background-color: #282f2f;
+  background-color: transparent;
   height: 100%;
   padding: 0.25rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
+  color: $white;
+  outline: 0
 }
 
-.c-DropDown__button .icon {
+.dropdown-button .icon {
   margin-left: 1rem;
 }
 
-.c-DropDown__menu {
+.dropdown-menu {
   width: 100%;
   padding: 0;
 }
 
-.c-DropDown__content {
+.dropdown-content {
   box-shadow: none;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-trigger {
+  outline: 0;
+}
+
+.t-dark {
+  .dropdown-content {
+    background-color: $primary;
+    padding: 0;
+  }
+  
+  .dropdown-item {
+    padding: 0.5rem 1rem;
+    
+    &:hover {
+      background-color: #2f4d6d;
+      color: $white;
+    }
+  }
 }

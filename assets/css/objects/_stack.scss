@@ -1,5 +1,9 @@
 .o-Stack {
-    display: flex;
+  display: flex;
+}
+
+.o-Stack--column {
+  flex-direction: column;
 }
 
 .o-Stack--split\@m {
@@ -22,6 +26,10 @@
 
 .o-Stack--spaceBetween {
     justify-content: space-between;
+}
+
+.o-Stack--end-row {
+  justify-content: flex-end;
 }
 
 .o-Stack--center-row\@m {

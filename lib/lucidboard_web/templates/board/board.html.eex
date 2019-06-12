@@ -7,21 +7,23 @@
 <section class="board u-Width--100 columns is-desktop u-Man">
   <%= for column <- board.columns do %>
     <div class="column" data-col-id="<%= column.id %>">
-      <h2 class="b-TypeHeading--secondary b-TypeHeading--divider"><%= column.title %></h2>
+      <div class="o-Stack o-Stack--spaceBetween b-TypeHeading--divider">
+        <h2 class="b-TypeHeading--secondary"><%= column.title %></h2>
 
-      <div class="dropdown is-hoverable <%=
-        if column.pos == 0, do: "is-left", else: "is-right"
-      %>">
-        <div class="dropdown-trigger">
-          <button class="button" aria-haspopup="true" aria-controls="column-menu">
-            <%= fas("ellipsis-h") %>
-          </button>
-        </div>
-        <div class="dropdown-menu" id="column-menu" role="menu">
-          <div class="dropdown-content">
-            <a href="#" phx-click="sortby_votes" phx-value="<%= column.id %>" class="dropdown-item">
-              Sort by Votes
-            </a>
+        <div class="dropdown is-hoverable <%=
+          if column.pos == 0, do: "is-left", else: "is-right"
+        %>">
+          <div class="dropdown-trigger">
+            <button class="button button-plain" aria-haspopup="true" aria-controls="column-menu">
+              <%= fas("ellipsis-h") %>
+            </button>
+          </div>
+          <div class="dropdown-menu" id="column-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" phx-click="sortby_votes" phx-value="<%= column.id %>" class="dropdown-item">
+                Sort by Votes
+              </a>
+            </div>
           </div>
         </div>
       </div>

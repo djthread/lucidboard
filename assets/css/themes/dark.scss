@@ -5,6 +5,7 @@
 $link-hover: #0f96f0;
 
 @import "../settings/settings";
+$body-size: 16px;
 $dropdown-item-hover-color: lighten($primary, 25%);
 
 @import "../../node_modules/bulma/bulma";
@@ -14,6 +15,7 @@ $dropdown-item-hover-color: lighten($primary, 25%);
 @import "../base/form";
 @import "../base/type";
 
+@import "../components/buttons";
 @import "../components/card";
 @import "../components/dragAndDrop";
 @import "../components/dropDown";

@@ -15,11 +15,8 @@ section.board {
       border: 2px dashed $white-ter;
 }
 
-.t-darkly {
+.t-dark {
   .cardjunction.active {
       border: 2px dashed $turquoise;
-  }
-  
-  .dnd-dragging .cardjunction {
   }
 }

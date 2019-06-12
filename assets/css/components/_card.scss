@@ -1,13 +1,6 @@
 .c-Card {
   transition: all .2s ease-in-out;
-  display: flex;
-  flex-direction: column;
   cursor: grab;
-    
-    //   .c-Card__actions {
-    //     opacity: 1;
-    //   }
-    // }
 }
 
 .c-Card--clickable {
@@ -18,20 +11,6 @@
   }
 }
 
-// .t-minty {
-//     .c-Card:hover {
-//         background-color: darken($white, 5%);
-// 
-//         .b-Subtitle {
-//             color: $primary;
-//         }
-//     }
-// 
-//     .card-footer-item:hover {
-//         color: $primary;
-//     }
-// }
-
 .c-Card__content {
   word-wrap: break-word;
 }
@@ -39,10 +18,13 @@
 .c-Card__actions {
   display: flex;
   transition: all .2s ease-in-out;
-  // opacity: 0;
   transition: all .2s ease-in-out;
   align-self: flex-end;
   justify-content: space-between;
+}
+
+.c-Card__link {
+  padding: 0 0.75rem 0.75rem;
 }
 
 .c-Card__footer--extra {
@@ -58,7 +40,7 @@
   width: 100%;
 }
 
-.t-darkly {
+.t-dark {
   .c-Card {
     box-shadow: none;
     border: 2px solid #343c3d;

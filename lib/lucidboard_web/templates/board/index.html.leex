@@ -1,14 +1,15 @@
+
+<div class="o-Stack o-Stack--end-row u-Mbm">
+  <form phx-change="search_key">
+    <input class="input" type="text" name="q" list="matches" placeholder="Search">
+  </form>
+</div>
 <div class="o-Stack o-Stack--medium o-Stack--split@m o-Stack--spaceBetween o-Stack--center-row@m u-Mbm u-Phm">
   <div class="o-Stack__item">
     <h1 class="title u-Mbn"><%= @board.title %></h1>
   </div>
   <div class="o-Stack__item">
     <ul class="c-Tabs">
-    <li class="boardsearch <%= if @search, do: ~s(active) %>">
-      <form phx-change="search_key">
-        <input type="text" name="q" list="matches" placeholder="Search...">
-      </form>
-    </li>
       <li class="c-Tab">
         <a class="c-Tab__link" phx-click="tab" phx-value="events" href="#">
           <span class="onlinedot">&bull;</span> &nbsp; <%= @online_count %> Online

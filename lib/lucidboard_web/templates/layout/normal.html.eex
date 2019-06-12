@@ -1,6 +1,6 @@
 <%= render_layout "app.html", assigns do %>
-  <main role="main" class="section">
-    <div class="o-CenteredColumn u-Mbm">
+  <main role="main" class="u-Pvl u-Phm">
+    <div class="o-CenteredColumn">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
     </div>

@@ -5,6 +5,7 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 
 @import "objects/column";
 @import "objects/stack";
+@import "utilities/spacing";
 @import "utilities/utilities";
 
 .boardsearch.active { border: 4px solid green; }

@@ -34,7 +34,8 @@ for (var edit = 0; edit < inlineEdit.length; edit++) {
     setTimeout(function () {
       var tx = document.getElementsByTagName('textarea');
       for (var i = 0; i < tx.length; i++) {
-        console.log(tx[i]);
+        tx[i].focus();
+        console.log('hi');
         tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
         tx[i].addEventListener('input', OnInput, false);
       }
