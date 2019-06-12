@@ -36,10 +36,11 @@ defmodule Lucidboard.TwiddlerTest do
     actual_card_id = Focus.view(card_lens, board).id
 
     {:ok, new_board, tx_fn, %{}, event} =
-      Twiddler.act(board, {:update_card, id: actual_card_id, body: "OH YEAH"})
+      Twiddler.act(board, {:update_card, id: actual_card_id, body: "OH YEAH", settings: %{color: "FFF000"}})
 
     assert "has changed card text." == event.desc
     assert "OH YEAH" == Focus.view(card_lens, new_board).body
+    assert "FFF000" == Focus.view(card_lens, new_board).settings.color
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
