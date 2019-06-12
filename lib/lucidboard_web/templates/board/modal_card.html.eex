@@ -11,26 +11,11 @@
         <%= error_tag f, :body %>
         <button class="delete" aria-label="close"></button>
       </div>
-      <div class="dropdown u-Mbl">
-        <div class="dropdown-trigger">
-          <a href="#" class="" aria-haspopup="true" aria-controls="dropdown-menu">
-            Labels <%= fas("plus fa-md") %>
-          </a>
-        </div>
-        <div class="dropdown-menu c-DropDown__menu" id="dropdown-menu" role="menu">
-          <div class="dropdown-content u-Pas">
-            <a href="#" class="dropdown-item c-DropDown__item--turquoise u-Pam u-Mbs"></a>
-            <a class="dropdown-item c-DropDown__item--red u-Pam u-Mbs"></a>
-            <a href="#" class="dropdown-item is-active c-DropDown__item--purple u-Pam u-Mbs"></a>
-            <a href="#" class="dropdown-item c-DropDown__item--cyan u-Pam u-Mbs"></a>
-          </div>
-        </div>
-        <div class="is-block">
-          <div class="c-Card__label c-Card__label--green"></div>
-          <div class="c-Card__label c-Card__label--blue"></div>
-          <div class="c-Card__label c-Card__label--red"></div>
-          <div class="c-Card__label c-Card__label--orange"></div>
-        </div>
+
+      <div class="is-block">
+      <%= radio_button f, :color, "FF0000" %> <label for="card_color_FF0000">- Red</label> <br/>
+      <%= radio_button f, :color, "FFFFFF" %> <label for="card_color_FFFFFF">- White</label> <br/>
+      <%= radio_button f, :color, "000000" %> <label for="card_color_000000">- Black</label> <br/>
       </div>
     </section>
     <footer class="modal-card-foot">

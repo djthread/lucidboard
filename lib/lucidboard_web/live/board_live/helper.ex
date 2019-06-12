@@ -43,7 +43,7 @@ defmodule LucidboardWeb.BoardLive.Helper do
         card = Changeset.apply_changes(changeset)
 
         unless delete_card_if_empty(socket, card) do
-          {:update_card, %{id: card.id, body: String.trim(card.body)}}
+          {:update_card, %{id: card.id, body: String.trim(card.body), settings: %{color: card.settings.color}}}
           |> live_board_action(socket)
         end
 
