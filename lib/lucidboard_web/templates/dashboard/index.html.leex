@@ -6,8 +6,8 @@
 
   <h2 class="title">Lucidboards</h2>
 
-  <form phx-change="search">
-    <input type="text" name="q" value="<%= @search_key %>" />
+  <form class="u-Mbl" phx-change="search">
+    <input class="input input-huge" type="text" name="q" value="<%= @search_key %>" placeholder="Search" />
   </form>
 
   <%= for short_board <- @short_boards do %>
@@ -17,12 +17,14 @@
         <h3 class="b-Subtitle subtitle is-marginless">
           <%= short_board.title %>
         </h3>
-        Created by <strong><%= short_board.username %></strong> at
-        <span title="<%= display_date_time(short_board.inserted_at, :long) %>">
-          <%= display_date_time(short_board.inserted_at, :short) %></span>.<br>
+          Created by <strong><%= short_board.username %></strong> at
+          <span title="<%= display_date_time(short_board.inserted_at, :long) %>">
+            <%= display_date_time(short_board.inserted_at, :short) %></span>.
         <%= if short_board.last_event do %>
+          <span class="u-Mtm is-block">
           <%= fas("clock") %>
           <%= display_event(short_board.last_event) %>
+          </span>
         <% end %>
       </div>
       <%# <footer class="card-footer">

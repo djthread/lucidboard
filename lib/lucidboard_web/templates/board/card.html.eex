@@ -1,4 +1,4 @@
-<div class="c-Card__content card-content u-Pan">
+<div class="c-Card__content card-content u-Pan" style="border-left: 1px solid #<%= @card.settings.color %>">
   <%= cond do %>
   <% @locked_by_user? -> %>
     <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
@@ -23,14 +23,13 @@
   <% end %>
 </div>
 
-<footer class="card-footer">
-Color: <%= @card.settings.color %>
+<footer class="c-Card__actions card-footer">
   <%= if count_user_likes(@card.likes, @user.id) < @board.settings.likes_per_user do %>
     <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item">
       <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
     </a>
   <% else %>
-    <a href="#" class="card-footer-item">
+    <a href="#" class="c-Card__link card-footer-item">
       <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
     </a>
   <% end %>
@@ -54,10 +53,10 @@ Color: <%= @card.settings.color %>
 </footer>
 
 <%= if @delete_confirming_card_id == @card.id do %>
-<div class="c-Card__modal u-Pam">
+<div class="u-Phm u-Pbm">
   <div class="">
     <p class="u-Mbm">
-      Are you super duper sure?
+      If you delete the card, it's gone forever. Are you sure?
     </p>
     <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button is-primary">Confirm</button>
     <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button">Cancel</button>
