@@ -36,7 +36,7 @@ defmodule Lucidboard.Card do
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
-  def changeset(card, attrs) do
+  def changeset(card, attrs \\ %{}) do
     settings =
       if attrs["color"] do
         %{color: attrs["color"]}

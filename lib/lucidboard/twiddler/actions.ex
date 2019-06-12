@@ -77,7 +77,7 @@ defmodule Lucidboard.Twiddler.Actions do
     end
   end
 
-  def delete_column(board, args) do
+  def delete_column(board, args, _opts \\ []) do
     with [id] <- grab(args, [:id]),
          {:ok, lens} <- Glass.column_by_id(board, id) do
       column = Focus.view(lens, board)

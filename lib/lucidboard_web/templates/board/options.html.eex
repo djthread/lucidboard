@@ -30,23 +30,32 @@
           else: {"Create", "Create Column"}
     %>
 
-<div style="width:45%;float:right">
-  <h2>Manage Board Roles</h2>
-  <form phx-change="role_suggest" phx-submit="grant">
-  <input type="text" name="user" list="matches" placeholder="Find User...">
-  [Owner]
-  <datalist id="matches">
-    <%= for user <- @role_users_suggest do %>
-      <option value="<%= user.id %>"><%= Account.display_name(user) %></option>
+    <h3><%= title %></h3>
+
+    <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
+      <%= text_input f, :title, placeholder: "New column title", class: "input u-Mbm" %>
+      <%= error_tag f, :title %>
+      <%= submit button_txt, phx_disable_with: "Saving...", class: "button is-primary" %>
     <% end %>
-  </datalist>
-  <ul>
-    <%= for role <- @board.board_roles do %>
-      <li><%= inspect role %></li>
-    <% end %>
-  </ul>
-  </form>
-</div>
+  </div>
+
+  <div style="width:45%;float:right">
+    <h2>Manage Board Roles</h2>
+    <form phx-change="role_suggest" phx-submit="grant">
+    <input type="text" name="user" list="matches" placeholder="Find User...">
+    [Owner]
+    <datalist id="matches">
+      <%= for user <- @role_users_suggest do %>
+        <option value="<%= user.id %>"><%= display_name(user) %></option>
+      <% end %>
+    </datalist>
+    <ul>
+      <%= for role <- @board.board_roles do %>
+        <li><%= inspect role %></li>
+      <% end %>
+    </ul>
+    </form>
+  </div>
 
 <!--
 <section class="column-manager clearpls">
@@ -82,30 +91,30 @@
       <%= submit "Save", phx_disable_with: "Saving...", class: "button is-primary" %>
     <% end %>
   </div>
-</section>
 
-<h2>Manage Board Roles</h2>
-<form phx-change="role_suggest" phx-submit="grant">
-Grant owner access to <input type="text" name="user" list="matches" placeholder="Find User...">
-<datalist id="matches">
-  <%= for user <- @role_users_suggest do %>
-    <option value="<%= user.id %>"><%= display_name(user) %></option>
-  <% end %>
-</datalist>
-<input type="submit" value="Grant">
-</form>
-<ul>
-  <% more_than_one_owner = more_than_one_owner(@board.board_roles) %>
-  <%= for role <- @board.board_roles do %>
-    <li>
-      <%= avatar(role.user) %>
-      <%= display_name(role.user) %>
-      (<%= role.role %>)
-      <%= if more_than_one_owner do %>
-      <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
-        <%= fas("user-minus") %>
-      </a>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
+  <h2>Manage Board Roles</h2>
+  <form phx-change="role_suggest" phx-submit="grant">
+  Grant owner access to <input type="text" name="user" list="matches" placeholder="Find User...">
+  <datalist id="matches">
+    <%= for user <- @role_users_suggest do %>
+      <option value="<%= user.id %>"><%= display_name(user) %></option>
+    <% end %>
+  </datalist>
+  <input type="submit" value="Grant">
+  </form>
+  <ul>
+    <% more_than_one_owner = more_than_one_owner(@board.board_roles) %>
+    <%= for role <- @board.board_roles do %>
+      <li>
+        <%= avatar(role.user) %>
+        <%= display_name(role.user) %>
+        (<%= role.role %>)
+        <%= if more_than_one_owner do %>
+        <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
+          <%= fas("user-minus") %>
+        </a>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</section>

@@ -1,7 +1,8 @@
 defmodule Lucidboard.Seeds do
   @moduledoc "Some database seed data"
   import Ecto.Query
-  alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
+
+  alias Lucidboard.{Board, BoardRole, Card, Column, Like, Pile, Repo, User}
 
   def get_user do
     Repo.one(from(u in User, where: u.name == "bob")) ||
@@ -15,12 +16,13 @@ defmodule Lucidboard.Seeds do
     Repo.insert!(board2(user))
   end
 
-  def board(user \\ nil) do
+  def board(user) do
     %User{id: uid} = user = user || get_user()
 
     Board.new(
       title: "My Test Board",
       user_id: user.id,
+      board_roles: [BoardRole.new(user_id: user.id, role: :owner)],
       columns: [
         Column.new(title: "Col1", pos: 0),
         Column.new(

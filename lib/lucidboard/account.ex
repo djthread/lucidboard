@@ -46,7 +46,6 @@ defmodule Lucidboard.Account do
            Board |> Repo.get(board_id) |> Repo.preload(:board_roles),
          {:ok, _} <-
            board
-           |> IO.inspect
            |> Board.changeset()
            |> Changeset.put_assoc(:board_roles, [board_role | board.board_roles])
            |> Repo.update() do
