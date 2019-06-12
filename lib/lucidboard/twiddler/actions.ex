@@ -190,7 +190,7 @@ defmodule Lucidboard.Twiddler.Actions do
       {:ok, like_to_delete, new_card} = Op.unlike(card, user)
       tx_fn = fn -> Repo.delete!(like_to_delete) end
       new_board = Focus.set(card_lens, board, new_card)
-      {:ok, new_board, tx_fn, %{}, event("liked a card.")}
+      {:ok, new_board, tx_fn, %{}, event("unliked a card.")}
     end
   end
 

@@ -122,6 +122,11 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("unlike", card_id, socket) do
+    live_board_action({:unlike, id: card_id, user: user(socket)}, socket)
+    {:noreply, socket}
+  end
+
   def handle_event("card_delete", card_id, socket) do
     {:noreply, assign(socket, :delete_confirming_card_id, card_id)}
   end
