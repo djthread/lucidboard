@@ -33,6 +33,14 @@
   border-top: 0;
 }
 
+.c-Card__label {
+    border-radius: 50%;
+    box-sizing: border-box;
+    height: 25px;
+    margin-left: 0.75rem;
+    width: 25px;
+}
+
 .t-dark {
   .c-Card {
     box-shadow: none;

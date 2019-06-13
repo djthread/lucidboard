@@ -18,6 +18,7 @@
     data-pile-id="<%= @pile.id %>">
     <div
       class="o-Stack o-Stack--column c-Card u-Mbm"
+      style="border-left: 3px solid #<%= card.settings.color %>"
       data-card-id="<%= card.id %>"
       <%= unless @search || card_locked? do %>
       draggable="true"

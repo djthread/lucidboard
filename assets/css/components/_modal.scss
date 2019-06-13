@@ -1,0 +1,23 @@
+.modal-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.modal-card-textarea {
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 1rem;
+  resize: none;
+  outline: 0;
+  height: 1.5rem;
+  width: 100%;
+}
+
+.modal-card-close {
+  background: none;
+  border: 0;
+  color: $white;
+  font-size: 1rem;
+}

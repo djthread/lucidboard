@@ -1,4 +1,4 @@
-<div class="c-Card__content card-content u-Pan" style="border-left: 1px solid #<%= @card.settings.color %>">
+<div class="c-Card__content card-content u-Pan">
   <%= cond do %>
   <% @locked_by_user? -> %>
     <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
