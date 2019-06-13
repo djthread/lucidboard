@@ -1,6 +1,16 @@
 defmodule LucidboardWeb.BoardController do
   use LucidboardWeb, :controller
-  alias Lucidboard.{Account, Board, Column, LiveBoard, ShortBoard, Twiddler}
+
+  alias Lucidboard.{
+    Account,
+    Board,
+    BoardSettings,
+    Column,
+    LiveBoard,
+    ShortBoard,
+    Twiddler
+  }
+
   alias LucidboardWeb.BoardLive
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Controller, as: LiveViewController
@@ -22,7 +32,7 @@ defmodule LucidboardWeb.BoardController do
 
   def create_form(conn, _params) do
     template_options =
-      for {name, %{columns: columns}} <- @templates do
+      for %{name: name, columns: columns} <- @templates do
         {"#{name} (#{Enum.join(columns, ", ")})", name}
       end
 
@@ -33,12 +43,20 @@ defmodule LucidboardWeb.BoardController do
   end
 
   def create(conn, %{"title" => title, "template" => template}) do
+    template = Enum.find(@templates, fn t -> t.name == template end)
+
     columns =
-      Enum.map(Enum.with_index(@templates[template].columns), fn {c, idx} ->
+      Enum.map(Enum.with_index(template.columns), fn {c, idx} ->
         Column.new(title: c, pos: idx)
       end)
 
-    board = Board.new(title: title, columns: columns, user: conn.assigns[:user])
+    board =
+      Board.new(
+        title: title,
+        columns: columns,
+        user: conn.assigns[:user],
+        settings: BoardSettings.new(template.settings)
+      )
 
     with {:ok, %Board{id: id} = board} <- Twiddler.insert(board) do
       Lucidboard.broadcast("short_boards", {:new, ShortBoard.from_board(board)})

@@ -23,11 +23,18 @@ config :lucidboard, LucidboardWeb.Endpoint,
 config :phoenix,
   template_engines: [leex: Phoenix.LiveView.Engine]
 
-config :lucidboard, :templates, %{
-  "Retrospective" => %{
-    columns: ["What Went Well", "What Didn't Go Well", "Propouts"]
+config :lucidboard, :templates, [
+  %{
+    name: "Retrospective",
+    columns: ["What Went Well", "What Didn't Go Well", "Propouts"],
+    settings: [likes_per_user: 5, likes_per_user_per_card: 3]
+  },
+  %{
+    name: "Lean Coffee",
+    columns: ["Ready", "Doing", "Done"],
+    settings: [likes_per_user: 2, likes_per_user_per_card: 2]
   }
-}
+]
 
 config :lucidboard, :default_theme, "dark"
 
