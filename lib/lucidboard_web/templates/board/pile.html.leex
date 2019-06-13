@@ -1,5 +1,6 @@
 <% 
   card = hd(@pile.cards)
+  card_locked? = card.id in @locked_card_ids
 
   rendered_card = render(
     LucidboardWeb.BoardView,
@@ -7,7 +8,7 @@
     Map.merge(assigns, %{
       card: card,
       locked_by_user?: @locked_card_id == card.id,
-      locked?: card.id in @locked_card_ids
+      locked?: card_locked?
     })
   )
 %>
@@ -18,7 +19,7 @@
     <div
       class="o-Stack o-Stack--column c-Card u-Mbm"
       data-card-id="<%= card.id %>"
-      <%= unless @search do %>
+      <%= unless @search || card_locked? do %>
       draggable="true"
       onDragStart="dnd.drag(event)"
       onDragOver="dnd.allowDrop(event)"
@@ -31,20 +32,22 @@
 <% else %>
   <div
     data-pile-id="<%= @pile.id %>"
-    <%= unless @search do %>
+    <%= unless @search || card_locked? do %>
     draggable="true"
     onDragStart="dnd.drag(event)"
     onDragOver="dnd.allowDrop(event)"
     onDrop="dnd.dropIntoPile(event)"
-    class="u-Mbm">
+    class="u-Mbm"
     <% end %>
+    >
     <div
       data-card-id="<%= card.id %>"
-      <%= unless @search do %>
+      <%= unless @search || card_locked? do %>
       draggable="true"
       onDragStart="dnd.drag(event)"
-      class="o-Stack o-Stack--column c-Card">
+      class="o-Stack o-Stack--column c-Card"
       <% end %>
+      >
       <%= rendered_card %>
     </div>
     <div class="c-Card__footer--extra">
