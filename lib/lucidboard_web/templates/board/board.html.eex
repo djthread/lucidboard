@@ -7,7 +7,7 @@
 <section class="board u-Width--100 columns is-desktop u-Man">
   <%= for column <- board.columns do %>
     <div class="column" data-col-id="<%= column.id %>">
-      <div class="o-Stack o-Stack--spaceBetween b-TypeHeading--divider">
+      <div class="o-Stack o-Stack--spaceBetween b-TypeHeading--divider u-Mbm">
         <h2 class="b-TypeHeading--secondary"><%= column.title %></h2>
 
         <div class="dropdown is-hoverable">
