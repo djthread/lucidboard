@@ -9,7 +9,7 @@ defmodule Lucidboard.Account do
 
   @providers %{
     github: Github,
-    ping_fed: PingFed
+    pingfed: PingFed
   }
 
   def get!(user_id), do: Repo.get!(User, user_id)

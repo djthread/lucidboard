@@ -90,4 +90,13 @@ config :ueberauth, Ueberauth.Strategy.PingFed.OAuth,
   client_id: System.get_env("PINGFED_CLIENT_ID"),
   client_secret: System.get_env("PINGFED_CLIENT_SECRET")
 
+config :ueberauth, Ueberauth,
+  providers: [
+    github: {Ueberauth.Strategy.Github, default_scope: "user:email"},
+    pingfed:
+      {Ueberauth.Strategy.PingFed,
+       default_scope: "openid profile email",
+       redirect_uri: System.get_env("PINGFED_REDIRECT_URI")}
+  ]
+
 import_config "dev.secret.exs"
