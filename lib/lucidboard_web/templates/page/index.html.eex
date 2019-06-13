@@ -14,7 +14,7 @@
 <main role="main" class="container content u-Pam">
   <%= unless signed_in?(@conn) do %>
   <p>
-    <a class="button is-link" href="/auth/github">
+    <a class="button is-primary" href="/auth/github">
       <span class="icon">
         <%= fab("github") %>
       </span>
