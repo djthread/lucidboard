@@ -30,7 +30,7 @@ defmodule Lucidboard.LiveBoard.Agent do
   def init(board_id) do
     case {Twiddler.by_id(board_id), TimeMachine.events(board_id)} do
       {%Board{} = board, events} -> {:ok, %State{board: board, events: events}}
-      _ -> {:stop, "Board id #{board_id} not found!"}
+      _ -> {:stop, :not_found}
     end
   end
 

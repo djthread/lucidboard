@@ -38,7 +38,7 @@ defmodule Lucidboard.Twiddler do
         {:ok, board, nil, nil, nil}
 
       %Changeset{} = cs ->
-        {:error, changeset_to_string(cs)}
+        {:error, cs}
     end
   end
 
@@ -122,14 +122,5 @@ defmodule Lucidboard.Twiddler do
     with {:ok, {:ok, the_board}} <- Repo.transaction(tx_fn) do
       {:ok, Repo.preload(the_board, :user)}
     end
-  end
-
-  defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do
-    msg =
-      errs
-      |> Enum.map(fn {k, {err, _}} -> "#{k}: #{err}" end)
-      |> Enum.join(", ")
-
-    "Error: #{msg}"
   end
 end
