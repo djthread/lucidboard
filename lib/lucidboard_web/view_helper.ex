@@ -63,7 +63,7 @@ defmodule LucidboardWeb.ViewHelper do
   end
 
   def avatar(%{avatar_url: url}) do
-    raw(~s[<div class="avatar" style="background-image:url('#{url}')"></div>])
+    raw(~s[<div class="icon-avatar" style="background-image:url('#{url}')"></div>])
   end
 
   @spec more_than_one_owner([BoardRole.t()]) :: boolean

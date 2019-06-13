@@ -4,6 +4,7 @@
     <ul>
     <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
       <li class="card card-manage u-Mbm" phx-click="column_edit" phx-value="<%= id %>">
+        <%= if pos > 0 || pos < length(@board.columns) - 1 do %>
         <div class="card-manage__arrows">
           <%= if pos > 0 do %>
             <a phx-click="col_up" phx-value="<%= id %>" href="#" class="card-manage__arrow">
@@ -16,6 +17,7 @@
             </a>
           <% end %>
         </div>
+        <% end %>
         <div class="card-manage__title">
           <%= title %>
         </div>

@@ -25,7 +25,13 @@
 }
 
 .o-Stack--spaceBetween {
+  justify-content: space-between;
+}
+
+.o-Stack--spaceBetween\@m {
+  @media all and (min-width: 20rem) {
     justify-content: space-between;
+  }
 }
 
 .o-Stack--end-row {

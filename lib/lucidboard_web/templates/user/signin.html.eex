@@ -1,5 +1,5 @@
 <div class="jumbotron">
-  <a class="button is-link" href="/auth/github">
+  <a class="button is-primary" href="/auth/github">
     <span class="icon">
       <%= fab("github") %>
     </span>

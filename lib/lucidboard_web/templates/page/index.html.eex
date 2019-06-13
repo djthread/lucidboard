@@ -1,4 +1,4 @@
-<section class="hero mainhero is-medium">
+<section class="hero mainhero is-medium u-Mbm">
   <div class="hero-body">
     <div class="container">
       <h1 class="title is-2 has-text-grey-lighter">
@@ -11,10 +11,10 @@
   </div>
 </section>
 
-<main role="main" class="container content">
+<main role="main" class="container content u-Pam">
   <%= unless signed_in?(@conn) do %>
   <p>
-    <a class="button is-link" href="/auth/github">
+    <a class="button is-primary" href="/auth/github">
       <span class="icon">
         <%= fab("github") %>
       </span>
