@@ -36,12 +36,6 @@ defmodule LucidboardWeb.BoardLive do
     user = user_id && Account.get(user_id)
 
     case LiveBoard.call(String.to_integer(board_id), :state) do
-      {:error, error} ->
-        {:stop,
-         socket
-         |> put_flash(:error, error)
-         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
-
       {:ok, %{board: board, events: events}} ->
         identifier = "board:#{board.id}"
         Lucidboard.subscribe(identifier)
@@ -56,7 +50,7 @@ defmodule LucidboardWeb.BoardLive do
             modal_open?: false,
             tab: :board,
             column_changeset: new_column_changeset(),
-            board_settings_changeset: new_board_settings_changeset(),
+            board_settings_changeset: nil,
             delete_confirming_card_id: nil,
             online_count: online_count(board.id),
             search: nil,
@@ -64,6 +58,18 @@ defmodule LucidboardWeb.BoardLive do
           )
 
         {:ok, socket}
+
+      {:ok, {:error, :not_found}} ->
+        {:stop,
+         socket
+         |> put_flash(:error, "Board id #{board_id} not found!")
+         |> redirect(to: "/404")}
+
+      {:error, error} ->
+        {:stop,
+         socket
+         |> put_flash(:error, error)
+         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
     end
   end
 
@@ -71,6 +77,15 @@ defmodule LucidboardWeb.BoardLive do
     if 1 == online_count(socket) do
       LiveBoard.stop(socket.assigns.board.id)
     end
+  end
+
+  def handle_event("tab", "options", socket) do
+    {:noreply,
+     assign(socket,
+       tab: :options,
+       board_settings_changeset:
+         BoardSettings.changeset(socket.assigns.board.settings)
+     )}
   end
 
   def handle_event("tab", tab, socket) when tab in ~w(board events options) do
@@ -185,27 +200,20 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("board_settings_save", form_data, socket) do
-    cs = socket.assigns.board_settings_changeset
+    action =
+      {:update_board_from_post, %{"settings" => form_data["board_settings"]}}
 
-    case BoardSettings.changeset(cs, form_data["board_settings"]) do
-      %{valid?: true} = changeset ->
-        board_settings = Changeset.apply_changes(changeset)
+    case live_board_action(action, socket) do
+      {:ok, {:error, %Changeset{} = invalid_cs}} ->
+        {:noreply,
+         assign(socket, board_settings_changeset: invalid_cs.changes.settings)}
 
-        action =
-          {:update_board,
-           settings: %{likes_per_user: board_settings.likes_per_user}}
-
-        live_board_action(action, socket)
-
-        socket =
-          socket
-          |> assign(board_settings_changeset: new_board_settings_changeset())
-          |> put_flash(:info, "Settings were saved!")
-
-        {:noreply, socket}
-
-      invalid_changeset ->
-        {:noreply, assign(socket, board_settings_changeset: invalid_changeset)}
+      {:ok, _} ->
+        {:noreply,
+         assign(socket,
+           board_settings_changeset:
+             BoardSettings.changeset(socket.assigns.board.settings)
+         )}
     end
   end
 

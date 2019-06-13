@@ -9,8 +9,9 @@ defmodule Lucidboard.Twiddler.Actions do
   alias Lucidboard.Twiddler.{Glass, Op, QueryBuilder}
   import Ecto.Query
 
-  @spec update_board(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
-  def update_board(board, args, opts) do
+  @spec update_board_from_post(Board.t(), map, keyword) ::
+          Twiddler.action_ok_or_error()
+  def update_board_from_post(board, args, opts) do
     with true <-
            Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
          %Changeset{valid?: true} = cs <- Board.changeset(board, args),

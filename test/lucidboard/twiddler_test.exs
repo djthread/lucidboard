@@ -9,7 +9,8 @@ defmodule Lucidboard.TwiddlerTest do
 
   test "update_board", %{board: board, user: user} do
     action =
-      {:update_board, title: "CHANGED IT", settings: %{likes_per_user: 3}}
+      {:update_board_from_post,
+       %{"title" => "CHANGED IT", "settings" => %{"likes_per_user" => "3"}}}
 
     {:ok, new_board, tx_fn, %{}, event} =
       Twiddler.act(board, action, user: user)
