@@ -77,7 +77,7 @@ defmodule LucidboardWeb.ViewHelper do
   end
 
   def login_button do
-    case Application.get_env(:lucidboard, :auth_provider) do
+    case Lucidboard.auth_provider() do
       :github ->
         ~E"""
         <a class="button is-link" href="/auth/github">
@@ -89,7 +89,7 @@ defmodule LucidboardWeb.ViewHelper do
       :pingfed ->
         ~E"""
         <a class="button is-link" href="/auth/pingfed">
-          <span class="icon"><%= fab("pingfed") %>}</span>
+          <span class="icon"><%= fab("pingfed") %></span>
           <span>Sign in with PingFed</span>
         </a>
         """

@@ -9,6 +9,8 @@
 "Lucidboard.Repo".port = "${PG_PORT | default: 5432}"
 "Lucidboard.Repo".password = "${PG_PASS | default: verysecure123}"
 
+auth_provider = "pingfed"
+
 [ueberauth."Ueberauth.Strategy.Github.OAuth"]
 client_id = "${GITHUB_CLIENT_ID}"
 client_secret = "${GITHUB_CLIENT_SECRET}"
