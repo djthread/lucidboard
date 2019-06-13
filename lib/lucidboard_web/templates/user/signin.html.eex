@@ -1,21 +1,3 @@
 <div class="jumbotron">
-  <a class="button is-primary" href="/auth/github">
-    <span class="icon">
-      <%= fab("github") %>
-    </span>
-    <span>Sign in with GitHub</span>
-  </a>
-  <a class="button is-link" href="/auth/pingfed">
-    <span class="icon">
-      <%= fab("pingfed") %>
-    </span>
-    <span>Sign in with PingFed</span>
-  </a>
-
-<%#
-    <a class="btn btn-primary btn-lg" href="/auth/identity">
-      <i class="fa fa-user"></i>
-      Sign in with Username/Password
-    </a>
-    %>
+  <%= login_button() %>
 </div>

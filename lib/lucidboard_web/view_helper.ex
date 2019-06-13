@@ -1,6 +1,6 @@
 defmodule LucidboardWeb.ViewHelper do
   @moduledoc "Helper functions for all views"
-  import Phoenix.HTML, only: [raw: 1]
+  import Phoenix.HTML
   alias Lucidboard.{Account, BoardRole, Event}
 
   @doc "Create a font-awesome icon by name"
@@ -74,5 +74,26 @@ defmodule LucidboardWeb.ViewHelper do
         %{role: :owner}, acc -> {:cont, acc + 1}
         _, acc -> {:cont, acc}
       end)
+  end
+
+  def login_button do
+    case Application.get_env(:lucidboard, :auth_provider) do
+      :github ->
+        ~E"""
+        <a class="button is-link" href="/auth/github">
+          <span class="icon"><%= fab("github") %></span>
+          <span>Sign in with GitHub</span>
+        </a>
+        """
+
+      :pingfed ->
+        ~E"""
+        <a class="button is-link" href="/auth/pingfed">
+          <span class="icon"><%= fab("pingfed") %>}</span>
+          <span>Sign in with PingFed</span>
+        </a>
+        """
+    end
+    |> raw()
   end
 end

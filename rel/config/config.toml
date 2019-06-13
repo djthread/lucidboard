@@ -12,3 +12,9 @@
 [ueberauth."Ueberauth.Strategy.Github.OAuth"]
 client_id = "${GITHUB_CLIENT_ID}"
 client_secret = "${GITHUB_CLIENT_SECRET}"
+
+[ueberauth."Ueberauth.Strategy.PingFed.OAuth"]
+site = "${PINGFED_SITE}"
+redirect_uri = "${PINGFED_REDIRECT_URI}"
+client_id = "${PINGFED_CLIENT_ID}"
+client_secret = "${PINGFED_CLIENT_SECRET}"
