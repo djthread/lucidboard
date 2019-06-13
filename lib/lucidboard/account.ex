@@ -36,7 +36,7 @@ defmodule Lucidboard.Account do
     )
   end
 
-  @spec grant(integer, BoardRole.t()) :: :ok | :error
+  @spec grant(integer, BoardRole.t()) :: :ok | {:error, Changeset.t()}
   def grant(board_id, board_role) do
     with %Board{} = board <-
            Board |> Repo.get(board_id) |> Repo.preload(:board_roles),
@@ -47,7 +47,7 @@ defmodule Lucidboard.Account do
            |> Repo.update() do
       :ok
     else
-      _ -> :error
+      {:error, error} -> {:error, error}
     end
   end
 

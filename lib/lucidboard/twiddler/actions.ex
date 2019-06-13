@@ -131,7 +131,7 @@ defmodule Lucidboard.Twiddler.Actions do
          {:ok, col} <- Op.column_by_id(board, id),
          true <- col.pos > 0 || :noop do
       pos = col.pos - 1
-      move_column(board, %{id: id, pos: pos})
+      move_column(board, %{id: id, pos: pos}, opts)
     end
   end
 
@@ -142,7 +142,7 @@ defmodule Lucidboard.Twiddler.Actions do
          {:ok, col} <- Op.column_by_id(board, id),
          true <- col.pos < length(board.columns) - 1 || :noop do
       pos = col.pos + 1
-      move_column(board, %{id: id, pos: pos})
+      move_column(board, %{id: id, pos: pos}, opts)
     end
   end
 

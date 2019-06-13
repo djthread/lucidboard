@@ -245,8 +245,11 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("grant", %{"user" => user_id}, socket) do
-    user = user_id |> String.to_integer() |> Account.get!()
-    live_board_action({:grant, id: user.id, role: :owner}, socket)
+    with {int, ""} <- Integer.parse(user_id),
+         user when not is_nil(user) <- Account.get(int) do
+      live_board_action({:grant, id: user.id, role: :owner}, socket)
+    end
+
     {:noreply, socket}
   end
 
