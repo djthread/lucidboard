@@ -11,13 +11,9 @@ defmodule Lucidboard.Account do
     github: Github
   }
 
-  def get!(user_id) do
-    Repo.get!(User, user_id)
-  end
+  def get!(user_id), do: Repo.get!(User, user_id)
 
-  def get(user_id) do
-    Repo.get(User, user_id)
-  end
+  def get(user_id), do: Repo.get(User, user_id)
 
   def display_name(%User{name: name, full_name: full_name}) do
     "#{name} (#{full_name})"

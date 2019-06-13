@@ -49,18 +49,19 @@ defmodule LucidboardWeb.BoardLive do
         Presence.track(self(), identifier, user.id, presence_meta)
 
         socket =
-          socket
-          |> assign(:board, board)
-          |> assign(:events, events)
-          |> assign(:user, user)
-          |> assign(:modal_open?, false)
-          |> assign(:tab, :board)
-          |> assign(:column_changeset, new_column_changeset())
-          |> assign(:board_settings_changeset, new_board_settings_changeset())
-          |> assign(:delete_confirming_card_id, nil)
-          |> assign(:online_count, online_count(board.id))
-          |> assign(:search, nil)
-          |> assign(:role_users_suggest, [])
+          assign(socket,
+            board: board,
+            events: events,
+            user: user,
+            modal_open?: false,
+            tab: :board,
+            column_changeset: new_column_changeset(),
+            board_settings_changeset: new_board_settings_changeset(),
+            delete_confirming_card_id: nil,
+            online_count: online_count(board.id),
+            search: nil,
+            role_users_suggest: []
+          )
 
         {:ok, socket}
     end
@@ -273,24 +274,25 @@ defmodule LucidboardWeb.BoardLive do
       end
 
     socket =
-      socket
-      |> assign(:board, board)
-      |> assign(:events, events)
-      |> assign(:search, get_search_assign(socket.assigns.search, board))
+      assign(socket,
+        board: board,
+        events: events,
+        search: get_search_assign(socket.assigns.search, board)
+      )
 
     {:noreply, socket}
   end
 
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do
-    id = socket.assigns.board.id
-    users = online_users(id)
+    users = online_users(socket.assigns.board.id)
 
     socket =
-      socket
-      |> assign(:online_users, users)
-      |> assign(:online_count, users |> Map.keys() |> length())
+      assign(socket,
+        online_users: users,
+        online_count: users |> Map.keys() |> length()
+      )
 
-    {:noreply, assign(socket, :online_users, Presence.list("board:#{id}"))}
+    {:noreply, socket}
   end
 
   def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"

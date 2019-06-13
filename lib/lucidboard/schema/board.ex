@@ -45,6 +45,7 @@ defmodule Lucidboard.Board do
     |> cast(attrs, [:title])
     |> validate_required([:title])
     |> cast_assoc(:columns)
+    |> cast_assoc(:board_roles)
     |> cast_embed(:settings)
   end
 end
