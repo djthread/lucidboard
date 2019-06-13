@@ -12,7 +12,6 @@ defmodule Lucidboard.Twiddler.Actions do
   @spec update_board_from_post(Board.t(), map, keyword) ::
           Twiddler.action_ok_or_error()
   def update_board_from_post(board, args, opts) do
-    IO.inspect({args, opts})
     with true <-
            Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
          %Changeset{valid?: true} = cs <- Board.changeset(board, args),
@@ -20,7 +19,6 @@ defmodule Lucidboard.Twiddler.Actions do
       {:ok, new_board, fn -> Repo.update(cs) end, %{},
        event("has updated the board settings.")}
     end
-    |> IO.inspect("action return")
   end
 
   @spec add_column(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()

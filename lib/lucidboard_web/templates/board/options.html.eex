@@ -65,12 +65,12 @@
   
   <div class="o-Stack__item u-Phm">
     <h2 class="b-TypeHeading--secondary b-TypeHeading--divider">Board Settings</h2>
-    <%= form_for @board_settings_changeset |> IO.inspect(label: "bsc"), "#", [phx_submit: :board_settings_save], fn f -> %>
+    <%= form_for @board_settings_changeset, "#", [phx_submit: :board_settings_save], fn f -> %>
       <%= label(:likes_per_user, "Likes Per User") %>
-      <%= text_input f, :likes_per_user, value: @board.settings.likes_per_user, class: "input u-Mbm" %>
+      <%= text_input f, :likes_per_user, class: "input u-Mbm" %>
       <%= error_tag f, :likes_per_user %>
       <%= label(:likes_per_user, "Likes Per User per Card") %>
-      <%= text_input f, :likes_per_user_per_card, value: @board.settings.likes_per_user_per_card, class: "input u-Mbm" %>
+      <%= text_input f, :likes_per_user_per_card, class: "input u-Mbm" %>
       <%= error_tag f, :likes_per_user_per_card %>
       <br />
       <%= submit "Save", phx_disable_with: "Saving...", class: "button is-primary" %>

@@ -82,7 +82,7 @@ defmodule LucidboardWeb.BoardLive do
   def handle_event("tab", "options", socket) do
     {:noreply,
      assign(socket,
-      tab: :options,
+       tab: :options,
        board_settings_changeset:
          BoardSettings.changeset(socket.assigns.board.settings)
      )}
@@ -200,18 +200,13 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("board_settings_save", form_data, socket) do
-    # cs = socket.assigns.board_settings_changeset
-
     action =
       {:update_board_from_post, %{"settings" => form_data["board_settings"]}}
 
-    case live_board_action(action, socket) |> IO.inspect(label: "action ret") do
+    case live_board_action(action, socket) do
       {:ok, {:error, %Changeset{} = invalid_cs}} ->
         {:noreply,
-         assign(socket,
-           board_settings_changeset:
-             invalid_cs.changes.settings |> IO.inspect(label: "BSCbackend")
-         )}
+         assign(socket, board_settings_changeset: invalid_cs.changes.settings)}
 
       {:ok, _} ->
         {:noreply,
@@ -219,33 +214,7 @@ defmodule LucidboardWeb.BoardLive do
            board_settings_changeset:
              BoardSettings.changeset(socket.assigns.board.settings)
          )}
-        |> IO.inspect(label: "cs passed")
     end
-
-    # case BoardSettings.changeset(cs, form_data["board_settings"]) do
-    #   %{valid?: true} = changeset ->
-    #     board_settings = Changeset.apply_changes(changeset)
-
-    #     action =
-    #       {:update_board,
-    #        settings: %{
-    #          likes_per_user: board_settings.likes_per_user,
-    #          likes_per_user_per_card: board_settings.likes_per_user_per_card
-    #        }}
-
-    #     live_board_action(action, socket)
-
-    #     socket =
-    #       socket
-    #       |> assign(board_settings_changeset: nil)
-    #       # BoardSettings.changeset(board.settings))
-    #       |> put_flash(:info, "Settings were saved!")
-
-    #     {:noreply, socket}
-
-    #   invalid_changeset ->
-    #     {:noreply, assign(socket, board_settings_changeset: invalid_changeset)}
-    # end
   end
 
   def handle_event("flip_pile", pile_id, socket) do
