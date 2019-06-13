@@ -21,3 +21,66 @@
   color: $white;
   font-size: 1rem;
 }
+
+.modal-radio-button {
+  position: absolute;
+  opacity: 0;
+}
+
+.modal-radio-label {
+  height: 2rem;
+  width: 8rem;
+  border-radius: 2px;
+  display: block;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  
+  &:last-child() {
+    margin-bottom: 0;
+  }
+}
+
+.modal-radio-label--green {
+  background-color: #2ecc71;
+  
+  &:hover {
+    border-left: 8px solid darken(#2ecc71, 10%);
+  }
+}
+
+.modal-radio-label--blue {
+  background-color: #3498db;
+  
+  &:hover {
+    border-left: 8px solid darken(#3498db, 10%);
+  }
+}
+
+.modal-radio-label--red {
+  background-color: #e74c3c;
+  
+  &:hover {
+    border-left: 8px solid darken(#e74c3c, 10%);
+  }
+}
+
+.modal-radio-label--orange {
+  background-color: #e67e22;
+  
+  &:hover {
+    border-left: 8px solid darken(#e67e22, 10%);
+  }
+}
+
+.modal-radio-label__icon {
+  display: none;
+  margin-right: 0.5rem;
+}
+
+input[type="radio"]:checked+label { 
+  .modal-radio-label__icon {
+    display: block;
+  }
+}

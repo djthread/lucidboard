@@ -17,14 +17,34 @@
       </div>
 
       <div class="is-block">
-      <%= radio_button f, :color, "2ecc71", checked: f.data.settings.color == "2ecc71" %> <label for="card_color_2ecc71">- Green</label> <br/>
-      <%= radio_button f, :color, "3498db", checked: f.data.settings.color == "3498db" %> <label for="card_color_3498db">- Blue</label> <br/>
-      <%= radio_button f, :color, "e74c3c", checked: f.data.settings.color == "e74c3c" %> <label for="card_color_e74c3c">- Red</label> <br/>
-      <%= radio_button f, :color, "e67e22", checked: f.data.settings.color == "e67e22" %> <label for="card_color_e67e22">- Orange</label> <br/>
+      <%= radio_button f, :color, "2ecc71", checked: f.data.settings.color == "2ecc71", class: "modal-radio-button" %> 
+      <label for="card_color_2ecc71" class="modal-radio-label modal-radio-label--green">
+        <span class="modal-radio-label__icon">
+          <i class="fa fa-check" aria-hidden="true"></i>
+        </span>
+      </label>
+      <%= radio_button f, :color, "3498db", checked: f.data.settings.color == "3498db", class: "modal-radio-button" %> 
+      <label for="card_color_3498db" class="modal-radio-label modal-radio-label--blue">
+        <span class="modal-radio-label__icon">
+          <i class="fa fa-check" aria-hidden="true"></i>
+        </span>
+      </label>
+      <%= radio_button f, :color, "e74c3c", checked: f.data.settings.color == "e74c3c", class: "modal-radio-button" %> 
+      <label for="card_color_e74c3c" class="modal-radio-label modal-radio-label--red">
+        <span class="modal-radio-label__icon">
+          <i class="fa fa-check" aria-hidden="true"></i>
+        </span>
+      </label>
+      <%= radio_button f, :color, "e67e22", checked: f.data.settings.color == "e67e22", class: "modal-radio-button" %> 
+      <label for="card_color_e67e22" class="modal-radio-label modal-radio-label--orange">
+        <span class="modal-radio-label__icon">
+          <i class="fa fa-check" aria-hidden="true"></i>
+        </span>
+      </label>
       </div>
     </section>
     <footer class="modal-card-foot">
-      <%= submit "Save Changes", class: "button is-success", phx_disable_with: "Saving..." %>
+      <%= submit "Save Changes", class: "button is-primary", phx_disable_with: "Saving..." %>
       <%= submit "Cancel", class: "button", phx_click: :card_cancel %>
     </footer>
   </div>

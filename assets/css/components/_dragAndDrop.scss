@@ -1,22 +1,22 @@
 
-section.board {
-    .cardjunction {
-        line-height: 0.5em;
-        margin-top: 1rem;
-    }
-    
-    .cardjunction.active {
-        line-height: 10rem;
-    }
+
+.cardjunction {
+    line-height: 0rem;
 }
 
+.cardjunction.active {
+    line-height: 10rem;
+}
+
+
 .dnd-dragging .cardjunction {
-    margin-bottom: 12px;
-      border: 2px dashed $white-ter;
+  border: 0.5px solid transparent;
 }
 
 .t-dark {
   .cardjunction.active {
       border: 2px dashed $turquoise;
+      margin-bottom: 1rem;
+      cursor: grabbing;
   }
 }
