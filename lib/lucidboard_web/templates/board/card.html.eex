@@ -23,7 +23,7 @@
   <% end %>
 </div>
 
-<%= if not @locked_by_user? and not @locked? do %>
+<%= unless @locked? do %>
 <footer class="c-Card__actions card-footer">
   <%= if count_user_likes(@card.likes, @user.id) < @board.settings.likes_per_user do %>
     <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item">
