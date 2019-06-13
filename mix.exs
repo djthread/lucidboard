@@ -30,7 +30,8 @@ defmodule Lucidboard.MixProject do
         :runtime_tools,
         :toml,
         :toml_transformer,
-        :scrivener_ecto
+        :scrivener_ecto,
+        :ueberauth,
       ]
     ]
   end
@@ -60,6 +61,8 @@ defmodule Lucidboard.MixProject do
       {:toml_transformer,
        git: "https://github.com/djthread/toml_transformer.git", app: false},
       {:ueberauth_github, "~> 0.7"},
+      {:ueberauth_pingfed,
+       git: "https://github.com/borodark/ueberauth_pingfed.git"},
       {:timex, "~> 3.1"},
       {:scrivener_ecto, "~> 2.0"},
       {:ecto_enum, "~> 1.2"}

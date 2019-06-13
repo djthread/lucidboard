@@ -53,7 +53,8 @@ config :oauth2, serializers: %{"application/json" => Jason}
 
 config :ueberauth, Ueberauth,
   providers: [
-    github: {Ueberauth.Strategy.Github, [default_scope: "user:email"]}
+    github: {Ueberauth.Strategy.Github, default_scope: "user:email"},
+    pingfed: {Ueberauth.Strategy.PingFed, default_scope: "openid profile email"}
   ]
 
 # config :ueberauth, Ueberauth.Strategy.Github.OAuth
