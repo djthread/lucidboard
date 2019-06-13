@@ -11,7 +11,8 @@
     <% end %>
 
   <% @locked? -> %>
-    [ card is locked ]
+  <i class="fa fa-comment-dots fa-3x card-locked" aria-hidden="true"></i>
+
 
   <% true -> %>
     <p phx-click="inline_edit"

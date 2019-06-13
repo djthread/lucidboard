@@ -4,15 +4,15 @@ defmodule Lucidboard.UserSettings do
   import Ecto.Changeset
 
   @primary_key false
+  @default_theme Application.get_env(:lucidboard, :default_theme)
 
   embedded_schema do
-    field(:theme, :string)
+    field(:theme, :string, default: @default_theme)
   end
 
   @spec new(keyword) :: UserSettings.t()
   def new(fields \\ []) do
-    defaults = [theme: "default"]
-    struct(__MODULE__, Keyword.merge(defaults, fields))
+    struct(__MODULE__, fields)
   end
 
   @doc false

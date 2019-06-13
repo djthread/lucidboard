@@ -43,4 +43,10 @@ defmodule Lucidboard do
 
   def format(datetime, :long),
     do: Timex.format!(datetime, @datetime_format_long, :strftime)
+
+  def auth_provider do
+    :lucidboard
+    |> Application.get_env(:auth_provider)
+    |> String.to_atom()
+  end
 end

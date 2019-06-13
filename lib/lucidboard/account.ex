@@ -2,13 +2,14 @@ defmodule Lucidboard.Account do
   @moduledoc "Context for user things"
   import Ecto.Query
   alias Ecto.Changeset
-  alias Lucidboard.Account.Github
+  alias Lucidboard.Account.{Github, PingFed}
   alias Lucidboard.{Board, BoardRole, Repo, User}
   alias Ueberauth.Auth
   require Logger
 
   @providers %{
-    github: Github
+    github: Github,
+    pingfed: PingFed
   }
 
   def get!(user_id), do: Repo.get!(User, user_id)

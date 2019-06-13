@@ -1,17 +1,17 @@
-<section class="events u-Phm">
-  <div class="event-list">
+<section class="o-Stack o-Stack--split@m o-Stack--medium o-Stack--spaceBetween@m u-Phm">
+  <div class="o-Stack__item">
     <ul>
     <%= for event <- Enum.reverse(@events) do %>
       <li><%= display_event(event) %></li>
     <% end %>
     </ul>
   </div>
-  <div class="user-list">
+  <div class="o-Stack__item">
     <h3>Users Online</h3>
     <ul>
       <%= for user <- @online_users do %>
         <li>
-          <span class="onlinedot">&bull;</span> &nbsp; <%= online_indicator(user) %>
+          <span class="color-limegreen">&bull;</span> &nbsp; <%= online_indicator(user) %>
         </li>
       <% end %>
     </ul>

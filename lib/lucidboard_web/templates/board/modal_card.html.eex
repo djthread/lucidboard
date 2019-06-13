@@ -13,10 +13,9 @@
     </header>
     <section class="modal-card-body">
       <div class="is-block">
-
-      </div>
-
-      <div class="is-block">
+      <p class="u-Mbm">
+        Choose label color
+      </p>
       <%= radio_button f, :color, "2ecc71", checked: f.data.settings.color == "2ecc71", class: "modal-radio-button" %> 
       <label for="card_color_2ecc71" class="modal-radio-label modal-radio-label--green">
         <span class="modal-radio-label__icon">
