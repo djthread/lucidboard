@@ -11,13 +11,9 @@ defmodule Lucidboard.Account do
     github: Github
   }
 
-  def get!(user_id) do
-    Repo.get!(User, user_id)
-  end
+  def get!(user_id), do: Repo.get!(User, user_id)
 
-  def get(user_id) do
-    Repo.get(User, user_id)
-  end
+  def get(user_id), do: Repo.get(User, user_id)
 
   def display_name(%User{name: name, full_name: full_name}) do
     "#{name} (#{full_name})"
@@ -40,7 +36,7 @@ defmodule Lucidboard.Account do
     )
   end
 
-  @spec grant(integer, BoardRole.t()) :: :ok | :error
+  @spec grant(integer, BoardRole.t()) :: :ok | {:error, Changeset.t()}
   def grant(board_id, board_role) do
     with %Board{} = board <-
            Board |> Repo.get(board_id) |> Repo.preload(:board_roles),
@@ -51,7 +47,7 @@ defmodule Lucidboard.Account do
            |> Repo.update() do
       :ok
     else
-      _ -> :error
+      {:error, error} -> {:error, error}
     end
   end
 

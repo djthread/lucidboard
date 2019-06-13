@@ -4,7 +4,7 @@ defmodule Lucidboard.Twiddler do
   """
   import Ecto.Query
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Board, BoardRole, Event}
+  alias Lucidboard.{Board, BoardRole, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.{Actions, Op}
 
@@ -105,32 +105,29 @@ defmodule Lucidboard.Twiddler do
     Repo.paginate(query, page: page_index)
   end
 
-  @doc "Insert a board record"
-  @spec insert(Board.t() | Ecto.Changeset.t(Board.t()), User.t()) ::
+  @doc """
+  Insert a board record
+
+  Creates 2 records: the Board and the BoardRole for the creator
+  """
+  @spec insert(Board.t() | Ecto.Changeset.t(Board.t())) ::
           {:ok, Board.t()} | {:error, any}
-  def insert(%Board{} = board, %{id: user_id} = _user) do
-    with {:ok, the_board} <-
-           Repo.transaction(fn -> create_board(board, user_id) end) do
+  def insert(%Board{user: user, user_id: user_id} = board) do
+    tx_fn = fn ->
+      board_role = BoardRole.new(user_id: user_id || user.id, role: :owner)
+      tail = with %Ecto.Association.NotLoaded{} <- board.board_roles, do: []
+      Repo.insert(%{board | board_roles: [board_role | tail]})
+    end
+
+    with {:ok, {:ok, the_board}} <- Repo.transaction(tx_fn) do
       {:ok, Repo.preload(the_board, :user)}
     end
-  end
-
-  # Creates 2 records: the Board and the BoardRole for the creator
-  defp create_board(board, user_id) do
-    {:ok, new_board} = Repo.insert(board)
-
-    board_role =
-      BoardRole.new(user_id: user_id, board_id: new_board.id, role: :owner)
-
-    :ok = Account.grant(new_board.id, board_role)
-
-    new_board
   end
 
   defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do
     msg =
       errs
-      |> Enum.map(fn {k, err} -> "#{k}: #{err}" end)
+      |> Enum.map(fn {k, {err, _}} -> "#{k}: #{err}" end)
       |> Enum.join(", ")
 
     "Error: #{msg}"

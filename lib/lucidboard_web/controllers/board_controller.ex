@@ -40,8 +40,7 @@ defmodule LucidboardWeb.BoardController do
 
     board = Board.new(title: title, columns: columns, user: conn.assigns[:user])
 
-    with {:ok, %Board{id: id} = board} <-
-           Twiddler.insert(board, conn.assigns.user) do
+    with {:ok, %Board{id: id} = board} <- Twiddler.insert(board) do
       Lucidboard.broadcast("short_boards", {:new, ShortBoard.from_board(board)})
       {:see_other, Routes.board_path(conn, :index, id)}
     end
