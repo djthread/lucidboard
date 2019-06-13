@@ -10,16 +10,17 @@ defmodule Lucidboard.Board do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lucidboard.{BoardSettings, Column, Event, User}
+  alias Lucidboard.{BoardRole, BoardSettings, Column, Event, User}
 
   @derive {Jason.Encoder, only: ~w(id title settings columns)a}
 
   schema "boards" do
     field(:title, :string)
-    embeds_one(:settings, BoardSettings)
+    embeds_one(:settings, BoardSettings, on_replace: :update)
     has_many(:columns, Column)
     has_many(:events, Event)
     belongs_to(:user, User)
+    has_many(:board_roles, BoardRole)
 
     field(:inserted_at, :utc_datetime)
     field(:updated_at, :utc_datetime)
@@ -39,10 +40,12 @@ defmodule Lucidboard.Board do
   end
 
   @doc false
-  def changeset(board, attrs) do
+  def changeset(board, attrs \\ %{}) do
     board
     |> cast(attrs, [:title])
-    |> cast_assoc(:columns)
     |> validate_required([:title])
+    |> cast_assoc(:columns)
+    |> cast_assoc(:board_roles)
+    |> cast_embed(:settings)
   end
 end

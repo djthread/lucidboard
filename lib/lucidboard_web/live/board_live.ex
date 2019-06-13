@@ -3,7 +3,16 @@ defmodule LucidboardWeb.BoardLive do
   use Phoenix.LiveView
   import LucidboardWeb.BoardLive.Helper
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Column, LiveBoard, Presence, TimeMachine}
+
+  alias Lucidboard.{
+    Account,
+    BoardSettings,
+    Column,
+    LiveBoard,
+    Presence,
+    TimeMachine
+  }
+
   alias Lucidboard.Twiddler.Op
   alias LucidboardWeb.{BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
@@ -27,12 +36,6 @@ defmodule LucidboardWeb.BoardLive do
     user = user_id && Account.get(user_id)
 
     case LiveBoard.call(String.to_integer(board_id), :state) do
-      {:error, error} ->
-        {:stop,
-         socket
-         |> put_flash(:error, error)
-         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
-
       {:ok, %{board: board, events: events}} ->
         identifier = "board:#{board.id}"
         Lucidboard.subscribe(identifier)
@@ -40,18 +43,33 @@ defmodule LucidboardWeb.BoardLive do
         Presence.track(self(), identifier, user.id, presence_meta)
 
         socket =
-          socket
-          |> assign(:board, board)
-          |> assign(:events, events)
-          |> assign(:user, user)
-          |> assign(:modal_open?, false)
-          |> assign(:tab, :board)
-          |> assign(:column_changeset, new_column_changeset())
-          |> assign(:delete_confirming_card_id, nil)
-          |> assign(:online_count, online_count(board.id))
-          |> assign(:search, nil)
+          assign(socket,
+            board: board,
+            events: events,
+            user: user,
+            modal_open?: false,
+            tab: :board,
+            column_changeset: new_column_changeset(),
+            board_settings_changeset: nil,
+            delete_confirming_card_id: nil,
+            online_count: online_count(board.id),
+            search: nil,
+            role_users_suggest: []
+          )
 
         {:ok, socket}
+
+      {:ok, {:error, :not_found}} ->
+        {:stop,
+         socket
+         |> put_flash(:error, "Board id #{board_id} not found!")
+         |> redirect(to: "/404")}
+
+      {:error, error} ->
+        {:stop,
+         socket
+         |> put_flash(:error, error)
+         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
     end
   end
 
@@ -59,6 +77,15 @@ defmodule LucidboardWeb.BoardLive do
     if 1 == online_count(socket) do
       LiveBoard.stop(socket.assigns.board.id)
     end
+  end
+
+  def handle_event("tab", "options", socket) do
+    {:noreply,
+     assign(socket,
+       tab: :options,
+       board_settings_changeset:
+         BoardSettings.changeset(socket.assigns.board.settings)
+     )}
   end
 
   def handle_event("tab", tab, socket) when tab in ~w(board events options) do
@@ -120,6 +147,11 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
+  def handle_event("unlike", card_id, socket) do
+    live_board_action({:unlike, id: card_id, user: user(socket)}, socket)
+    {:noreply, socket}
+  end
+
   def handle_event("card_delete", card_id, socket) do
     {:noreply, assign(socket, :delete_confirming_card_id, card_id)}
   end
@@ -167,6 +199,27 @@ defmodule LucidboardWeb.BoardLive do
     end
   end
 
+  def handle_event("board_settings_save", form_data, socket) do
+    action =
+      {:update_board_from_post, %{"settings" => form_data["board_settings"]}}
+
+    case live_board_action(action, socket) do
+      {:ok, {:error, %Changeset{} = invalid_cs}} ->
+        {:noreply,
+         assign(socket, board_settings_changeset: invalid_cs.changes.settings)}
+
+      {:ok, %{changeset: cs}} ->
+        {:noreply,
+         assign(socket,
+           board_settings_changeset:
+             cs
+             |> Changeset.apply_changes()
+             |> Map.get(:settings)
+             |> BoardSettings.changeset(%{})
+         )}
+    end
+  end
+
   def handle_event("flip_pile", pile_id, socket) do
     live_board_action({:flip_pile, id: pile_id, user: user(socket)}, socket)
     {:noreply, socket}
@@ -192,6 +245,30 @@ defmodule LucidboardWeb.BoardLive do
      assign(socket, :search, get_search_assign(q, socket.assigns.board))}
   end
 
+  def handle_event("sortby_likes", col_id, socket) do
+    live_board_action({:sortby_likes, id: col_id}, socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("role_suggest", %{"user" => input}, socket) do
+    suggestions = Account.suggest_users(input)
+    {:noreply, assign(socket, :role_users_suggest, suggestions)}
+  end
+
+  def handle_event("grant", %{"user" => user_id}, socket) do
+    with {int, ""} <- Integer.parse(user_id),
+         user when not is_nil(user) <- Account.get(int) do
+      live_board_action({:grant, id: user.id, role: :owner}, socket)
+    end
+
+    {:noreply, socket}
+  end
+
+  def handle_event("revoke", user_id, socket) do
+    live_board_action({:revoke, id: String.to_integer(user_id)}, socket)
+    {:noreply, socket}
+  end
+
   def handle_event("sortby_votes", col_id, socket) do
     live_board_action({:sortby_votes, id: col_id}, socket)
     {:noreply, socket}
@@ -211,24 +288,25 @@ defmodule LucidboardWeb.BoardLive do
       end
 
     socket =
-      socket
-      |> assign(:board, board)
-      |> assign(:events, events)
-      |> assign(:search, get_search_assign(socket.assigns.search, board))
+      assign(socket,
+        board: board,
+        events: events,
+        search: get_search_assign(socket.assigns.search, board)
+      )
 
     {:noreply, socket}
   end
 
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do
-    id = socket.assigns.board.id
-    users = online_users(id)
+    users = online_users(socket.assigns.board.id)
 
     socket =
-      socket
-      |> assign(:online_users, users)
-      |> assign(:online_count, users |> Map.keys() |> length())
+      assign(socket,
+        online_users: users,
+        online_count: users |> Map.keys() |> length()
+      )
 
-    {:noreply, assign(socket, :online_users, Presence.list("board:#{id}"))}
+    {:noreply, socket}
   end
 
   def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"

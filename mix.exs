@@ -63,9 +63,9 @@ defmodule Lucidboard.MixProject do
       {:ueberauth_github, "~> 0.7"},
       {:ueberauth_pingfed,
        git: "https://github.com/borodark/ueberauth_pingfed.git"},
-      {:poison, "~> 4.0"},
       {:timex, "~> 3.1"},
-      {:scrivener_ecto, "~> 2.0"}
+      {:scrivener_ecto, "~> 2.0"},
+      {:ecto_enum, "~> 1.2"}
     ]
   end
 

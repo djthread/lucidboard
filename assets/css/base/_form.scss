@@ -14,14 +14,13 @@
 
 .textarea:not([rows]) {
     min-height: 1rem;
-
 }
 
-.t-darkly .b-TextArea {
+.t-dark .b-TextArea {
     color: $white;
 }
 
-.t-default .b-TextArea {
+.t-light .b-TextArea {
     color: $black;
 }
 
@@ -38,10 +37,41 @@
   top: 60%;
 }
 
-.t-darkly .button.is-primary.is-outlined {
+.t-dark .button.is-primary.is-outlined {
   color: #afd6ff;
 
   &:hover {
     color: $white;
   }
+}
+
+.input, 
+.select select {
+  border-width: 4px;
+  border-radius: 4px;
+  box-shadow: none;
+  
+  &:hover,
+  &:focus,
+  &:active {
+    box-shadow: none;
+  }
+}
+
+.input-huge {
+  height: 50px;
+  font-size: 1.25rem;
+}
+
+.input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: $grey-dark;
+  opacity: 1; /* Firefox */
+}
+
+.input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: $grey-dark;
+}
+
+.input::-ms-input-placeholder { /* Microsoft Edge */
+  color: $grey-dark;
 }

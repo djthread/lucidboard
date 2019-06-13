@@ -4,7 +4,7 @@ defmodule Lucidboard.Twiddler do
   """
   import Ecto.Query
   alias Ecto.Changeset
-  alias Lucidboard.{Board, Event}
+  alias Lucidboard.{Board, BoardRole, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.{Actions, Op}
 
@@ -13,17 +13,23 @@ defmodule Lucidboard.Twiddler do
   @type action_ok_or_error ::
           {:ok, Board.t(), function, meta, Event.t()} | {:error, String.t()}
 
-  @spec act(Board.t(), action) :: action_ok_or_error
-  def act(%Board{} = board, {action_name, args}) when is_list(args) do
-    act(board, {action_name, Enum.into(args, %{})})
+  @spec act(Board.t(), action, keyword) :: action_ok_or_error
+  def act(board, action, opts \\ [])
+
+  def act(%Board{} = board, {action_name, args}, opts) when is_list(args) do
+    act(board, {action_name, Enum.into(args, %{})}, opts)
   end
 
-  def act(%Board{} = board, {action_name, args})
+  def act(%Board{} = board, {action_name, args}, opts)
       when is_atom(action_name) and is_map(args) do
-    with true <- function_exported?(Actions, action_name, 2) || :no_action,
-         {:ok, _, _, _, _} = res <- apply(Actions, action_name, [board, args]) do
+    with true <- function_exported?(Actions, action_name, 3) || :no_action,
+         {:ok, _, _, _, _} = res <-
+           apply(Actions, action_name, [board, args, opts]) do
       res
     else
+      :unauthorized ->
+        {:ok, board, nil, nil, nil}
+
       :noop ->
         {:ok, board, nil, nil, nil}
 
@@ -32,7 +38,7 @@ defmodule Lucidboard.Twiddler do
         {:ok, board, nil, nil, nil}
 
       %Changeset{} = cs ->
-        {:error, changeset_to_string(cs)}
+        {:error, cs}
     end
   end
 
@@ -43,12 +49,15 @@ defmodule Lucidboard.Twiddler do
       Repo.one(
         from(board in Board,
           where: board.id == ^id,
+          left_join: board_roles in assoc(board, :board_roles),
+          left_join: role_users in assoc(board_roles, :user),
           left_join: columns in assoc(board, :columns),
           left_join: piles in assoc(columns, :piles),
           left_join: cards in assoc(piles, :cards),
           left_join: likes in assoc(cards, :likes),
           preload: [
-            columns: {columns, piles: {piles, cards: {cards, likes: likes}}}
+            columns: {columns, piles: {piles, cards: {cards, likes: likes}}},
+            board_roles: {board_roles, user: role_users}
           ]
         )
       )
@@ -96,17 +105,22 @@ defmodule Lucidboard.Twiddler do
     Repo.paginate(query, page: page_index)
   end
 
-  @doc "Insert a board record"
+  @doc """
+  Insert a board record
+
+  Creates 2 records: the Board and the BoardRole for the creator
+  """
   @spec insert(Board.t() | Ecto.Changeset.t(Board.t())) ::
-          {:ok, Board.t()} | {:error, Ecto.Changeset.t(Board.t())}
-  def insert(%Board{} = board), do: Repo.insert(board)
+          {:ok, Board.t()} | {:error, any}
+  def insert(%Board{user: user, user_id: user_id} = board) do
+    tx_fn = fn ->
+      board_role = BoardRole.new(user_id: user_id || user.id, role: :owner)
+      tail = with %Ecto.Association.NotLoaded{} <- board.board_roles, do: []
+      Repo.insert(%{board | board_roles: [board_role | tail]})
+    end
 
-  defp changeset_to_string(%Changeset{valid?: false, errors: errs}) do
-    msg =
-      errs
-      |> Enum.map(fn {k, err} -> "#{k}: #{err}" end)
-      |> Enum.join(", ")
-
-    "Error: #{msg}"
+    with {:ok, {:ok, the_board}} <- Repo.transaction(tx_fn) do
+      {:ok, Repo.preload(the_board, :user)}
+    end
   end
 end

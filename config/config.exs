@@ -29,7 +29,7 @@ config :lucidboard, :templates, %{
   }
 }
 
-config :lucidboard, :default_theme, "light"
+config :lucidboard, :default_theme, "dark"
 
 config :lucidboard, :themes, ~w(light dark)
 

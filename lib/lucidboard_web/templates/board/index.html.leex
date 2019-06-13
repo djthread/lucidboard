@@ -1,51 +1,52 @@
-<div class="o-CenteredColumn o-CenteredColumn--wide">
-  <div class="right-panel tabs is-toggle">
-    <ul>
-      <li class="boardsearch <%= if @search, do: ~s(active) %>">
-        <form phx-change="search_key">
-          <input type="text" name="q" list="matches" placeholder="Search..."
-          <%= if @search do %>
-          value="<%= @search.q %>"
-          <% end %>
-          >
-        </form>
-      </li>
-      <li class="online-short">
-        <a phx-click="tab" phx-value="events" href="#">
+<div class="o-Stack o-Stack--end-row u-Mbm">
+  <form phx-change="search_key">
+    <input class="input" type="text" name="q" list="matches" placeholder="Search"
+    <%= if @search do %>
+    value="<%= @search.q %>"
+    <% end %>
+    >
+  </form>
+</div>
+<div class="o-Stack o-Stack--medium o-Stack--split@m o-Stack--spaceBetween o-Stack--center-row@m u-Mbm u-Phm">
+  <div class="o-Stack__item">
+    <h1 class="title u-Mbn"><%= @board.title %></h1>
+  </div>
+  <div class="o-Stack__item">
+    <ul class="c-Tabs">
+      <li class="c-Tab">
+        <a class="c-Tab__link" phx-click="tab" phx-value="events" href="#">
           <span class="onlinedot">&bull;</span> &nbsp; <%= @online_count %> Online
         </a>
       </li>
-      <li class="<%= if @tab == :board, do: "is-active" %>">
-        <a phx-click="tab" phx-value="board" href="#">
+      <li class="c-Tab <%= if @tab == :board, do: "is-active" %>">
+        <a class="c-Tab__link" phx-click="tab" phx-value="board" href="#">
           <span class="icon is-small"><%= fas("grip-vertical") %></span>
           <span>Board</span>
         </a>
       </li>
-      <li class="<%= if @tab == :events, do: "is-active" %>">
-        <a phx-click="tab" phx-value="events" href="#">
+      <li class="c-Tab <%= if @tab == :events, do: "is-active" %>">
+        <a class="c-Tab__link" phx-click="tab" phx-value="events" href="#">
           <span class="icon is-small"><%= fas("calendar-alt") %></span>
           <span>Events</span>
         </a>
       </li>
-      <li class="<%= if @tab == :options, do: "is-active" %>">
-        <a phx-click="tab" phx-value="options" href="#">
+      <li class="c-Tab <%= if @tab == :options, do: "is-active" %>">
+        <a class="c-Tab__link" phx-click="tab" phx-value="options" href="#">
           <span class="icon is-small"><%= fas("cog") %></span>
           <span>Options</span>
         </a>
       </li>
     </ul>
   </div>
-
-  <h1 class="title"><%= @board.title %></h1>
-
-  <%=
-    case @tab do
-      :board -> render(LucidboardWeb.BoardView, "board.html", assigns)
-      :events -> render(LucidboardWeb.BoardView, "events.html", assigns)
-      :options -> render(LucidboardWeb.BoardView, "options.html", assigns)
-    end
-  %>
 </div>
+
+<%=
+  case @tab do
+    :board -> render(LucidboardWeb.BoardView, "board.html", assigns)
+    :events -> render(LucidboardWeb.BoardView, "events.html", assigns)
+    :options -> render(LucidboardWeb.BoardView, "options.html", assigns)
+  end
+%>
 
 <%=
   if @modal_open? do

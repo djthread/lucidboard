@@ -8,7 +8,7 @@ defmodule Lucidboard.Twiddler.Op do
   """
   import Ecto.Query
   alias Ecto.UUID
-  alias Lucidboard.{Board, Card, Column, Like, Pile, Repo, User}
+  alias Lucidboard.{Account, Board, Card, Column, Like, Pile, Repo, User}
   alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler.Glass
 
@@ -290,6 +290,36 @@ defmodule Lucidboard.Twiddler.Op do
     {:ok, Focus.set(pile_lens, board, new_pile), tx_fn}
   end
 
+  def user_can_like(
+        %Board{
+          settings: %{
+            likes_per_user: votes_per_user,
+            likes_per_user_per_card: likes_per_user_per_card
+          }
+        } = board,
+        %{id: user_id},
+        %{likes: likes}
+      ) do
+    likes_on_card = Enum.count(likes, fn l -> l.user_id == user_id end)
+
+    if likes_on_card >= likes_per_user_per_card do
+      false
+    else
+      if likes_on_board(board, user_id) >= votes_per_user, do: false, else: true
+    end
+  end
+
+  # credo:disable-for-lines:10 Credo.Check.Refactor.Nesting
+  def likes_on_board(%{columns: columns}, user_id) do
+    Enum.reduce(columns, 0, fn %{piles: piles}, acc ->
+      Enum.reduce(piles, acc, fn %{cards: cards}, acc2 ->
+        Enum.reduce(cards, acc2, fn %{likes: likes}, acc3 ->
+          acc3 + Enum.count(likes, fn l -> l.user_id == user_id end)
+        end)
+      end)
+    end)
+  end
+
   @doc "Create a like"
   def like(%Card{id: card_id} = card, %User{id: user_id}) do
     built_like = Like.new(card_id: card_id, user_id: user_id)
@@ -350,6 +380,12 @@ defmodule Lucidboard.Twiddler.Op do
     Enum.reduce(cards, 0, fn %{likes: likes}, acc ->
       acc + length(likes)
     end)
+  end
+
+  def revoke(user_id, board) do
+    tx_fn = fn -> :ok = Account.revoke(user_id, board.id) end
+    new_roles = Enum.reject(board.board_roles, &(&1.user_id == user_id))
+    {new_roles, tx_fn}
   end
 
   defp renumber_positions(items) do

@@ -7,22 +7,29 @@ defmodule Lucidboard.TwiddlerTest do
   alias Lucidboard.Twiddler.Glass
   import Focus
 
-  test "update_board", %{board: board} do
-    action = {:update_board, title: "CHANGED IT"}
-    {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
+  test "update_board", %{board: board, user: user} do
+    action =
+      {:update_board_from_post,
+       %{"title" => "CHANGED IT", "settings" => %{"likes_per_user" => "3"}}}
+
+    {:ok, new_board, tx_fn, %{}, event} =
+      Twiddler.act(board, action, user: user)
 
     assert "has updated the board settings." == event.desc
     assert "CHANGED IT" == new_board.title
+    assert 3 == new_board.settings.likes_per_user
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "update_column", %{board: board} do
+  test "update_column", %{board: board, user: user} do
     col_lens = Lens.make_lens(:columns) ~> Lens.idx(1)
     actual_col_id = Focus.view(col_lens, board).id
 
     action = {:update_column, id: actual_col_id, title: "CHANGED IT"}
-    {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
+
+    {:ok, new_board, tx_fn, %{}, event} =
+      Twiddler.act(board, action, user: user)
 
     assert "has updated the `CHANGED IT` column." == event.desc
     assert "CHANGED IT" == Focus.view(col_lens, new_board).title
@@ -35,10 +42,15 @@ defmodule Lucidboard.TwiddlerTest do
     actual_card_id = Focus.view(card_lens, board).id
 
     {:ok, new_board, tx_fn, %{}, event} =
-      Twiddler.act(board, {:update_card, id: actual_card_id, body: "OH YEAH"})
+      Twiddler.act(
+        board,
+        {:update_card,
+         id: actual_card_id, body: "OH YEAH", settings: %{color: "FFF000"}}
+      )
 
     assert "has changed card text." == event.desc
     assert "OH YEAH" == Focus.view(card_lens, new_board).body
+    assert "FFF000" == Focus.view(card_lens, new_board).settings.color
 
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
@@ -85,12 +97,14 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "move third column to the first position", %{board: board} do
+  test "move third column to the first position", %{board: board, user: user} do
     # Baseline
     ~w(Col1 Col2 Col3) = titles(board.columns)
 
     action = {:move_column, id: Enum.at(board.columns, 2).id, pos: 0}
-    {:ok, new_board, tx_fn, %{}, event} = Twiddler.act(board, action)
+
+    {:ok, new_board, tx_fn, %{}, event} =
+      Twiddler.act(board, action, user: user)
 
     assert "has moved the `Col3` column." == event.desc
     assert ~w(Col3 Col1 Col2) == titles(new_board.columns)
@@ -98,9 +112,11 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "move first column to the last position", %{board: board} do
+  test "move first column to the last position", %{board: board, user: user} do
     action = {:move_column, id: Enum.at(board.columns, 0).id, pos: 2}
-    {:ok, new_board, tx_fn, %{}, _event} = Twiddler.act(board, action)
+
+    {:ok, new_board, tx_fn, %{}, _event} =
+      Twiddler.act(board, action, user: user)
 
     assert ~w(Col2 Col3 Col1) == titles(new_board.columns)
 

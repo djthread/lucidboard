@@ -2,7 +2,7 @@ defmodule Lucidboard.User do
   @moduledoc "Schema for a board record"
   use Ecto.Schema
   import Ecto.Changeset
-  alias Lucidboard.{Card, Like, UserSettings}
+  alias Lucidboard.{BoardRole, Card, Like, UserSettings}
 
   schema "users" do
     field(:name)
@@ -10,6 +10,7 @@ defmodule Lucidboard.User do
     field(:avatar_url)
     embeds_one(:settings, UserSettings, on_replace: :delete)
     many_to_many(:cards_liked, Card, join_through: Like)
+    has_many(:board_roles, BoardRole)
 
     timestamps()
   end

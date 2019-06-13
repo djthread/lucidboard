@@ -13,7 +13,7 @@ defmodule Lucidboard.Card do
     field(:body, :string)
     # field(:locked, :boolean)
     # field(:locked_by, User)
-    embeds_one(:settings, CardSettings)
+    embeds_one(:settings, CardSettings, on_replace: :update)
     belongs_to(:pile, Pile, type: :binary_id)
     belongs_to(:user, User)
     # many_to_many(:users_liked, User, join_through: Like)
@@ -37,11 +37,21 @@ defmodule Lucidboard.Card do
   end
 
   def changeset(card, attrs \\ %{}) do
-    card
-    |> cast(attrs, [:body, :pile_id, :pos])
+    settings =
+      if attrs["color"] do
+        %{color: attrs["color"]}
+      else
+        attrs[:settings]
+      end
 
-    # |> validate_required([:body])
-    # |> cast_assoc(:users_liked)
+    if settings do
+      card
+      |> cast(attrs, [:body, :pile_id, :pos])
+      |> put_change(:settings, settings)
+    else
+      card
+      |> cast(attrs, [:body, :pile_id, :pos])
+    end
   end
 
   @doc "Get the number of likes on a card"
