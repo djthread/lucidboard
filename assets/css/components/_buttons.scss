@@ -1,4 +1,15 @@
 .button-plain {
   border: 0;
   background-color: transparent;
+
+  &:active,
+  &:focus {
+    color: $white;
+    box-shadow: none;
+  }
+}
+
+.button-plain:focus:not(:active) {
+  color: $white;
+  box-shadow: none;
 }

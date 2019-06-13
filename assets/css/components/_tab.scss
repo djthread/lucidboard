@@ -1,20 +1,20 @@
 .c-Tabs {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .c-Tab {
   margin-right: 1rem;
+  margin-bottom: 0.5rem;
 
   &:last-child() {
     margin-right: 0;
   }
+  
+  @media all and (min-width: 960px) {
+    margin-bottom: 0;
+  }
 }
-
-// .c-Tab__link {
-//   // &:hover {
-//   //   color: #0f96f0
-//   // }
-// }
 
 .c-Tab.is-active {
   border-bottom: 2px solid #0f96f0;

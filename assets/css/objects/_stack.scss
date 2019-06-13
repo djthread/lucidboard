@@ -66,11 +66,15 @@
 }
 
 .o-Stack--split\@m>.o-Stack__item--30\@m {
+  @media all and (min-width: 960px) {
     flex: 0 0 30%;
     max-width: 30%;
+  }
 }
 
 .o-Stack--split\@m>.o-Stack__item--70\@m {
+  @media all and (min-width: 960px) {
     flex: 0 0 70%;
     max-width: 70%;
+  }
 }
