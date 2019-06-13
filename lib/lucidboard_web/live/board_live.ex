@@ -208,11 +208,14 @@ defmodule LucidboardWeb.BoardLive do
         {:noreply,
          assign(socket, board_settings_changeset: invalid_cs.changes.settings)}
 
-      {:ok, _} ->
+      {:ok, %{changeset: cs}} ->
         {:noreply,
          assign(socket,
            board_settings_changeset:
-             BoardSettings.changeset(socket.assigns.board.settings)
+             cs
+             |> Changeset.apply_changes()
+             |> Map.get(:settings)
+             |> BoardSettings.changeset(%{})
          )}
     end
   end

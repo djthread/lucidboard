@@ -19,7 +19,14 @@ defmodule Lucidboard.BoardSettings do
 
   @doc false
   def changeset(settings, attrs \\ %{}) do
+    per_user =
+      case attrs["likes_per_user"] || settings.likes_per_user do
+        str when is_binary(str) -> String.to_integer(str)
+        int when is_integer(int) -> int
+      end
+
     settings
     |> cast(attrs, [:likes_per_user, :likes_per_user_per_card])
+    |> validate_number(:likes_per_user_per_card, less_than: per_user)
   end
 end
