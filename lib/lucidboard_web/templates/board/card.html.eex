@@ -1,4 +1,4 @@
-<div class="c-Card__content card-content u-Pan" style="border-left: 1px solid #<%= @card.settings.color %>">
+<div class="c-Card__content card-content u-Pan">
   <%= cond do %>
   <% @locked_by_user? -> %>
     <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
@@ -25,30 +25,30 @@
 
 <%= unless @locked? do %>
 <footer class="c-Card__actions card-footer">
+  <%= if count_user_likes(@card.likes, @user.id) > 0  do %>
+  <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="card__link card-footer-item">
+    <%= fas("heart-broken") %>
+  </a>
+  <% end %>
+  
   <%= if count_user_likes(@card.likes, @user.id) < @board.settings.likes_per_user do %>
-    <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item">
+    <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card__link card-footer-item">
       <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
     </a>
   <% else %>
-    <a href="#" class="c-Card__link card-footer-item">
+    <a href="#" class="card__link card-footer-item card__link--disabled">
       <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
     </a>
-  <% end %>
-
-  <%= if count_user_likes(@card.likes, @user.id) > 0  do %>
-  <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item">
-    <%= fas("heart-broken") %>
-  </a>
   <% end %>
 
   <a phx-click="modal_card_edit"
     phx-value="<%= @card.id %>"
     href="#"
-    class="c-Card__link card-footer-item"
+    class="card__link card-footer-item"
     data-modal="trigger">
     <%= fas("edit") %>
   </a>
-  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="c-Card__link card-footer-item">
+  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card__link card-footer-item">
     <%= fas("trash-alt") %>
   </a>
 </footer>

@@ -3,19 +3,24 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title"></p>
+      <p class="modal-card-title">
+        <%= textarea f, :body, class: "modal-card-textarea" %>
+        <%= error_tag f, :body %>
+        <button class="modal-card-close" aria-label="close">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+      </p>
     </header>
     <section class="modal-card-body">
       <div class="is-block">
-        <%= textarea f, :body %>
-        <%= error_tag f, :body %>
-        <button class="delete" aria-label="close"></button>
+
       </div>
 
       <div class="is-block">
-      <%= radio_button f, :color, "FF0000", checked: f.data.settings.color == "FF0000" %> <label for="card_color_FF0000">- Red</label> <br/>
-      <%= radio_button f, :color, "FFFFFF", checked: f.data.settings.color == "FFFFFF" %> <label for="card_color_FFFFFF">- White</label> <br/>
-      <%= radio_button f, :color, "000000", checked: f.data.settings.color == "000000" %> <label for="card_color_000000">- Black</label> <br/>
+      <%= radio_button f, :color, "2ecc71", checked: f.data.settings.color == "2ecc71" %> <label for="card_color_2ecc71">- Green</label> <br/>
+      <%= radio_button f, :color, "3498db", checked: f.data.settings.color == "3498db" %> <label for="card_color_3498db">- Blue</label> <br/>
+      <%= radio_button f, :color, "e74c3c", checked: f.data.settings.color == "e74c3c" %> <label for="card_color_e74c3c">- Red</label> <br/>
+      <%= radio_button f, :color, "e67e22", checked: f.data.settings.color == "e67e22" %> <label for="card_color_e67e22">- Orange</label> <br/>
       </div>
     </section>
     <footer class="modal-card-foot">

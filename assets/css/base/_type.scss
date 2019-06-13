@@ -1,9 +1,22 @@
 .b-TypeHeading--secondary {
-  color: white;
   line-height: 1.5;
   margin: 0;
   font-weight: 400;
   font-size: 1.5rem;
+}
+
+.b-TypeHeading--tertiary {
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 400;
+  font-size: 1.25rem;
+}
+
+.t-dark {
+  .b-TypeHeading--secondary,
+  .b-TypeHeading--tertiary {
+    color: $white;
+  }
 }
 
 .b-TypeHeading--divider {

@@ -1,23 +1,27 @@
 <section class="o-Stack o-Stack--split@m o-Stack--medium u-Phm">
-  <div class="o-Stack__item u-Mbl">
+  <div class="o-Stack__item o-Stack__item--30@m u-Mbh">
     <h2 class="b-TypeHeading--secondary b-TypeHeading--divider">Manage Columns</h2>
     <ul>
     <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
-      <li class="c-Card o-Stack o-Stack--spaceBetween u-Pam u-Mvm" phx-click="column_edit" phx-value="<%= id %>">
-        <%= title %>
-        <div class="controls">
+      <li class="card card-manage u-Mvm" phx-click="column_edit" phx-value="<%= id %>">
+        <div class="card-manage__arrows">
           <%= if pos > 0 do %>
-            <a phx-click="col_up" phx-value="<%= id %>" href="#" class="c-Card__link">
+            <a phx-click="col_up" phx-value="<%= id %>" href="#" class="card-manage__arrow">
               <%= fas("angle-up") %>
             </a>
           <% end %>
           <%= if pos < length(@board.columns) - 1 do %>
-            <a phx-click="col_down" phx-value="<%= id %>" href="#" class="c-Card__link">
+            <a phx-click="col_down" phx-value="<%= id %>" href="#" class="card-manage__arrow">
               <%= fas("angle-down") %>
             </a>
           <% end %>
         </div>
-        <a href="#" phx-click="delete_column" phx-value="<%= id %>">Delete column</a>
+        <div class="card-manage__title">
+          <%= title %>
+        </div>
+        <a class="u-Phm" href="#" phx-click="delete_column" phx-value="<%= id %>">
+          <i class="fa fa-minus-circle" aria-hidden="true"></i>
+        </a>
       </li>
     <% end %>
     </ul>
@@ -30,7 +34,7 @@
           else: {"Create", "Create Column"}
     %>
 
-    <h3><%= title %></h3>
+    <h3 class="b-TypeHeading--tertiary"><%= title %></h3>
 
     <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
       <%= text_input f, :title, placeholder: "New column title", class: "input u-Mbm" %>
@@ -62,9 +66,9 @@
     <% end %>
   </div>
   -->
-  
+  <div class="o-Stack__item o-Stack__item--70s@m o-Stack--split@m">
   <div class="o-Stack__item u-Phm">
-    <h2 class="b-TypeHeading--secondary b-TypeHeading--divider">Board Settings</h2>
+    <h2 class="b-TypeHeading--secondary b-TypeHeading--divider u-Mbs">Board Settings</h2>
     <%= form_for @board_settings_changeset, "#", [phx_submit: :board_settings_save], fn f -> %>
       <%= label(:likes_per_user, "Likes Per User") %>
       <%= text_input f, :likes_per_user, class: "input u-Mbm" %>
@@ -78,31 +82,32 @@
   </div>
 
   <div class="o-Stack__item u-Phm">
-    <h2 class="b-TypeHeading--secondary b-TypeHeading--divider">Manage Roles</h2>
-    <form phx-change="role_suggest" phx-submit="grant">
-    Grant owner access to 
-    <input class="input u-Mbm" type="text" name="user" list="matches" placeholder="Find User...">
-    <datalist id="matches">
-      <%= for user <- @role_users_suggest do %>
-        <option value="<%= user.id %>"><%= display_name(user) %></option>
-      <% end %>
-    </datalist>
-    <input type="submit" value="Grant" class="button is-primary">
-    </form>
-    <ul>
-      <% more_than_one_owner = more_than_one_owner(@board.board_roles) %>
-      <%= for role <- @board.board_roles do %>
-        <li>
-          <%= avatar(role.user) %>
-          <%= display_name(role.user) %>
-          (<%= role.role %>)
-          <%= if more_than_one_owner do %>
-          <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
-            <%= fas("user-minus") %>
-          </a>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+      <h2 class="b-TypeHeading--secondary b-TypeHeading--divider u-Mbs">Manage Roles</h2>
+      <form phx-change="role_suggest" phx-submit="grant" class="u-Mbl">
+      Grant owner access to 
+      <input class="input u-Mbm" type="text" name="user" list="matches" placeholder="Find User...">
+      <datalist id="matches">
+        <%= for user <- @role_users_suggest do %>
+          <option value="<%= user.id %>"><%= display_name(user) %></option>
+        <% end %>
+      </datalist>
+      <input type="submit" value="Grant" class="button is-primary">
+      </form>
+      <ul>
+        <% more_than_one_owner = more_than_one_owner(@board.board_roles) %>
+        <%= for role <- @board.board_roles do %>
+          <li class="o-Stack o-Stack--center-row">
+            <%= avatar(role.user) %>
+            <%= display_name(role.user) %>
+            (<%= role.role %>)
+            <%= if more_than_one_owner do %>
+            <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
+              <%= fas("user-minus") %>
+            </a>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 </section>

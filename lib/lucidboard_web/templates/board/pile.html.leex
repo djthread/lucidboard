@@ -17,7 +17,8 @@
   <div
     data-pile-id="<%= @pile.id %>">
     <div
-      class="o-Stack o-Stack--column c-Card u-Mbm"
+      class="o-Stack o-Stack--column c-Card u-Mbm card--grab"
+      style="border-left: 3px solid #<%= card.settings.color %>"
       data-card-id="<%= card.id %>"
       <%= unless @search || card_locked? do %>
       draggable="true"
@@ -45,7 +46,7 @@
       <%= unless @search || card_locked? do %>
       draggable="true"
       onDragStart="dnd.drag(event)"
-      class="o-Stack o-Stack--column c-Card"
+      class="o-Stack o-Stack--column c-Card card--grab"
       <% end %>
       >
       <%= rendered_card %>
@@ -53,8 +54,8 @@
     <div class="c-Card__footer--extra">
       <span class="card-footer-item has-text-grey-lighter">of <%= length(@pile.cards) %></span>
       <span class="card-footer-item has-text-grey-lighter"><%= fas("heart") %> <%= Op.likes(@pile) %></span>
-      <a phx-click="unflip_pile" phx-value="<%= @pile.id %>" href="#" class="c-Card__link card-footer-item"><%= fas("angle-left") %></a>
-      <a phx-click="flip_pile" phx-value="<%= @pile.id %>" href="#" class="c-Card__link card-footer-item"><%= fas("angle-right") %></a>
+      <a phx-click="unflip_pile" phx-value="<%= @pile.id %>" href="#" class="card__link card-footer-item"><%= fas("angle-left") %></a>
+      <a phx-click="flip_pile" phx-value="<%= @pile.id %>" href="#" class="card__link card-footer-item"><%= fas("angle-right") %></a>
     </div>
   </div>
 <% end %>

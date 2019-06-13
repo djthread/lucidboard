@@ -32,6 +32,10 @@
   justify-content: flex-end;
 }
 
+.o-Stack--center-row {
+  align-items: center;
+}
+
 .o-Stack--center-row\@m {
   @media all and (min-width: 960px) {
     align-items: center;
@@ -59,4 +63,18 @@
     @media all and (min-width: 960px) {
         margin-bottom: 0;
     }
+}
+
+.o-Stack--split\@m>.o-Stack__item--30\@m {
+  @media all and (min-width: 960px) {
+    flex: 0 0 30%;
+    max-width: 30%;
+  }
+}
+
+.o-Stack--split\@m>.o-Stack__item--70\@m {
+  @media all and (min-width: 960px) {
+    flex: 0 0 70%;
+    max-width: 70%;
+  }
 }
