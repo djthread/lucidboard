@@ -1,5 +1,8 @@
 .c-Card {
   transition: all .2s ease-in-out;
+}
+
+.card--grab {
   cursor: grab;
 }
 
@@ -23,14 +26,32 @@
   justify-content: space-between;
 }
 
-.c-Card__link {
-  padding: 0 0.75rem 0.75rem;
+.card__link {
+  padding: 0.75rem;
+}
+
+.card__link--disabled {
+  color: $grey;
+  cursor: not-allowed;
+  
+  &:hover,
+  &:focus {
+    color: $grey;
+  }
 }
 
 .c-Card__footer--extra {
   display: flex;
   border: 2px solid #343c3d;
   border-top: 0;
+}
+
+.c-Card__label {
+    border-radius: 50%;
+    box-sizing: border-box;
+    height: 25px;
+    margin-left: 0.75rem;
+    width: 25px;
 }
 
 .t-dark {
@@ -51,6 +72,35 @@
           color: lighten($primary, 25%);
       }
   }
+}
+
+.card-manage {
+  display: flex;
+  align-items: center;
+}
+
+.card-manage__arrows {
+  display: flex;
+  justify-content: space-between;
+  border-right: 2px solid #343c3d;
+  padding: 0.5rem 1rem;
+  max-width: 8rem;
+  width: 8rem;
+}
+
+.card-manage__arrow {
+  margin-right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  
+  &:last-child() {
+    margin-right: 0;
+  }
+}
+
+.card-manage__title {
+  width: 100%;
+  padding: 0 1rem;
 }
 
 .js-card-delete .icon {
