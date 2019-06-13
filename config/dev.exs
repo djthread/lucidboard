@@ -15,7 +15,9 @@ config(
     code_reloader: true,
     check_origin: false
   ] ++
-    unless System.get_env("NO_WEBPACK_WATCH") do
+    if System.get_env("NO_WEBPACK_WATCH") do
+      []
+    else
       [
         watchers: [
           node: [
@@ -27,8 +29,6 @@ config(
           ]
         ]
       ]
-    else
-      []
     end
 )
 
