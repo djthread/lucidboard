@@ -37,15 +37,17 @@
     onDragStart="dnd.drag(event)"
     onDragOver="dnd.allowDrop(event)"
     onDrop="dnd.dropIntoPile(event)"
-    class="u-Mbm">
+    class="u-Mbm"
     <% end %>
+    >
     <div
       data-card-id="<%= card.id %>"
       <%= unless @search || card_locked? do %>
       draggable="true"
       onDragStart="dnd.drag(event)"
-      class="o-Stack o-Stack--column c-Card">
+      class="o-Stack o-Stack--column c-Card"
       <% end %>
+      >
       <%= rendered_card %>
     </div>
     <div class="c-Card__footer--extra">
