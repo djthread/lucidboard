@@ -6,20 +6,31 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
-config :lucidboard, LucidboardWeb.Endpoint,
-  http: [port: 8800],
-  debug_errors: true,
-  code_reloader: true,
-  check_origin: false,
-  watchers: [
-    node: [
-      "node_modules/webpack/bin/webpack.js",
-      "--mode",
-      "development",
-      "--watch-stdin",
-      cd: Path.expand("../assets", __DIR__)
-    ]
-  ]
+config(
+  :lucidboard,
+  LucidboardWeb.Endpoint,
+  [
+    http: [port: 8800],
+    debug_errors: true,
+    code_reloader: true,
+    check_origin: false
+  ] ++
+    unless System.get_env("NO_WEBPACK_WATCH") do
+      [
+        watchers: [
+          node: [
+            "node_modules/webpack/bin/webpack.js",
+            "--mode",
+            "development",
+            "--watch-stdin",
+            cd: Path.expand("../assets", __DIR__)
+          ]
+        ]
+      ]
+    else
+      []
+    end
+)
 
 # ## SSL Support
 #
