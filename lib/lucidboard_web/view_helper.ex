@@ -77,7 +77,8 @@ defmodule LucidboardWeb.ViewHelper do
   end
 
   def login_button do
-    case Lucidboard.auth_provider() do
+    Lucidboard.auth_provider()
+    |> case do
       :github ->
         ~E"""
         <a class="button is-link" href="/auth/github">

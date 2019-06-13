@@ -48,4 +48,5 @@ defmodule Lucidboard do
     :lucidboard
     |> Application.get_env(:auth_provider)
     |> String.to_atom()
+  end
 end
