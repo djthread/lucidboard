@@ -1,52 +1,34 @@
-.b-TextArea {
-    background-color: transparent;
-    border: 0;
-    resize: none;
-    outline: none;
-    box-shadow: none;
-    overflow: hidden;
-    padding: 0;
-
-    &:focus {
-        box-shadow: none;
-    }
-}
-
-.textarea:not([rows]) {
-    min-height: 1rem;
-}
-
-.t-dark .b-TextArea {
-    color: $white;
-}
-
-.t-light .b-TextArea {
+// Light theme styles
+.t-light .lb-textarea {
     color: $black;
 }
 
-.b-TextArea--compact:not([rows]) {
-    min-height: 1.75rem;
-    max-height: 1.75rem;
-}
+// Textarea styles
+.lb-textarea {
+  background-color: transparent;
+  border: 0;
+  resize: none;
+  outline: none;
+  box-shadow: none;
+  overflow: hidden;
+  padding: 0;
 
-.button {
-  height: auto;
-}
-
-.select:not(.is-multiple):not(.is-loading)::after {
-  top: 60%;
-}
-
-.t-dark .button.is-primary.is-outlined {
-  color: #afd6ff;
-
-  &:hover {
-    color: $white;
+  &:focus {
+    box-shadow: none;
   }
 }
 
-.input, 
-.select select {
+.lb-textarea:not([rows]) {
+    min-height: 1rem;
+}
+
+// Select arrow style
+.lb-select:not(.is-multiple):not(.is-loading)::after {
+  top: 60%;
+}
+
+.lb-input, 
+.lb-select select {
   border-width: 4px;
   border-radius: 4px;
   box-shadow: none;
@@ -58,20 +40,22 @@
   }
 }
 
-.input-huge {
+// Tall and bigger font size text input
+.lb-input-huge {
   height: 50px;
   font-size: 1.25rem;
 }
 
-.input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+// Input placeholder color per browser
+.lb-input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: $grey-dark;
   opacity: 1; /* Firefox */
 }
 
-.input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+.lb-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
   color: $grey-dark;
 }
 
-.input::-ms-input-placeholder { /* Microsoft Edge */
+.lb-input::-ms-input-placeholder { /* Microsoft Edge */
   color: $grey-dark;
 }

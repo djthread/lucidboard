@@ -43,8 +43,8 @@
       </div>
     </section>
     <footer class="modal-card-foot">
-      <%= submit "Save Changes", class: "button is-primary", phx_disable_with: "Saving..." %>
-      <%= submit "Cancel", class: "button", phx_click: :card_cancel %>
+      <%= submit "Save Changes", class: "button lb-button is-primary", phx_disable_with: "Saving..." %>
+      <%= submit "Cancel", class: "button lb-button", phx_click: :card_cancel %>
     </footer>
   </div>
   <% end %>

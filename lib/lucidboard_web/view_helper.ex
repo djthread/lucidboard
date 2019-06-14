@@ -81,7 +81,7 @@ defmodule LucidboardWeb.ViewHelper do
     |> case do
       :github ->
         ~E"""
-        <a class="button is-link" href="/auth/github">
+        <a class="button lb-button is-primary" href="/auth/github">
           <span class="icon"><%= fab("github") %></span>
           <span>Sign in with GitHub</span>
         </a>
@@ -89,7 +89,7 @@ defmodule LucidboardWeb.ViewHelper do
 
       :pingfed ->
         ~E"""
-        <a class="button is-link" href="/auth/pingfed">
+        <a class="button lb-button is-primary" href="/auth/pingfed">
           <span class="icon"><%= fab("pingfed") %></span>
           <span>Sign in with PingFed</span>
         </a>

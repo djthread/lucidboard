@@ -1,18 +1,17 @@
-<div id="usermenu" class="dropdown is-hoverable is-right u-Width--100">
-  <div class="dropdown-trigger">
-    <button class="dropdown-button" aria-haspopup="true" aria-controls="dropdown-menu">
+<div id="usermenu" class="dropdown lb-dropdown is-hoverable is-right u-Width--100">
+  <div class="dropdown-trigger lb-dropdown-trigger">
+    <button class="lb-dropdown-button" aria-haspopup="true" aria-controls="dropdown-menu">
       <%= avatar(@user) %>
       <span><%= @user.name %></span>
       <%= fas("angle-down", "is-small") %>
     </button>
   </div>
-  <div class="dropdown-menu" id="dropdown-menu" role="menu">
-    <div class="dropdown-content">
-      <a href="<%= Routes.user_path(@conn, :settings) %>" class="dropdown-item">
+  <div class="dropdown-menu lb-dropdown-menu" id="dropdown-menu" role="menu">
+    <div class="dropdown-content lb-dropdown-content">
+      <a href="<%= Routes.user_path(@conn, :settings) %>" class="dropdown-item lb-dropdown-item">
         Settings
       </a>
-      <%# <hr class="dropdown-divider"> %>
-      <a href="<%= Routes.auth_path(@conn, :signout) %>" class="dropdown-item">
+      <a href="<%= Routes.auth_path(@conn, :signout) %>" class="dropdown-item lb-dropdown-item">
         Sign Out
       </a>
     </div>

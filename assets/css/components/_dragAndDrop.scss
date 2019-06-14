@@ -1,22 +1,12 @@
-
-
-.cardjunction {
-    line-height: 0rem;
+// Drag and drop slot
+.dnd-slot {
+  line-height: 0rem;
 }
 
-.cardjunction.active {
-    line-height: 10rem;
+.dnd-slot.active {
+  line-height: 10rem;
 }
 
-
-.dnd-dragging .cardjunction {
+.dnd-dragging .dnd-slot {
   border: 0.5px solid transparent;
-}
-
-.t-dark {
-  .cardjunction.active {
-      border: 2px dashed $turquoise;
-      margin-bottom: 1rem;
-      cursor: grabbing;
-  }
 }
