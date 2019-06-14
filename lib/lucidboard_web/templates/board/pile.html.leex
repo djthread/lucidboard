@@ -17,7 +17,7 @@
   <div
     data-pile-id="<%= @pile.id %>">
     <div
-      class="o-Stack o-Stack--column lb-card u-Mbm lb-card--grab"
+      class="stack stack--column lb-card u-Mbm lb-card--grab"
       style="border-left: 3px solid #<%= card.settings.color %>"
       data-card-id="<%= card.id %>"
       <%= unless @search || card_locked? do %>
@@ -46,7 +46,7 @@
       <%= unless @search || card_locked? do %>
       draggable="true"
       onDragStart="dnd.drag(event)"
-      class="o-Stack o-Stack--column lb-card lb-card--grab"
+      class="stack stack--column lb-card lb-card--grab"
       <% end %>
       >
       <%= rendered_card %>

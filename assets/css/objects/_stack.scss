@@ -1,12 +1,12 @@
-.o-Stack {
+.stack {
   display: flex;
 }
 
-.o-Stack--column {
+.stack--column {
   flex-direction: column;
 }
 
-.o-Stack--split\@m {
+.stack--split\@m {
   flex-direction: column;
   
   @media all and (min-width: $widescreen) {
@@ -15,7 +15,7 @@
   }
 }
 
-.o-Stack--split\@xxs {
+.stack--split\@xxs {
   flex-direction: column;
   
   @media all and (min-width: 20rem) {
@@ -24,31 +24,31 @@
   }
 }
 
-.o-Stack--spaceBetween {
+.stack--spaceBetween {
   justify-content: space-between;
 }
 
-.o-Stack--spaceBetween\@m {
+.stack--spaceBetween\@m {
   @media all and (min-width: 20rem) {
     justify-content: space-between;
   }
 }
 
-.o-Stack--end-row {
+.stack--end-row {
   justify-content: flex-end;
 }
 
-.o-Stack--center-row {
+.stack--center-row {
   align-items: center;
 }
 
-.o-Stack--center-row\@m {
+.stack--center-row\@m {
   @media all and (min-width: $widescreen) {
     align-items: center;
   }
 }
 
-.o-Stack--medium .o-Stack__item {
+.stack--medium .stack__item {
     margin-bottom: 1rem;
     
     &:last-child() {
@@ -56,7 +56,7 @@
     }
 }
 
-.o-Stack--split\@m.o-Stack--medium .o-Stack__item {
+.stack--split\@m.stack--medium .stack__item {
     margin-right: 1rem;
     
     &:last-child() {
@@ -65,20 +65,20 @@
 }
 
 
-.o-Stack--split\@m .o-Stack__item {
+.stack--split\@m .stack__item {
     @media all and (min-width: $widescreen) {
         margin-bottom: 0;
     }
 }
 
-.o-Stack--split\@m>.o-Stack__item--30\@m {
+.stack--split\@m>.stack__item--30\@m {
   @media all and (min-width: $widescreen) {
     flex: 0 0 30%;
     max-width: 30%;
   }
 }
 
-.o-Stack--split\@m>.o-Stack__item--70\@m {
+.stack--split\@m>.stack__item--70\@m {
   @media all and (min-width: $widescreen) {
     flex: 0 0 70%;
     max-width: 70%;

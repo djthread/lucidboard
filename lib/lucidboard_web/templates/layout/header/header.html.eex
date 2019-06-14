@@ -21,7 +21,7 @@
 
       <div class="navbar-end">
         <div class="navbar-item u-Pan">
-          <div class="o-Stack u-Height--100">
+          <div class="stack u-Height--100">
             <%= if @user do %>
               <%= render("header_user_menu.html", conn: @conn, user: @user) %>
             <% else %>

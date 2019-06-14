@@ -1,4 +1,4 @@
-<div class="o-CenteredColumn">
+<div class="centered-column">
   <a href="<%= Routes.board_path(LucidboardWeb.Endpoint, :create) %>"
     class="button lb-button is-primary is-outlined is-pulled-right">
     <%= fas("plus") %><span>Create Board</span>
@@ -11,7 +11,7 @@
   </form>
 
   <%= for short_board <- @short_boards do %>
-    <a class="o-Stack lb-card lb-card--clickable u-Pal u-Mbm"
+    <a class="stack lb-card lb-card--clickable u-Pal u-Mbm"
       href="<%= Routes.board_path(LucidboardWeb.Endpoint, :index, short_board.id) %>">
       <div class="content">
         <h3 class="b-Subtitle subtitle is-marginless">
@@ -34,8 +34,8 @@
   <% end %>
 
   <%= if  @board_pagination.total_entries > 0 do %>
-    <div class="o-Stack o-Stack--spaceBetween o-Stack--split@m">
-      <div class="o-Stack__item">
+    <div class="stack stack--spaceBetween stack--split@m">
+      <div class="stack__item">
         <p>
           Showing page <%= @board_pagination.page_number %> of <%= @board_pagination.total_pages %>
         </p>
@@ -43,7 +43,7 @@
           Total boards: <%= @board_pagination.total_entries %>
         </p>
       </div>
-      <div class="o-Stack__item">
+      <div class="stack__item">
         <%= if @board_pagination.page_number > 1 do %>
           <button phx-click="paginate" phx-value="prev" class="button lb-button is-primary">Previous</button>
         <% end %>

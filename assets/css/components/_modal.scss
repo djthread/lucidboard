@@ -1,10 +1,10 @@
-.modal-card-title {
+.lb-modal-card-title {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
 
-.modal-card-textarea {
+.lb-modal-card-textarea {
   background: transparent;
   border: 0;
   color: white;
@@ -15,19 +15,19 @@
   width: 100%;
 }
 
-.modal-card-close {
+.lb-modal-card-close {
   background: none;
   border: 0;
   color: $white;
   font-size: 1rem;
 }
 
-.modal-radio-button {
+.lb-modal-radio-button {
   position: absolute;
   opacity: 0;
 }
 
-.modal-radio-label {
+.lb-modal-radio-label {
   height: 2rem;
   width: 8rem;
   border-radius: 2px;
@@ -42,7 +42,7 @@
   }
 }
 
-.modal-radio-label--green {
+.lb-modal-radio-label--green {
   background-color: #2ecc71;
   
   &:hover {
@@ -50,7 +50,7 @@
   }
 }
 
-.modal-radio-label--blue {
+.lb-modal-radio-label--blue {
   background-color: #3498db;
   
   &:hover {
@@ -58,7 +58,7 @@
   }
 }
 
-.modal-radio-label--red {
+.lb-modal-radio-label--red {
   background-color: #e74c3c;
   
   &:hover {
@@ -66,7 +66,7 @@
   }
 }
 
-.modal-radio-label--orange {
+.lb-modal-radio-label--orange {
   background-color: #e67e22;
   
   &:hover {
@@ -74,13 +74,13 @@
   }
 }
 
-.modal-radio-label__icon {
+.lb-modal-radio-label__icon {
   display: none;
   margin-right: 0.5rem;
 }
 
 input[type="radio"]:checked+label { 
-  .modal-radio-label__icon {
+  .lb-modal-radio-label__icon {
     display: block;
   }
 }

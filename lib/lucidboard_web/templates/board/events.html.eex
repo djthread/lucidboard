@@ -1,12 +1,12 @@
-<section class="o-Stack o-Stack--split@m o-Stack--medium o-Stack--spaceBetween@m u-Phm">
-  <div class="o-Stack__item">
+<section class="stack stack--split@m stack--medium stack--spaceBetween@m u-Phm">
+  <div class="stack__item">
     <ul>
     <%= for event <- Enum.reverse(@events) do %>
       <li><%= display_event(event) %></li>
     <% end %>
     </ul>
   </div>
-  <div class="o-Stack__item">
+  <div class="stack__item">
     <h3>Users Online</h3>
     <ul>
       <%= for user <- @online_users do %>

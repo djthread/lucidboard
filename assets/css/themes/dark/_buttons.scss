@@ -1,10 +1,7 @@
-// Dark theme styles
-.t-dark {
-  .lb-button.is-primary.is-outlined {
-    color: #afd6ff;
+.lb-button.is-primary.is-outlined {
+  color: #afd6ff;
 
-    &:hover {
-      color: $white;
-    }
+  &:hover {
+    color: $white;
   }
 }

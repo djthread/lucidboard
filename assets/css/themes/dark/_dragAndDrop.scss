@@ -1,8 +1,5 @@
-// Dark theme styles
-.t-dark {
-  .dnd-slot.active {
-      border: 2px dashed $turquoise;
-      margin-bottom: 1rem;
-      cursor: grabbing;
-  }
+.lb-dnd-slot.active {
+  border: 2px dashed $turquoise;
+  margin-bottom: 1rem;
+  cursor: grabbing;
 }

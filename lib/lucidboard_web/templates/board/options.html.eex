@@ -1,5 +1,5 @@
-<section class="o-Stack o-Stack--split@m o-Stack--medium u-Phm">
-  <div class="o-Stack__item o-Stack__item--30@m u-Mbh">
+<section class="stack stack--split@m stack--medium u-Phm">
+  <div class="stack__item stack__item--30@m u-Mbh">
     <h2 class="lb-heading--secondary lb-heading--divider u-Mbm">Manage Columns</h2>
     <ul class="u-Mbl">
     <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
@@ -68,8 +68,8 @@
     <% end %>
   </div>
   -->
-  <div class="o-Stack__item o-Stack__item--70s@m o-Stack--split@m">
-  <div class="o-Stack__item u-Phm">
+  <div class="stack__item stack__item--70s@m stack--split@m">
+  <div class="stack__item u-Phm">
     <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
     <%= form_for @board_settings_changeset, "#", [phx_submit: :board_settings_save], fn f -> %>
       <%= label(:likes_per_user, "Likes Per User") %>
@@ -83,7 +83,7 @@
     <% end %>
   </div>
 
-  <div class="o-Stack__item u-Phm">
+  <div class="stack__item u-Phm">
       <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
       <form phx-change="role_suggest" phx-submit="grant" class="u-Mbl">
       Grant owner access to 
@@ -98,7 +98,7 @@
       <ul>
         <% more_than_one_owner = more_than_one_owner(@board.board_roles) %>
         <%= for role <- @board.board_roles do %>
-          <li class="o-Stack o-Stack--center-row">
+          <li class="stack stack--center-row">
             <%= avatar(role.user) %>
             <%= display_name(role.user) %>
             (<%= role.role %>)
