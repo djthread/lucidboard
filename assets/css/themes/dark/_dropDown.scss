@@ -1,0 +1,18 @@
+.lb-dropdown-content {
+  background-color: $primary;
+  padding: 0;
+}
+
+.lb-dropdown-item {
+  padding: 0.5rem 1rem;
+  
+  &:hover {
+    background-color: $blue-gray;
+    color: $white;
+  }
+}
+
+.lb-dropdown-menu {
+  left: auto;
+  right: 0;
+}

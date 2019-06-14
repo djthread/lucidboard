@@ -3,10 +3,10 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">
-        <%= textarea f, :body, class: "modal-card-textarea" %>
+      <p class="modal-card-title lb-modal-card-title">
+        <%= textarea f, :body, class: "lb-modal-card-textarea" %>
         <%= error_tag f, :body %>
-        <button class="modal-card-close" aria-label="close">
+        <button class="lb-modal-card-close" aria-label="close">
           <i class="fa fa-times" aria-hidden="true"></i>
         </button>
       </p>
@@ -16,35 +16,35 @@
       <p class="u-Mbm">
         Choose label color
       </p>
-      <%= radio_button f, :color, "2ecc71", checked: f.data.settings.color == "2ecc71", class: "modal-radio-button" %> 
-      <label for="card_color_2ecc71" class="modal-radio-label modal-radio-label--green">
-        <span class="modal-radio-label__icon">
+      <%= radio_button f, :color, "2ecc71", checked: f.data.settings.color == "2ecc71", class: "lb-modal-radio-button" %> 
+      <label for="card_color_2ecc71" class="lb-modal-radio-label lb-modal-radio-label--green">
+        <span class="lb-modal-radio-label__icon">
           <i class="fa fa-check" aria-hidden="true"></i>
         </span>
       </label>
-      <%= radio_button f, :color, "3498db", checked: f.data.settings.color == "3498db", class: "modal-radio-button" %> 
-      <label for="card_color_3498db" class="modal-radio-label modal-radio-label--blue">
-        <span class="modal-radio-label__icon">
+      <%= radio_button f, :color, "3498db", checked: f.data.settings.color == "3498db", class: "lb-modal-radio-button" %> 
+      <label for="card_color_3498db" class="lb-modal-radio-label lb-modal-radio-label--blue">
+        <span class="lb-modal-radio-label__icon">
           <i class="fa fa-check" aria-hidden="true"></i>
         </span>
       </label>
-      <%= radio_button f, :color, "e74c3c", checked: f.data.settings.color == "e74c3c", class: "modal-radio-button" %> 
-      <label for="card_color_e74c3c" class="modal-radio-label modal-radio-label--red">
-        <span class="modal-radio-label__icon">
+      <%= radio_button f, :color, "e74c3c", checked: f.data.settings.color == "e74c3c", class: "lb-modal-radio-button" %> 
+      <label for="card_color_e74c3c" class="lb-modal-radio-label lb-modal-radio-label--red">
+        <span class="lb-modal-radio-label__icon">
           <i class="fa fa-check" aria-hidden="true"></i>
         </span>
       </label>
-      <%= radio_button f, :color, "e67e22", checked: f.data.settings.color == "e67e22", class: "modal-radio-button" %> 
-      <label for="card_color_e67e22" class="modal-radio-label modal-radio-label--orange">
-        <span class="modal-radio-label__icon">
+      <%= radio_button f, :color, "e67e22", checked: f.data.settings.color == "e67e22", class: "lb-modal-radio-button" %> 
+      <label for="card_color_e67e22" class="lb-modal-radio-label lb-modal-radio-label--orange">
+        <span class="lb-modal-radio-label__icon">
           <i class="fa fa-check" aria-hidden="true"></i>
         </span>
       </label>
       </div>
     </section>
     <footer class="modal-card-foot">
-      <%= submit "Save Changes", class: "button is-primary", phx_disable_with: "Saving..." %>
-      <%= submit "Cancel", class: "button", phx_click: :card_cancel %>
+      <%= submit "Save Changes", class: "button lb-button is-primary", phx_disable_with: "Saving..." %>
+      <%= submit "Cancel", class: "button lb-button", phx_click: :card_cancel %>
     </footer>
   </div>
   <% end %>

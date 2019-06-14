@@ -1,17 +1,17 @@
-<div class="c-Card__content card-content u-Pan">
+<div class="lb-card__content card-content u-Pan">
   <%= cond do %>
   <% @locked_by_user? -> %>
     <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
-    <%= textarea f, :body, class: "textarea is-medium has-fixed-size b-TextArea u-Phm u-Ptm" %>
+    <%= textarea f, :body, class: "textarea is-medium has-fixed-size lb-textarea u-Phm u-Ptm" %>
     <%= error_tag f, :body %>
     <div class="u-Pam">
-      <%= submit "Save", phx_disable_with: "Saving...", class: "button is-primary" %>
-      <%= submit "Cancel", phx_click: :card_cancel, class: "button" %>
+      <%= submit "Save", phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+      <%= submit "Cancel", phx_click: :card_cancel, class: "button lb-button" %>
     </div>
     <% end %>
 
   <% @locked? -> %>
-  <i class="fa fa-comment-dots fa-3x card-locked" aria-hidden="true"></i>
+  <i class="fa fa-comment-dots fa-3x lb-card-locked" aria-hidden="true"></i>
 
 
   <% true -> %>
@@ -25,19 +25,19 @@
 </div>
 
 <%= unless @locked? do %>
-<footer class="c-Card__actions card-footer">
+<footer class="lb-card__footer card-footer">
   <%= if count_user_likes(@card.likes, @user.id) > 0  do %>
-  <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="card__link card-footer-item">
+  <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
     <%= fas("heart-broken") %>
   </a>
   <% end %>
   
   <%= if count_user_likes(@card.likes, @user.id) < @board.settings.likes_per_user do %>
-    <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card__link card-footer-item">
+    <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
       <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
     </a>
   <% else %>
-    <a href="#" class="card__link card-footer-item card__link--disabled">
+    <a href="#" class="card-footer-item lb-card__footer-item--disabled">
       <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
     </a>
   <% end %>
@@ -45,11 +45,11 @@
   <a phx-click="modal_card_edit"
     phx-value="<%= @card.id %>"
     href="#"
-    class="card__link card-footer-item"
+    class="card-footer-item"
     data-modal="trigger">
     <%= fas("edit") %>
   </a>
-  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card__link card-footer-item">
+  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
     <%= fas("trash-alt") %>
   </a>
 </footer>
@@ -61,8 +61,8 @@
     <p class="u-Mbm">
       If you delete the card, it's gone forever. Are you sure?
     </p>
-    <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button is-primary">Confirm</button>
-    <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button">Cancel</button>
+    <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button lb-button is-primary">Confirm</button>
+    <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button lb-button">Cancel</button>
   </div>
 </div>
 <% end %>

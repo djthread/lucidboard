@@ -7,12 +7,12 @@
 <section class="board u-Width--100 columns is-desktop u-Man">
   <%= for column <- board.columns do %>
     <div class="column" data-col-id="<%= column.id %>">
-      <div class="o-Stack o-Stack--spaceBetween b-TypeHeading--divider u-Mbm">
-        <h2 class="b-TypeHeading--secondary"><%= column.title %></h2>
+      <div class="stack stack--spaceBetween lb-body--divider u-Mbm">
+        <h2 class="lb-heading--secondary"><%= column.title %></h2>
 
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
-            <button class="button button-plain" aria-haspopup="true" aria-controls="column-menu">
+            <button class="button lb-button lb-button--plain" aria-haspopup="true" aria-controls="column-menu">
               <%= fas("ellipsis-h") %>
             </button>
           </div>
@@ -29,7 +29,7 @@
       <%= for pile <- column.piles do %>
         <div
           data-pos="<%= pile.pos %>"
-          class="cardjunction"
+          class="lb-dnd-slot"
           <%= unless @search do %>
           onDragOver="dnd.allowDrop(event)"
           onDragLeave="dnd.dragLeave(event)"
@@ -52,7 +52,7 @@
 
       <div
         data-pos="<%= length(column.piles) %>"
-        class="cardjunction"
+        class="lb-dnd-slot"
         <%= unless @search do %>
         onDragOver="dnd.allowDrop(event)"
         onDragLeave="dnd.dragLeave(event)"
