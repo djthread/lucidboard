@@ -27,7 +27,7 @@
       </li>
     <% end %>
     </ul>
-    
+
     <%
       cs_data = Ecto.Changeset.apply_changes(@column_changeset)
       {button_txt, title} =
@@ -86,7 +86,7 @@
   <div class="stack__item u-Phm">
       <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
       <form phx-change="role_suggest" phx-submit="grant" class="u-Mbl">
-      Grant owner access to 
+      Grant owner access to
       <input class="input lb-input u-Mbm" type="text" name="user" list="matches" placeholder="Find User...">
       <datalist id="matches">
         <%= for user <- @role_users_suggest do %>

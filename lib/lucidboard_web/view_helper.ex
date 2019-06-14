@@ -27,17 +27,13 @@ defmodule LucidboardWeb.ViewHelper do
     end
   end
 
-  def display_date_time(datetime, mode \\ :short) do
-    Lucidboard.utc_to_formatted(datetime, mode)
-  end
-
   def display_event(%Event{
         inserted_at: inserted_at,
         user: %{name: name},
         desc: desc
       }) do
     raw("""
-    #{display_date_time(inserted_at)} \
+    #{Lucidboard.utc_to_formatted(inserted_at)} \
     <strong>#{name}</strong> \
     #{desc}\
     """)
@@ -52,10 +48,6 @@ defmodule LucidboardWeb.ViewHelper do
       <i class="#{family} fa-#{name}"></i>
     </span>
     """)
-  end
-
-  def display_name(user) do
-    Account.display_name(user)
   end
 
   def avatar(%{avatar_url: nil} = _user) do
