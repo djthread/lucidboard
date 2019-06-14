@@ -85,14 +85,22 @@
 
   <div class="stack__item u-Phm">
       <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
-      <form phx-change="role_suggest" phx-submit="grant" class="u-Mbl">
-      Grant owner access to 
-      <input class="input lb-input u-Mbm" type="text" name="user" list="matches" placeholder="Find User...">
+      <form phx-change="role_suggest" phx-submit="grant" onSubmit="datalistHelper.addIdOnSubmit(event)" class="u-Mbl">
+      Grant owner access to
+      <input
+          class="input lb-input u-Mbm"
+          name="userSearch"
+          type="text"
+          onInput="datalistHelper.roleUpdate(event)"
+          list="matches"
+          placeholder="Find User..."
+      />
       <datalist id="matches">
         <%= for user <- @role_users_suggest do %>
-          <option value="<%= user.id %>"><%= display_name(user) %></option>
+          <option data-value="<%= user.id %>"><%= display_name(user) %></option>
         <% end %>
       </datalist>
+      <input type="hidden" name="user" id="userId">
       <input type="submit" value="Grant" class="button lb-button is-primary">
       </form>
       <ul>
