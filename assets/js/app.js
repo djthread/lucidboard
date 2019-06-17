@@ -5,8 +5,10 @@ import css from '../css/app.scss';
 
 import hamburger from './hamburger';
 import dnd from './dnd';
+import {datalistHelper} from './datalist_helper';
 
 window.dnd = dnd;
+window.datalistHelper = datalistHelper;
 
 // webpack automatically bundles all modules in your
 // entry points. Those entry points can be configured
