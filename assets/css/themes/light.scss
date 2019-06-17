@@ -1,9 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
 @import "../../node_modules/bulmaswatch/flatly/variables";
 
-@import "../../node_modules/bulma/bulma";
+@import "light/colors";
 
+$link: $green;
+$link-hover: $primary;
+
+@import "../settings/bulma";
+
+@import "../../node_modules/bulma/bulma";
 @import "../../node_modules/bulmaswatch/flatly/overrides";
 
-@import "../base/form";
-@import "../components/card";
+@import "light/card";
+@import "light/dragAndDrop";
+@import "light/dropDown";
+// @import "dark/form";
+@import "light/tab";
+@import "light/type";

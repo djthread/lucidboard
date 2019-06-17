@@ -1,0 +1,6 @@
+.lb-navbar.is-primary .navbar-brand > a.navbar-item {
+  &:hover,
+  &:focus {
+    background-color: transparent;
+  }
+}

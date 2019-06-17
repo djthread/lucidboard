@@ -2,7 +2,6 @@
   box-shadow: none;
   border: 2px solid $dark-gray;
   background-color: $grey-darker;
-  border-radius: 0;
   color: $white;
   max-width: 100%;
   position: relative;
@@ -22,4 +21,8 @@
       color: $blue-dull;
     }
   }
+}
+
+.lb-card-manage__arrows {
+  border-right: 2px solid #343c3d;
 }
