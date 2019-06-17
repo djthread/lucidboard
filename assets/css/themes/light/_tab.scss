@@ -1,0 +1,7 @@
+.lb-tab.is-active {
+  border-bottom: 2px solid $primary;
+  
+  .lb-tab__link {
+    color: $primary;
+  }
+}

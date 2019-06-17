@@ -1,5 +1,10 @@
 .lb-card {
   transition: all .2s ease-in-out;
+  border-radius: 0.4rem;
+  box-shadow: none;
+  max-width: 100%;
+  position: relative;
+
 }
 
 .lb-card--grab {
@@ -35,11 +40,11 @@
 }
 
 .lb-card__label {
-    border-radius: 50%;
-    box-sizing: border-box;
-    height: 25px;
-    margin-left: 0.75rem;
-    width: 25px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  height: 25px;
+  margin-left: 0.75rem;
+  width: 25px;
 }
 
 // Cards on within the manage columns section
@@ -51,7 +56,6 @@
 .lb-card-manage__arrows {
   display: flex;
   justify-content: space-between;
-  border-right: 2px solid #343c3d;
   padding: 0.5rem 1rem;
   max-width: 8rem;
 }

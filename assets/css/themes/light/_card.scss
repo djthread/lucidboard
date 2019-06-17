@@ -1,0 +1,26 @@
+.lb-card {
+  border: 2px solid $grey-lighter;
+  background-color: $white-bis;
+  color: $primary;
+}
+
+.lb-card:hover {
+    background-color: $white-ter;
+    color: $black;
+
+    .lb-subtitle {
+        color: $black;
+    }
+}
+
+.lb-card--clickable {
+  &:hover {
+    .content {
+      color: $black;
+    }
+  }
+}
+
+.lb-card-manage__arrows {
+  border-right: 2px solid $grey-lighter;
+}

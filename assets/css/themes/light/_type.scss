@@ -1,0 +1,10 @@
+.lb-heading--secondary,
+.lb-heading--tertiary {
+  color: $primary;
+}
+
+// Heading/Body divider
+.lb-heading--divider,
+.lb-body--divider {
+  border-bottom: 2px solid $primary;
+}

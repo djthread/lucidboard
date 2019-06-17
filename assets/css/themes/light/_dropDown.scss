@@ -1,0 +1,33 @@
+.lb-navbar {
+  .lb-dropdown-content {
+    background-color: $primary;
+    color: $white;
+    padding: 0;
+  }
+
+  .lb-dropdown-item.dropdown-item {
+    padding: 0.5rem 1rem;
+    color: $white;
+    
+    &:hover {
+      background-color: darken($primary, 5%);
+      color: $white;
+    }
+  }
+}
+
+.lb-dropdown-content {
+  background-color: $grey-lighter;
+  color: $primary;
+  padding: 0;
+}
+
+.lb-dropdown-item.dropdown-item {
+  padding: 0.5rem 1rem;
+  color: $primary;
+
+  &:hover {
+    background-color: darken($grey-lighter, 5%);
+    color: $primary;
+  }
+}
