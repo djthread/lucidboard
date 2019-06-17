@@ -27,7 +27,7 @@
       </li>
     <% end %>
     </ul>
-    
+
     <%
       cs_data = Ecto.Changeset.apply_changes(@column_changeset)
       {button_txt, title} =

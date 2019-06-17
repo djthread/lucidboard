@@ -18,8 +18,8 @@
           <%= short_board.title %>
         </h3>
           Created by <strong><%= short_board.username %></strong> at
-          <span title="<%= display_date_time(short_board.inserted_at, :long) %>">
-            <%= display_date_time(short_board.inserted_at, :short) %></span>.
+          <span title="<%= utc_to_formatted(short_board.inserted_at, :long) %>">
+            <%= utc_to_formatted(short_board.inserted_at, :short) %></span>.
         <%= if short_board.last_event do %>
           <span class="u-Mtm is-block">
           <%= fas("clock") %>

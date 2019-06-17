@@ -48,6 +48,11 @@ defmodule LucidboardWeb do
       import LucidboardWeb.ErrorHelpers
       import LucidboardWeb.Gettext
       import LucidboardWeb.ViewHelper
+      import Lucidboard, only: [utc_to_formatted: 2]
+
+      import Lucidboard.Account,
+        only: [display_name: 1, has_role?: 2, has_role?: 3]
+
       import Phoenix.LiveView, only: [live_render: 2, live_render: 3]
       alias Lucidboard.Twiddler.Op
       alias LucidboardWeb.BoardLive
