@@ -250,7 +250,7 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
-  def handle_event("role_suggest", %{"user" => input}, socket) do
+  def handle_event("role_suggest", %{"userSearch" => input}, socket) do
     suggestions = Account.suggest_users(input)
     {:noreply, assign(socket, :role_users_suggest, suggestions)}
   end
