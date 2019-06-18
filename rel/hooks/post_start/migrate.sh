@@ -14,5 +14,5 @@ done
 set -e
 
 echo "Running migrations"
-bin/my_app rpc "Elixir.Lucidboard.ReleaseTasks.migrate"
+bin/lucidboard rpc "Elixir.Lucidboard.ReleaseTasks.migrate"
 echo "Migrations run successfully"
