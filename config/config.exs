@@ -36,7 +36,7 @@ config :lucidboard, :templates, [
   }
 ]
 
-config :lucidboard, :auth_provider, "github"
+config :lucidboard, :auth_provider, :github
 
 config :lucidboard, :default_theme, "dark"
 

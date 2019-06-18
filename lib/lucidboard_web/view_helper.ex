@@ -1,7 +1,7 @@
 defmodule LucidboardWeb.ViewHelper do
   @moduledoc "Helper functions for all views"
   import Phoenix.HTML
-  alias Lucidboard.{Account, BoardRole, Event}
+  alias Lucidboard.{BoardRole, Event}
 
   @doc "Create a font-awesome icon by name"
   def fas(name, class \\ nil), do: fa("fas", name, class)
