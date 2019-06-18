@@ -37,6 +37,7 @@ end
 environment :prod do
   set include_erts: true
   set include_src: false
+  set post_start_hooks: "rel/hooks/post_start"
   set cookie: :"U}xtguIXF0rt>a[tTf78q^zG5N1x8|)6J!?m,x.iJ4xx.*LG_n$DyI.Lj$8_]h^j"
   set vm_args: "rel/vm.args"
 end
