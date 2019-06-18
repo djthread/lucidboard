@@ -28,4 +28,10 @@
     <li>Track task progress in a simple way</li>
     <li>Whatever else you might imagine!</li>
   </ul>
+
+  <h3 class="subtitle is-3">Find us on Github!</h3>
+
+  <p><a href="https://github.com/djthread/lucidboard">Lucidboard is
+  MIT-licensed on Github.com</a>. See the README for instructions that should
+  get you a working dev environment in minutes.</p>
 </main>
