@@ -17,8 +17,29 @@ defmodule Lucidboard.Twiddler.Actions do
          %Changeset{valid?: true} = cs <- Board.changeset(board, args),
          new_board <- Changeset.apply_changes(cs) do
       {:ok, new_board, fn -> Repo.update(cs) end, %{changeset: cs},
-       event("has updated the board settings.")}
+       event(board_event_message(args))}
     end
+  end
+
+  defp board_event_message(%{"title" => title}) do
+    "has updated the board title to <b>#{title}</b>."
+  end
+
+  defp board_event_message(%{
+         "settings" => %{
+           "likes_per_user" => lpu,
+           "likes_per_user_per_card" => lpc
+         }
+       }) do
+    """
+      has updated the board settings:<br/>
+      likes_per_user to <b>#{lpu}</b><br/>
+      likes_per_user_per_card to <b>#{lpc}</b>.
+    """
+  end
+
+  defp board_event_message(_) do
+    "has updated the board."
   end
 
   @spec add_column(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()

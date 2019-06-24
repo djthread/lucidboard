@@ -9,8 +9,34 @@
 </div>
 <div class="stack stack--medium stack--split@m stack--spaceBetween stack--center-row@m u-Mbm u-Phm">
   <div class="stack__item">
-    <h1 class="title u-Mbn"><%= @board.title %></h1>
+    <%= if @board_changeset && has_role?(@user, @board, :owner) do %>
+      <%= form_for @board_changeset, "#", [phx_submit: :board_name_save], fn f -> %>
+        <section class="stack stack--split@m stack--medium u-Phm">
+        <div class="stack__item">
+          <%= text_input f, :title, class: "input lb-input u-Mbm is-medium" %>
+          <%= error_tag f, :title %>
+        </div>
+        <div class="stack__item">
+          <%= submit "Save", phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+          <button phx-click="board_name_edit_toggle" phx-value="false" class="button lb-button is-primary">Cancel</button>
+        </div>
+        </section>
+      <% end %>
+    <% else %>
+      <h1 class="title u-Mbn">
+        <%= @board.title %>
+        &nbsp;
+        <%= if has_role?(@user, @board, :owner) do %>
+          <a phx-click="board_name_edit_toggle"
+            phx-value="true"
+            href="#">
+            <%= fas("edit") %>
+          </a>
+        <% end %>
+      </h1>
+    <% end %>
   </div>
+
   <div class="stack__item">
     <ul class="lb-tabs">
       <li class="lb-tab">
