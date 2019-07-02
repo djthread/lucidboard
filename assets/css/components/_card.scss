@@ -18,15 +18,15 @@
 .lb-card__footer {
   display: flex;
   transition: all .2s ease-in-out;
-  transition: all .2s ease-in-out;
   align-self: flex-end;
   justify-content: space-between;
 }
 
 .lb-card__footer--extra {
   display: flex;
-  border: 2px solid #343c3d;
   border-top: 0;
+  border-bottom-left-radius: 0.4rem;
+  border-bottom-right-radius: 0.4rem;
 }
 
 .lb-card__footer-item--disabled {
@@ -57,7 +57,12 @@
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  max-width: 8rem;
+  max-width: 6rem;
+  min-width: 6rem;
+}
+
+.lb-card-manage__arrows--first {
+  justify-content: flex-end;;
 }
 
 .lb-card-manage__arrow {
@@ -80,4 +85,9 @@
   padding: 1rem;
   display: block;
   text-align: center;
+}
+
+.lb-card--piled {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }

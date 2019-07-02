@@ -1,0 +1,13 @@
+.lb-columns {
+  @media all and (min-width: $widescreen) {
+    overflow-x: auto;
+    min-height: 500px;
+  }
+}
+
+.lb-column {
+  @media all and (min-width: $widescreen) {
+    max-width: 350px;
+    min-width: 350px;
+  }
+}

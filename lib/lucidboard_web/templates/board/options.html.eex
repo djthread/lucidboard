@@ -1,11 +1,11 @@
-<section class="stack stack--split@m stack--medium u-Phm">
-  <div class="stack__item stack__item--30@m u-Mbh">
+<section class="stack stack--split@m stack--large u-Phm">
+  <div class="stack__item stack__item--30@m">
     <h2 class="lb-heading--secondary lb-heading--divider u-Mbm">Manage Columns</h2>
     <ul class="u-Mbl">
     <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
       <li class="card lb-card-manage u-Mbm" phx-click="column_edit" phx-value="<%= id %>">
         <%= if pos > 0 || pos < length(@board.columns) - 1 do %>
-        <div class="lb-card-manage__arrows">
+        <div class="lb-card-manage__arrows <%= if pos === 0 do %> lb-card-manage__arrows--first <% end %>">
           <%= if pos > 0 do %>
             <a phx-click="col_up" phx-value="<%= id %>" href="#" class="lb-card-manage__arrow">
               <%= fas("angle-up") %>
@@ -69,7 +69,7 @@
   </div>
   -->
   <div class="stack__item stack__item--70s@m stack--split@m">
-  <div class="stack__item u-Phm">
+  <div class="stack__item">
     <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
     <%= form_for @board_settings_changeset, "#", [phx_submit: :board_settings_save], fn f -> %>
       <%= label(:likes_per_user, "Likes Per User") %>
@@ -83,7 +83,7 @@
     <% end %>
   </div>
 
-  <div class="stack__item u-Phm">
+  <div class="stack__item">
       <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
       <form phx-change="role_suggest" phx-submit="grant" onSubmit="datalistHelper.addIdOnSubmit(event)" class="u-Mbl">
       Grant owner access to
