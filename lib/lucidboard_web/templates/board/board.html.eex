@@ -4,26 +4,15 @@
   {user_locked_card_id, locked_card_ids} =
     locked_cards(@user.id, board.id, @socket.id)
 %>
-<section class="board u-Width--100 columns is-desktop u-Man">
+<section class="board u-Width--100 columns is-desktop u-Man lb-columns">
   <%= for column <- board.columns do %>
-    <div class="column" data-col-id="<%= column.id %>">
-      <div class="stack stack--spaceBetween lb-body--divider u-Mbm">
+    <div class="column <%= if Enum.count(board.columns) > 4 do %>lb-column<% end %>" data-col-id="<%= column.id %>">
+      <div class="stack stack--spaceBetween lb-body--divider u-Mbm stack--center-row">
         <h2 class="lb-heading--secondary"><%= column.title %></h2>
 
-        <div class="dropdown is-right is-hoverable">
-          <div class="dropdown-trigger">
-            <button class="button lb-button lb-button--plain" aria-haspopup="true" aria-controls="column-menu">
-              <%= fas("ellipsis-h") %>
-            </button>
-          </div>
-          <div class="dropdown-menu u-Pan" id="column-menu" role="menu">
-            <div class="dropdown-content lb-dropdown-content">
-              <a href="#" phx-click="sortby_likes" phx-value="<%= column.id %>" class="dropdown-item lb-dropdown-item">
-                Sort by Likes
-              </a>
-            </div>
-          </div>
-        </div>
+        <a href="#" phx-click="sortby_likes" phx-value="<%= column.id %>">
+          Sort by Likes
+        </a>
       </div>
 
       <%= for pile <- column.piles do %>
