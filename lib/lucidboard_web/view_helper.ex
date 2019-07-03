@@ -71,6 +71,14 @@ defmodule LucidboardWeb.ViewHelper do
   def login_button do
     Lucidboard.auth_provider()
     |> case do
+      :dumb ->
+        ~E"""
+        <a class="button lb-button is-primary" href="/signin">
+          <span class="icon"><%= fas("smile") %></span>
+          <span>Sign in</span>
+        </a>
+        """
+
       :github ->
         ~E"""
         <a class="button lb-button is-primary" href="/auth/github">

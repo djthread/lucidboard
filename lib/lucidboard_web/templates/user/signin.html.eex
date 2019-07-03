@@ -1,3 +1,28 @@
 <div class="jumbotron">
-  <%= login_button() %>
+  <%= if Lucidboard.auth_provider() == :dumb do %>
+    <div class="auth-form-wrapper">
+      <%= form_for @conn, Routes.user_path(@conn, :signin), [as: :signin], fn f -> %>
+        <div class="text-center mb-4">
+          <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
+        </div>
+
+        <p style="max-width:40em;margin:1em">
+          In an effort to make a dev environment easy to get started,
+          Lucidboard is currently using the "dumb" (default) authentication
+          method. Simply enter a username and you will be logged in as that
+          user. See the documentation about the other methods available and
+          how to set them up.
+        </p>
+
+        <div class="form-label-group">
+          <%= label f, :username, "Username", class: "control-label" %>
+          <%= text_input f, :username, class: "form-control", placeholder: "Username", required: true, autofocus: true %>
+        </div>
+
+        <%= submit "Sign in" %>
+      <% end %>
+    </div>
+  <% else %>
+    <%= login_button() %>
+  <% end %>
 </div>

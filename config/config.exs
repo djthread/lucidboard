@@ -36,7 +36,8 @@ config :lucidboard, :templates, [
   }
 ]
 
-config :lucidboard, :auth_provider, :github
+# Options are :dumb, :github, :pingfed. See documentation about authentication
+config :lucidboard, :auth_provider, :dumb
 
 config :lucidboard, :default_theme, "dark"
 

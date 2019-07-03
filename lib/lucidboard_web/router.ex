@@ -31,7 +31,8 @@ defmodule LucidboardWeb.Router do
     get("/", PageController, :index)
 
     get("/signin", UserController, :signin)
-    post("/signin", AuthController, :signin)
+    # post("/signin", AuthController, :dumb_signin)
+    post("/signin", AuthController, :dumb_signin)
     get("/signout", AuthController, :signout)
 
     get("/user-settings", UserController, :settings)

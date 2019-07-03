@@ -16,6 +16,18 @@ defmodule Lucidboard.Account do
 
   def get(user_id), do: Repo.get(User, user_id)
 
+  def by_username(username) do
+    Repo.one(from(u in User, where: u.name == ^username))
+  end
+
+  def create(fields) do
+    fields |> User.new() |> insert()
+  end
+
+  def insert(%User{} = user) do
+    Repo.insert(user)
+  end
+
   def display_name(%User{name: name, full_name: full_name}) do
     "#{name} (#{full_name})"
   end
