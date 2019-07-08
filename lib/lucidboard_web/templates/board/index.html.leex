@@ -13,7 +13,7 @@
       <%= form_for @board_changeset, "#", [phx_submit: :board_name_save], fn f -> %>
         <section class="stack stack--split@m stack--medium u-Phm">
         <div class="stack__item">
-          <%= text_input f, :title, class: "input lb-input u-Mbm is-medium" %>
+          <%= text_input f, :title, class: "input lb-input u-Mbm is-medium", maxlength: 255 %>
           <%= error_tag f, :title %>
         </div>
         <div class="stack__item">
