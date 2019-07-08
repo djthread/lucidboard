@@ -22,7 +22,7 @@ defmodule Lucidboard.Twiddler.Actions do
   end
 
   defp board_event_message(%{"title" => title}) do
-    "has updated the board title to <b>#{title}</b>."
+    "has updated the board title to `#{title}`."
   end
 
   defp board_event_message(%{
