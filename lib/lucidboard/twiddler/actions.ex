@@ -16,30 +16,34 @@ defmodule Lucidboard.Twiddler.Actions do
            Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
          %Changeset{valid?: true} = cs <- Board.changeset(board, args),
          new_board <- Changeset.apply_changes(cs) do
-      {:ok, new_board, fn -> Repo.update(cs) end, %{changeset: cs},
-       event(board_event_message(args))}
+
+      event_text =
+        [
+          with title when not is_nil(title) <- args["title"] do
+            "title to `#{title}`"
+          end,
+          with lpu when not is_nil(lpu) <-
+                 get_in(args, ["settings", "likes_per_user"]) do
+            "likes per user to `#{lpu}`"
+          end,
+          with lpc when not is_nil(lpc) <-
+                 get_in(args, ["settings", "likes_per_user_per_card"]) do
+            "likes per user per card to `#{lpc}`"
+          end
+        ]
+        |> Enum.reject(fn x -> is_nil(x) end)
+        |> (fn
+              [bit] ->
+                bit
+
+              bits ->
+                {last, bits} = List.pop_at(bits, -1)
+                Enum.join(bits, ", ") <> " and " <> last
+            end).()
+        |> (fn clauses -> "has updated the board #{clauses}" end).()
+
+      {:ok, new_board, fn -> Repo.update(cs) end, %{changeset: cs}, event(event_text)}
     end
-  end
-
-  defp board_event_message(%{"title" => title}) do
-    "has updated the board title to `#{title}`."
-  end
-
-  defp board_event_message(%{
-         "settings" => %{
-           "likes_per_user" => lpu,
-           "likes_per_user_per_card" => lpc
-         }
-       }) do
-    """
-      has updated the board settings:
-      likes_per_user to `#{lpu}`
-      likes_per_user_per_card to `#{lpc}`.
-    """
-  end
-
-  defp board_event_message(_) do
-    "has updated the board."
   end
 
   @spec add_column(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
