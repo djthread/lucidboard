@@ -32,9 +32,9 @@ defmodule Lucidboard.Twiddler.Actions do
          }
        }) do
     """
-      has updated the board settings:<br/>
-      likes_per_user to <b>#{lpu}</b><br/>
-      likes_per_user_per_card to <b>#{lpc}</b>.
+      has updated the board settings:
+      likes_per_user to `#{lpu}`
+      likes_per_user_per_card to `#{lpc}`.
     """
   end
 
