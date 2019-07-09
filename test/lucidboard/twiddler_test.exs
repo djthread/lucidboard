@@ -15,7 +15,9 @@ defmodule Lucidboard.TwiddlerTest do
     {:ok, new_board, tx_fn, %{}, event} =
       Twiddler.act(board, action, user: user)
 
-    assert "has updated the board settings." == event.desc
+    assert "has updated the board title to `CHANGED IT` and likes per user to `3`" ==
+             event.desc
+
     assert "CHANGED IT" == new_board.title
     assert 3 == new_board.settings.likes_per_user
 

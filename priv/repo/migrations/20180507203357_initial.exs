@@ -15,7 +15,7 @@ defmodule Lucidboard.Repo.Migrations.Initial do
     create(unique_index(:users, :name))
 
     create table(:boards) do
-      add(:title, :string, null: false)
+      add(:title, :string, null: false, default: "")
       add(:settings, :jsonb, null: false, default: "{}")
       add(:user_id, references(:users), null: false)
 

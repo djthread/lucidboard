@@ -6,6 +6,7 @@ defmodule LucidboardWeb.BoardLive do
 
   alias Lucidboard.{
     Account,
+    Board,
     BoardSettings,
     Column,
     LiveBoard,
@@ -51,6 +52,7 @@ defmodule LucidboardWeb.BoardLive do
             tab: :board,
             column_changeset: new_column_changeset(),
             board_settings_changeset: nil,
+            board_changeset: nil,
             delete_confirming_card_id: nil,
             online_count: online_count(board.id),
             search: nil,
@@ -159,6 +161,29 @@ defmodule LucidboardWeb.BoardLive do
   def handle_event("card_delete_confirmed", card_id, socket) do
     live_board_action({:delete_card, id: card_id}, socket)
     {:noreply, assign(socket, :delete_confirming_card_id, nil)}
+  end
+
+  def handle_event("board_name_edit_toggle", "false", socket) do
+    {:noreply, assign(socket, :board_changeset, nil)}
+  end
+
+  def handle_event("board_name_edit_toggle", _value, socket) do
+    board = socket.assigns.board
+
+    {:noreply, assign(socket, :board_changeset, Board.changeset(board))}
+  end
+
+  def handle_event("board_name_save", form_data, socket) do
+    action = {:update_board_from_post, form_data["board"]}
+
+    case live_board_action(action, socket) do
+      {:ok, {:error, %Changeset{} = invalid_cs}} ->
+        invalid_cs = %{invalid_cs | action: :insert}
+        {:noreply, assign(socket, board_changeset: invalid_cs)}
+
+      {:ok, %{changeset: _cs}} ->
+        {:noreply, assign(socket, board_changeset: nil)}
+    end
   end
 
   def handle_event(

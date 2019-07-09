@@ -16,8 +16,33 @@ defmodule Lucidboard.Twiddler.Actions do
            Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
          %Changeset{valid?: true} = cs <- Board.changeset(board, args),
          new_board <- Changeset.apply_changes(cs) do
-      {:ok, new_board, fn -> Repo.update(cs) end, %{changeset: cs},
-       event("has updated the board settings.")}
+
+      event_text =
+        [
+          with title when not is_nil(title) <- args["title"] do
+            "title to `#{title}`"
+          end,
+          with lpu when not is_nil(lpu) <-
+                 get_in(args, ["settings", "likes_per_user"]) do
+            "likes per user to `#{lpu}`"
+          end,
+          with lpc when not is_nil(lpc) <-
+                 get_in(args, ["settings", "likes_per_user_per_card"]) do
+            "likes per user per card to `#{lpc}`"
+          end
+        ]
+        |> Enum.reject(fn x -> is_nil(x) end)
+        |> (fn
+              [bit] ->
+                bit
+
+              bits ->
+                {last, bits} = List.pop_at(bits, -1)
+                Enum.join(bits, ", ") <> " and " <> last
+            end).()
+        |> (fn clauses -> "has updated the board #{clauses}" end).()
+
+      {:ok, new_board, fn -> Repo.update(cs) end, %{changeset: cs}, event(event_text)}
     end
   end
 
