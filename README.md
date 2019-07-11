@@ -1,9 +1,12 @@
 # Lucidboard
 
-A realtime, collaborative kanban tool, built on Elixir, Phoenix, and
+A realtime, collaborative kanban tool, built on
+[Elixir](https://elixir-lang.org/), [Phoenix](https://phoenixframework.org/),
+and
 [LiveView](https://dockyard.com/blog/2018/12/12/phoenix-liveview-interactive-real-time-apps-no-need-to-write-javascript).
 
-**Status:** Still need a proper auth solution, but we are very close to being ready to share!
+**Status:** We've met our MVP goals! Now we're just adding features. As always,
+pull requests welcome!
 
 **CI:** [Lucidboard on CircleCI](https://circleci.com/gh/djthread/lucidboard) [![CircleCI](https://circleci.com/gh/djthread/lucidboard.svg?style=svg)](https://circleci.com/gh/djthread/lucidboard)
 
@@ -54,8 +57,8 @@ bin/down
 
 ## Shell Aliases
 
-These [recommended few](assets/ops/config.fish) are imported to the fish shell
-in the docker-based dev environment.
+These [recommended few](assets/ops/config.fish) aliases are imported to the
+fish shell in the docker-based dev environment.
 
 | Alias   | Full Command          |
 | ------- | --------------------- |
@@ -69,10 +72,7 @@ in the docker-based dev environment.
 | `mer`   | mix ecto.reset        |
 | `setup` | mix deps.get<br>cd assets; npm install; cd ..<br> mix ecto.setup | 
 
-## Learn more
+## License
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+Per the included [`LICENSE.txt`](LICENSE.txt), Lucidboard is made available
+under the MIT license.
