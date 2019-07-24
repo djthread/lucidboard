@@ -1,10 +1,12 @@
 // Drag and drop slot
 .lb-dnd-slot {
   line-height: 0rem;
+  height: 1rem;
 }
 
 .lb-dnd-slot.active {
   line-height: 10rem;
+  height: 8rem;
 }
 
 .dnd-dragging .lb-dnd-slot {
