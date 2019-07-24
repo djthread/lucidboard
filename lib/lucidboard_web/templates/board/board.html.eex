@@ -7,7 +7,7 @@
 <section class="board u-Width--100 columns is-desktop u-Man lb-columns">
   <%= for column <- board.columns do %>
     <div class="column <%= if Enum.count(board.columns) > 4 do %>lb-column<% end %>" data-col-id="<%= column.id %>">
-      <div class="stack stack--spaceBetween lb-body--divider u-Mbm stack--center-row">
+      <div class="stack stack--spaceBetween lb-body--divider stack--center-row">
         <h2 class="lb-heading--secondary"><%= column.title %></h2>
 
         <a href="#" phx-click="sortby_likes" phx-value="<%= column.id %>">
