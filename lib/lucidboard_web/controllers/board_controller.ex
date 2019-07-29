@@ -1,21 +1,11 @@
 defmodule LucidboardWeb.BoardController do
   use LucidboardWeb, :controller
 
-  alias Lucidboard.{
-    Account,
-    Board,
-    BoardSettings,
-    Column,
-    LiveBoard,
-    ShortBoard,
-    Twiddler
-  }
+  alias Lucidboard.{Account, LiveBoard}
 
-  alias LucidboardWeb.{CreateBoardLive, BoardLive}
+  alias LucidboardWeb.{BoardLive, CreateBoardLive}
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Controller, as: LiveViewController
-
-  @templates Application.get_env(:lucidboard, :templates)
 
   def index(conn, %{"id" => board_id}) do
     LiveViewController.live_render(conn, BoardLive,
