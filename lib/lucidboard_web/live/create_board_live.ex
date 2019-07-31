@@ -46,7 +46,7 @@ defmodule LucidboardWeb.CreateBoardLive do
     IO.inspect(params, label: "params")
     IO.inspect(Routes.board_path(Endpoint, :index, 1))
 
-    template = Enum.find(@templates, fn t -> t.name == template end)
+    template = Enum.find(@templates, fn t -> t.name == params.template end)
 
     columns =
       Enum.map(Enum.with_index(template.columns), fn {c, idx} ->
@@ -54,17 +54,26 @@ defmodule LucidboardWeb.CreateBoardLive do
       end)
 
     case Board.changeset(Board.new(), %{
-        title: title,
-        columns: columns,
-        user: conn.assigns[:user],
-        settings: BoardSettings.new(template.settings)
-    }) do
-      %{valid?: false}
+           title: params.title,
+           columns: columns,
+           user: socket.assigns.user,
+           settings: BoardSettings.new(template.settings)
+         }) do
+      %{valid?: false} = cs ->
+        {:noreply, assign(socket, :board_changeset, cs)}
+
+      cs ->
+        # with {:ok, %Board{id: id} = board} <- Twiddler.insert(board) do
+        Lucidboard.broadcast(
+          "short_boards",
+          {:new, ShortBoard.from_board(board)}
+        )
+
+        # create the board
+        # {:see_other, Routes.board_path(conn, :index, id)}
+        nil
     end
 
-    with {:ok, %Board{id: id} = board} <- Twiddler.insert(board) do
-      Lucidboard.broadcast("short_boards", {:new, ShortBoard.from_board(board)})
-      {:see_other, Routes.board_path(conn, :index, id)}
     end
   end
 end
