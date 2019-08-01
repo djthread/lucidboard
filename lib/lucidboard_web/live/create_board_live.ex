@@ -1,7 +1,8 @@
 defmodule LucidboardWeb.CreateBoardLive do
   @moduledoc "The LiveView for the create board screen"
   use Phoenix.LiveView
-  alias Lucidboard.Board
+  alias Ecto.Changeset
+  alias Lucidboard.{Account, Board, Column, BoardSettings, ShortBoard}
   alias LucidboardWeb.{BoardView, Endpoint}
 
   # alias Lucidboard.Twiddler.Op
@@ -25,7 +26,7 @@ defmodule LucidboardWeb.CreateBoardLive do
     {:stop, socket}
   end
 
-  def mount(_params, socket) do
+  def mount(params, socket) do
     template_options =
       for %{name: name, columns: columns} <- @templates do
         {"#{name} (#{Enum.join(columns, ", ")})", name}
@@ -33,6 +34,7 @@ defmodule LucidboardWeb.CreateBoardLive do
 
     socket =
       socket
+      |> assign(:user, params.user_id && Account.get(params.user_id))
       |> assign(:template_options, template_options)
       |> assign(
         :board_changeset,
@@ -43,21 +45,28 @@ defmodule LucidboardWeb.CreateBoardLive do
   end
 
   def handle_event("create", %{"board" => params}, socket) do
-    IO.inspect(params, label: "params")
-    IO.inspect(Routes.board_path(Endpoint, :index, 1))
+    # IO.inspect(params, label: "params")
+    # IO.inspect(Routes.board_path(Endpoint, :index, 1))
 
-    template = Enum.find(@templates, fn t -> t.name == params.template end)
+    {columns, settings} =
+      case Enum.find(@templates, fn t -> t.name == params["template"] end) do
+        nil ->
+          {nil, nil}
 
-    columns =
-      Enum.map(Enum.with_index(template.columns), fn {c, idx} ->
-        Column.new(title: c, pos: idx)
-      end)
+        tpl ->
+          {
+            Enum.map(Enum.with_index(tpl.columns), fn {c, idx} ->
+              Column.new([title: c, pos: idx], :just_map)
+            end),
+            BoardSettings.new(tpl.settings, :just_map)
+          }
+      end
 
     case Board.changeset(Board.new(), %{
-           title: params.title,
+           title: params["title"],
            columns: columns,
-           user: socket.assigns.user,
-           settings: BoardSettings.new(template.settings)
+           settings: settings,
+           user: socket.assigns.user
          }) do
       %{valid?: false} = cs ->
         {:noreply, assign(socket, :board_changeset, cs)}
@@ -66,14 +75,12 @@ defmodule LucidboardWeb.CreateBoardLive do
         # with {:ok, %Board{id: id} = board} <- Twiddler.insert(board) do
         Lucidboard.broadcast(
           "short_boards",
-          {:new, ShortBoard.from_board(board)}
+          {:new, cs |> Changeset.apply_changes() |> ShortBoard.from_board()}
         )
 
         # create the board
         # {:see_other, Routes.board_path(conn, :index, id)}
         nil
-    end
-
     end
   end
 end
