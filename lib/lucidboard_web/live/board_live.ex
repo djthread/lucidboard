@@ -33,7 +33,7 @@ defmodule LucidboardWeb.BoardLive do
     {:stop, socket}
   end
 
-  def mount(%{id: board_id, user_id: user_id}, socket) do
+  def mount(%{path_params: %{"id" => board_id}, user_id: user_id}, socket) do
     user = user_id && Account.get(user_id)
 
     case LiveBoard.call(String.to_integer(board_id), :state) do

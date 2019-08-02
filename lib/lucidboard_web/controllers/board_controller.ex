@@ -1,32 +1,6 @@
 defmodule LucidboardWeb.BoardController do
   use LucidboardWeb, :controller
-
   alias Lucidboard.{Account, LiveBoard}
-
-  alias LucidboardWeb.{BoardLive, CreateBoardLive}
-  alias LucidboardWeb.Router.Helpers, as: Routes
-  alias Phoenix.LiveView.Controller, as: LiveViewController
-
-  def index(conn, %{"id" => board_id}) do
-    LiveViewController.live_render(conn, BoardLive,
-      session: %{
-        id: board_id,
-        user_id: get_session(conn, :user_id)
-      }
-    )
-  end
-
-  def create_form(%{assigns: %{user: nil}} = conn, _) do
-    {:see_other, Routes.user_path(conn, :signin)}
-  end
-
-  def create_form(conn, _params) do
-    LiveViewController.live_render(conn, CreateBoardLive,
-      session: %{
-        user_id: get_session(conn, :user_id)
-      }
-    )
-  end
 
   def dnd_into_junction(%{body_params: p} = conn, %{"id" => board_id}) do
     user = conn |> get_session(:user_id) |> Account.get!()

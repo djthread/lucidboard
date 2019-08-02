@@ -39,10 +39,11 @@ defmodule LucidboardWeb.Router do
     get("/dashboard", DashboardController, :index)
     get("/boards", DashboardController, :index)
 
-    get("/create-board", BoardController, :create_form)
+    # get("/create-board", BoardController, :create_form)
     post("/create-board", BoardController, :create)
 
-    get("/boards/:id", BoardController, :index)
+    live("/boards/:id", BoardLive, session: [:path_params, :user_id])
+    live("/create-board", CreateBoardLive, session: [:path_params, :user_id])
 
     post("/boards/:id/dnd-into-junction", BoardController, :dnd_into_junction)
     post("/boards/:id/dnd-into-pile", BoardController, :dnd_into_pile)

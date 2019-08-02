@@ -2,14 +2,9 @@ defmodule LucidboardWeb.CreateBoardLive do
   @moduledoc "The LiveView for the create board screen"
   use Phoenix.LiveView
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Board, BoardSettings, Column, ShortBoard, Twiddler}
-  alias LucidboardWeb.{BoardView, Endpoint}
-
-  # alias Lucidboard.Twiddler.Op
-  # alias LucidboardWeb.{BoardView, Endpoint}
+  alias Lucidboard.{Account, Board, BoardSettings, Column, Twiddler}
+  alias LucidboardWeb.{BoardLive, BoardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
-  # alias Phoenix.LiveView.Socket
-  # alias Phoenix.Socket.Broadcast
 
   @templates Application.get_env(:lucidboard, :templates)
 
@@ -45,9 +40,6 @@ defmodule LucidboardWeb.CreateBoardLive do
   end
 
   def handle_event("create", %{"board" => params}, socket) do
-    # IO.inspect(params, label: "params")
-    # IO.inspect(Routes.board_path(Endpoint, :index, 1))
-
     {columns, settings} =
       case Enum.find(@templates, fn t -> t.name == params["template"] end) do
         nil ->
@@ -74,15 +66,8 @@ defmodule LucidboardWeb.CreateBoardLive do
       {:error, %Changeset{} = cs} ->
         {:noreply, assign(socket, :board_changeset, cs)}
 
-      {:ok, %Board{} = board} ->
-        Lucidboard.broadcast(
-          "short_boards",
-          {:new, ShortBoard.from_board(board)}
-        )
-
-        # create the board
-        # {:see_other, Routes.board_path(conn, :index, id)}
-        nil
+      {:ok, %Board{id: id}} ->
+        {:stop, redirect(socket, to: Routes.live_path(socket, BoardLive, id))}
     end
   end
 end

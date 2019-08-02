@@ -3,9 +3,9 @@ defmodule Lucidboard.Twiddler do
   A context for board operations
   """
   import Ecto.Query
-  alias Ecto.Changeset
   alias Ecto.Association.NotLoaded
-  alias Lucidboard.{Board, BoardRole, Event}
+  alias Ecto.Changeset
+  alias Lucidboard.{Board, BoardRole, Event, ShortBoard}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.{Actions, Op}
 
@@ -126,8 +126,9 @@ defmodule Lucidboard.Twiddler do
       {:ok, {:error, %Changeset{} = cs}} ->
         {:error, cs}
 
-      {:ok, {:ok, %Board{} = board}} ->
-        {:ok, Repo.preload(board, :user)}
+      {:ok, {:ok, %Board{} = b}} ->
+        Lucidboard.broadcast("short_boards", {:new, ShortBoard.from_board(b)})
+        {:ok, Repo.preload(b, :user)}
     end
   end
 end
