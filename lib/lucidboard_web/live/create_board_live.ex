@@ -2,7 +2,7 @@ defmodule LucidboardWeb.CreateBoardLive do
   @moduledoc "The LiveView for the create board screen"
   use Phoenix.LiveView
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Board, Column, BoardSettings, ShortBoard}
+  alias Lucidboard.{Account, Board, BoardSettings, Column, ShortBoard, Twiddler}
   alias LucidboardWeb.{BoardView, Endpoint}
 
   # alias Lucidboard.Twiddler.Op
@@ -62,20 +62,22 @@ defmodule LucidboardWeb.CreateBoardLive do
           }
       end
 
-    case Board.changeset(Board.new(), %{
-           title: params["title"],
-           columns: columns,
-           settings: settings,
-           user: socket.assigns.user
-         }) do
-      %{valid?: false} = cs ->
+    [
+      title: params["title"],
+      columns: columns,
+      settings: settings,
+      user: socket.assigns.user
+    ]
+    |> Board.new()
+    |> Twiddler.insert()
+    |> case do
+      {:error, %Changeset{} = cs} ->
         {:noreply, assign(socket, :board_changeset, cs)}
 
-      cs ->
-        # with {:ok, %Board{id: id} = board} <- Twiddler.insert(board) do
+      {:ok, %Board{} = board} ->
         Lucidboard.broadcast(
           "short_boards",
-          {:new, cs |> Changeset.apply_changes() |> ShortBoard.from_board()}
+          {:new, ShortBoard.from_board(board)}
         )
 
         # create the board
