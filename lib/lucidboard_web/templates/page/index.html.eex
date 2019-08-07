@@ -29,9 +29,17 @@
     <li>Whatever else you might imagine!</li>
   </ul>
 
-  <h3 class="subtitle is-3">Find us on Github!</h3>
+  <h3 class="subtitle is-3">We Want Your Feedback!</h3>
+
+  <p>Have an idea for Lucidboard? Please <a
+  href="https://github.com/djthread/lucidboard/issues/new">create an
+  issue</a> on Github or <a href="mailto:thread@threadbox.net">email Adam</a>
+  so we can discuss! If it makes sense, we will get it prioritized &
+  implemented!</p>
+
+  <h3 class="subtitle is-3">Find the Code on Github!</h3>
 
   <p><a href="https://github.com/djthread/lucidboard">Lucidboard is
-  MIT-licensed on Github.com</a>. See the README for instructions that should
-  get you a working dev environment in minutes.</p>
+  MIT-licensed on Github.com</a>. Pull requests welcome! (See the README for
+  instructions that should get you a working dev environment in minutes.)</p>
 </main>
