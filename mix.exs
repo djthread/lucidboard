@@ -6,7 +6,7 @@ defmodule Lucidboard.MixProject do
     [
       app: :lucidboard,
       version: "0.0.1",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -28,8 +28,6 @@ defmodule Lucidboard.MixProject do
       extra_applications: [
         :logger,
         :runtime_tools,
-        :toml,
-        :toml_transformer,
         :scrivener_ecto,
         :ueberauth,
       ]
@@ -56,10 +54,7 @@ defmodule Lucidboard.MixProject do
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
-      {:distillery, "~> 2.0"},
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
-      {:toml_transformer,
-       git: "https://github.com/djthread/toml_transformer.git", app: false},
       {:ueberauth_github, "~> 0.7"},
       {:ueberauth_pingfed,
        git: "https://github.com/borodark/ueberauth_pingfed.git"},
