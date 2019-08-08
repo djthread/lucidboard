@@ -11,6 +11,7 @@ defmodule Lucidboard.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
+      releases: releases(),
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
@@ -29,7 +30,7 @@ defmodule Lucidboard.MixProject do
         :logger,
         :runtime_tools,
         :scrivener_ecto,
-        :ueberauth,
+        :ueberauth
       ]
     ]
   end
@@ -70,6 +71,15 @@ defmodule Lucidboard.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"],
       lint: "credo --strict"
+    ]
+  end
+
+  defp releases do
+    [
+      lucidboard: [
+        include_executables_for: [:unix],
+        applications: [runtime_tools: :permanent]
+      ]
     ]
   end
 end

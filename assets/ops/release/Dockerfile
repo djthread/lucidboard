@@ -2,7 +2,7 @@
 # This should match the version of Alpine that the elixir image uses
 ARG ALPINE_VERSION=3.9
 
-FROM elixir:1.8.1-alpine AS builder
+FROM elixir:1.9.1-alpine AS builder
 
 ARG QL_MODE
 ENV QL_MODE=$QL_MODE
@@ -21,8 +21,7 @@ ARG SKIP_PHOENIX=false
 # can be built
 ARG PHOENIX_SUBDIR=.
 
-ENV SKIP_PHOENIX=${SKIP_PHOENIX} \
-    APP_NAME=${APP_NAME} \
+ENV APP_NAME=${APP_NAME} \
     APP_VSN=${APP_VSN} \
     MIX_ENV=${MIX_ENV} \
     HEX_UNSAFE_HTTPS=${QL_MODE}
@@ -53,21 +52,21 @@ RUN mix do deps.get, deps.compile, compile
 # This step builds assets for the Phoenix app (if there is one)
 # If you aren't building a Phoenix app, pass `--build-arg SKIP_PHOENIX=true`
 # This is mostly here for demonstration purposes
-RUN if [ ! "$SKIP_PHOENIX" = "true" ]; then \
-  cd ${PHOENIX_SUBDIR}/assets && \
+RUN cd ${PHOENIX_SUBDIR}/assets && \
   yarn install && \
   yarn deploy && \
   cd .. && \
-  mix phx.digest; \
-fi
+  mix phx.digest
 
 RUN \
   mkdir -p /opt/built && \
-  mix release --verbose && \
-  cp _build/${MIX_ENV}/rel/${APP_NAME}/releases/${APP_VSN}/${APP_NAME}.tar.gz /opt/built && \
-  cd /opt/built && \
-  tar -xzf ${APP_NAME}.tar.gz && \
-  rm ${APP_NAME}.tar.gz
+  mix release lucidboard && \
+  cp -a _build/${MIX_ENV}/rel/${APP_NAME}/* /opt/built && \
+  cd /opt/built
+  # cp _build/${MIX_ENV}/rel/${APP_NAME}/releases/${APP_VSN}/${APP_NAME}.tar.gz /opt/built && \
+  # cd /opt/built && \
+  # tar -xzf ${APP_NAME}.tar.gz && \
+  # rm ${APP_NAME}.tar.gz
 
 # From this line onwards, we're in a new image, which will be the image used in production
 FROM alpine:${ALPINE_VERSION}
@@ -76,12 +75,9 @@ FROM alpine:${ALPINE_VERSION}
 ARG APP_NAME
 
 RUN apk update && \
-    apk add --no-cache \
-      bash \
-      openssl-dev
+    apk add --no-cache bash openssl-dev
 
-ENV REPLACE_OS_VARS=true \
-    APP_NAME=${APP_NAME}
+ENV APP_NAME=${APP_NAME}
 
 WORKDIR /opt/app
 
