@@ -11,7 +11,7 @@ config :lucidboard, Lucidboard.Repo,
 
 config :lucidboard,
        :auth_provider,
-       String.to_atom(System.get_env("AUTH_PROVIDER", "github"))
+       String.to_atom(System.get_env("AUTH_PROVIDER", "dumb"))
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
   client_id: System.get_env("GITHUB_CLIENT_ID"),
