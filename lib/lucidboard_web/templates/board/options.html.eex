@@ -4,7 +4,7 @@
     <ul class="u-Mbl">
     <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
       <li class="card lb-card-manage u-Mbm" phx-click="column_edit" phx-value="<%= id %>">
-        <%= if pos > 0 || pos < length(@board.columns) - 1 do %>
+        <%= if has_role?(@user, @board, :owner) && (pos > 0 || pos < length(@board.columns) - 1) do %>
         <div class="lb-card-manage__arrows <%= if pos === 0 do %> lb-card-manage__arrows--first <% end %>">
           <%= if pos > 0 do %>
             <a phx-click="col_up" phx-value="<%= id %>" href="#" class="lb-card-manage__arrow">
@@ -21,65 +21,50 @@
         <div class="lb-card-manage__title">
           <%= title %>
         </div>
-        <a class="u-Phm" href="#" phx-click="delete_column" phx-value="<%= id %>">
-          <i class="fa fa-minus-circle" aria-hidden="true"></i>
-        </a>
+        <%= if has_role?(@user, @board, :owner) do %>
+          <a class="u-Phm" href="#" phx-click="delete_column" phx-value="<%= id %>">
+            <i class="fa fa-minus-circle" aria-hidden="true"></i>
+          </a>
+        <% end %>
       </li>
     <% end %>
     </ul>
 
-    <%
-      cs_data = Ecto.Changeset.apply_changes(@column_changeset)
-      {button_txt, title} =
-        if cs_data.id,
-          do: {"Update", "Editing Column: #{cs_data.title}"},
-          else: {"Create", "Create Column"}
-    %>
+    <%= if has_role?(@user, @board, :owner) do %>
+      <%
+        cs_data = Ecto.Changeset.apply_changes(@column_changeset)
+        {button_txt, title} =
+          if cs_data.id,
+            do: {"Update", "Editing Column: #{cs_data.title}"},
+            else: {"Create", "Create Column"}
+      %>
 
-    <h3 class="lb-heading--tertiary u-Mbs"><%= title %></h3>
+      <h3 class="lb-heading--tertiary u-Mbs"><%= title %></h3>
 
-    <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
-      <%= text_input f, :title, placeholder: "New column title", class: "input lb-input u-Mbm" %>
-      <%= error_tag f, :title %>
-      <%= submit button_txt, phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+      <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
+        <%= text_input f, :title, placeholder: "New column title", class: "input lb-input u-Mbm" %>
+        <%= error_tag f, :title %>
+        <%= submit button_txt, phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+      <% end %>
     <% end %>
   </div>
 
-<!--
-<section class="column-manager clearpls">
-<h2>Manage Columns</h2>
-
-    <h3 class="subtitle u-Mbm"><%= title %></h3>
-    <%
-      cs_data = Ecto.Changeset.apply_changes(@column_changeset)
-
-      {button_txt, title} =
-        if cs_data.id,
-          do: {"Update", "Editing Column: #{cs_data.title}"},
-          else: {"Create", "Create Column"}
-    %>
-
-    <h3><%= title %></h3>
-
-    <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
-      <%= text_input f, :title, placeholder: "New column title", class: "input u-Mbm" %>
-      <%= error_tag f, :title %>
-      <%= submit button_txt, phx_disable_with: "Saving...", class: "button is-primary" %>
-    <% end %>
-  </div>
-  -->
   <div class="stack__item stack__item--70s@m stack--split@m">
   <div class="stack__item">
     <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
     <%= form_for @board_settings_changeset, "#", [phx_submit: :board_settings_save], fn f -> %>
       <%= label(:likes_per_user, "Likes Per User") %>
-      <%= text_input f, :likes_per_user, class: "input lb-input u-Mbm" %>
+      <%= text_input f, :likes_per_user, class: "input lb-input u-Mbm",
+            disabled: not has_role?(@user, @board, :owner) %>
       <%= error_tag f, :likes_per_user %>
       <%= label(:likes_per_user, "Likes Per User per Card") %>
-      <%= text_input f, :likes_per_user_per_card, class: "input lb-input u-Mbm" %>
+      <%= text_input f, :likes_per_user_per_card, class: "input lb-input u-Mbm",
+            disabled: not has_role?(@user, @board, :owner) %>
       <%= error_tag f, :likes_per_user_per_card %>
-      <br />
-      <%= submit "Save", phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+      <%= if has_role?(@user, @board, :owner) do %>
+        <br />
+        <%= submit "Save", phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+      <% end %>
     <% end %>
   </div>
 
@@ -94,7 +79,11 @@
           onInput="datalistHelper.roleUpdate(event)"
           list="matches"
           placeholder="Find User..."
+          <%= unless has_role?(@user, @board, :owner) do %>
+          disabled="true"
+          <% end %>
       />
+      <%= if has_role?(@user, @board, :owner) do %>
       <datalist id="matches">
         <%= for user <- @role_users_suggest do %>
           <option data-value="<%= user.id %>"><%= display_name(user) %></option>
@@ -102,6 +91,7 @@
       </datalist>
       <input type="hidden" name="user" id="userId">
       <input type="submit" value="Grant" class="button lb-button is-primary">
+      <% end %>
       </form>
       <ul>
         <% more_than_one_owner = more_than_one_owner(@board.board_roles) %>

@@ -28,6 +28,8 @@ defmodule Lucidboard.LiveBoard.Agent do
 
   @impl true
   def init(board_id) do
+    Logger.info("Initializing board agent (id #{board_id})")
+
     case {Twiddler.by_id(board_id), TimeMachine.events(board_id)} do
       {%Board{} = board, events} -> {:ok, %State{board: board, events: events}}
       _ -> {:stop, :not_found}

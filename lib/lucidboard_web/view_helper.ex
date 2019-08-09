@@ -55,7 +55,9 @@ defmodule LucidboardWeb.ViewHelper do
   end
 
   def avatar(%{avatar_url: url}) do
-    raw(~s[<div class="lb-icon-avatar" style="background-image:url('#{url}')"></div>])
+    raw("""
+    <div class="lb-icon-avatar" style="background-image:url('#{url}')"></div>\
+    """)
   end
 
   @spec more_than_one_owner([BoardRole.t()]) :: boolean
@@ -69,32 +71,32 @@ defmodule LucidboardWeb.ViewHelper do
   end
 
   def login_button do
-    Lucidboard.auth_provider()
-    |> case do
-      :dumb ->
-        ~E"""
-        <a class="button lb-button is-primary" href="/signin">
-          <span class="icon"><%= fas("smile") %></span>
-          <span>Sign in</span>
-        </a>
-        """
+    raw(
+      case Lucidboard.auth_provider() do
+        :dumb ->
+          ~E"""
+          <a class="button lb-button is-primary" href="/signin">
+            <span class="icon"><%= fas("smile") %></span>
+            <span>Sign in</span>
+          </a>
+          """
 
-      :github ->
-        ~E"""
-        <a class="button lb-button is-primary" href="/auth/github">
-          <span class="icon"><%= fab("github") %></span>
-          <span>Sign in with GitHub</span>
-        </a>
-        """
+        :github ->
+          ~E"""
+          <a class="button lb-button is-primary" href="/auth/github">
+            <span class="icon"><%= fab("github") %></span>
+            <span>Sign in with GitHub</span>
+          </a>
+          """
 
-      :pingfed ->
-        ~E"""
-        <a class="button lb-button is-primary" href="/auth/pingfed">
-          <span class="icon"><%= fab("pingfed") %></span>
-          <span>Sign in with PingFed</span>
-        </a>
-        """
-    end
-    |> raw()
+        :pingfed ->
+          ~E"""
+          <a class="button lb-button is-primary" href="/auth/pingfed">
+            <span class="icon"><%= fab("pingfed") %></span>
+            <span>Sign in with PingFed</span>
+          </a>
+          """
+      end
+    )
   end
 end

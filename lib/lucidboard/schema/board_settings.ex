@@ -27,6 +27,6 @@ defmodule Lucidboard.BoardSettings do
 
     settings
     |> cast(attrs, [:likes_per_user, :likes_per_user_per_card])
-    |> validate_number(:likes_per_user_per_card, less_than: per_user)
+    |> validate_number(:likes_per_user_per_card, less_than_or_equal_to: per_user)
   end
 end

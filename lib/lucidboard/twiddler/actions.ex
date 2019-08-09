@@ -16,7 +16,6 @@ defmodule Lucidboard.Twiddler.Actions do
            Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
          %Changeset{valid?: true} = cs <- Board.changeset(board, args),
          new_board <- Changeset.apply_changes(cs) do
-
       event_text =
         [
           with title when not is_nil(title) <- args["title"] do
@@ -42,7 +41,8 @@ defmodule Lucidboard.Twiddler.Actions do
             end).()
         |> (fn clauses -> "has updated the board #{clauses}" end).()
 
-      {:ok, new_board, fn -> Repo.update(cs) end, %{changeset: cs}, event(event_text)}
+      {:ok, new_board, fn -> Repo.update(cs) end, %{changeset: cs},
+       event(event_text)}
     end
   end
 
