@@ -17,7 +17,7 @@
 
     <div id="navbarLucidboard" class="navbar-menu">
       <div class="navbar-start">
-        <%= render("header/navbar_menu.html", assigns) %>
+        <%= render("accoutrements/navbar_menu.html", assigns) %>
       </div>
 
       <div class="navbar-end">
