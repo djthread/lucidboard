@@ -1,0 +1,24 @@
+<% settings = Ecto.Changeset.apply_changes(@board_settings_changeset) %>
+<section class="stack stack--split@m stack--large u-Phm">
+  <div class="stack__item stack__item--70s@m stack--split@m">
+  <div class="stack__item">
+    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
+    <dl>
+    <dt>Likes Per User</dt>
+    <dd><%= settings.likes_per_user %></dd>
+    </dl>
+    <dl>
+    <dt>Likes Per User Per Card</dt>
+    <dd><%= settings.likes_per_user_per_card %></dd>
+    </dl>
+  </div>
+
+  <div class="stack__item">
+    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Roles</h2>
+      <%= render(
+        LucidboardWeb.BoardView,
+        "_roles.html",
+        board: @board, editable: false) %>
+    </div>
+  </div>
+</section>

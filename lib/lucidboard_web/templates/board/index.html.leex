@@ -68,9 +68,18 @@
 
 <%=
   case @tab do
-    :board -> render(LucidboardWeb.BoardView, "board.html", assigns)
-    :events -> render(LucidboardWeb.BoardView, "events.html", assigns)
-    :options -> render(LucidboardWeb.BoardView, "options.html", assigns)
+    :board ->
+      render(LucidboardWeb.BoardView, "board.html", assigns)
+
+    :events ->
+      render(LucidboardWeb.BoardView, "events.html", assigns)
+
+    :options ->
+      if has_role?(@user, @board, :owner) do
+        render(LucidboardWeb.BoardView, "options.html", assigns)
+      else
+        render(LucidboardWeb.BoardView, "options-show.html", assigns)
+      end
   end
 %>
 
