@@ -28,6 +28,7 @@ defmodule LucidboardWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :index)
+    get("/changelog", PageController, :changelog)
 
     get("/signin", UserController, :signin)
     post("/signin", AuthController, :dumb_signin)

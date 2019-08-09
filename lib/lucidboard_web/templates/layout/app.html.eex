@@ -44,6 +44,8 @@
     <%= Map.get(assigns, :inner_layout)
           || render(@view_module, @view_template, assigns) %>
 
+    &copy; 2019 Lucidboard &bull; <a href="https://github.com/djthread/lucidboard">GitHub</a> &bull; <a href="/changelog">CHANGELOG</a>
+
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
