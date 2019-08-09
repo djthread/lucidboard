@@ -7,6 +7,10 @@ defmodule LucidboardWeb.PageView do
                   |> Earmark.as_html!()
 
   def render("changelog.html", _params) do
-    raw(@changelog_html)
+    raw("""
+    <div class="content">
+      #{@changelog_html}
+    </div>
+    """)
   end
 end
