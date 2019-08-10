@@ -4,12 +4,12 @@ defmodule Lucidboard.LiveBoardTest do
   alias Lucidboard.{Board, Column, LiveBoard, Seeds, Twiddler}
 
   test "basic LiveBoard lifecycle" do
-    %{id: user_id} = user = Seeds.get_user()
+    user = Seeds.get_user()
 
     # Create a board record in the db
     {:ok, %Board{id: board_id, columns: [%Column{id: column_id}]}} =
       [
-        user_id: user_id,
+        user: user,
         title: "Awesome",
         columns: [Column.new(title: "foo", pos: 0)]
       ]
