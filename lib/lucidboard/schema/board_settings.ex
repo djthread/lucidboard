@@ -13,8 +13,10 @@ defmodule Lucidboard.BoardSettings do
   end
 
   @spec new(keyword) :: BoardSettings.t()
-  def new(fields \\ []) do
-    struct(__MODULE__, fields)
+  def new(fields \\ [], type \\ :struct) do
+    if type == :struct,
+      do: struct(__MODULE__, fields),
+      else: Enum.into(fields, %{})
   end
 
   @doc false

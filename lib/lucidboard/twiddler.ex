@@ -3,8 +3,9 @@ defmodule Lucidboard.Twiddler do
   A context for board operations
   """
   import Ecto.Query
+  alias Ecto.Association.NotLoaded
   alias Ecto.Changeset
-  alias Lucidboard.{Board, BoardRole, Event}
+  alias Lucidboard.{Board, BoardRole, Event, ShortBoard}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.{Actions, Op}
 
@@ -110,17 +111,24 @@ defmodule Lucidboard.Twiddler do
 
   Creates 2 records: the Board and the BoardRole for the creator
   """
-  @spec insert(Board.t() | Ecto.Changeset.t(Board.t())) ::
-          {:ok, Board.t()} | {:error, any}
+  @spec insert(Board.t()) :: {:ok, Board.t()} | {:error, Changeset.t()}
   def insert(%Board{user: user, user_id: user_id} = board) do
     tx_fn = fn ->
       board_role = BoardRole.new(user_id: user_id || user.id, role: :owner)
-      tail = with %Ecto.Association.NotLoaded{} <- board.board_roles, do: []
-      Repo.insert(%{board | board_roles: [board_role | tail]})
+      tail = with %NotLoaded{} <- board.board_roles, do: []
+
+      %{board | board_roles: [board_role | tail]}
+      |> Board.changeset()
+      |> Repo.insert()
     end
 
-    with {:ok, {:ok, the_board}} <- Repo.transaction(tx_fn) do
-      {:ok, Repo.preload(the_board, :user)}
+    case Repo.transaction(tx_fn) do
+      {:ok, {:error, %Changeset{} = cs}} ->
+        {:error, cs}
+
+      {:ok, {:ok, %Board{} = b}} ->
+        Lucidboard.broadcast("short_boards", {:new, ShortBoard.from_board(b)})
+        {:ok, Repo.preload(b, :user)}
     end
   end
 end

@@ -16,9 +16,13 @@ defmodule Lucidboard.Column do
   end
 
   @spec new(keyword) :: Column.t()
-  def new(fields \\ []) do
+  def new(fields \\ [], type \\ :struct) do
     defaults = [id: UUID.generate(), pos: 0, piles: []]
-    struct(__MODULE__, Keyword.merge(defaults, fields))
+    data = Keyword.merge(defaults, fields)
+
+    if type == :struct,
+      do: struct(__MODULE__, data),
+      else: Enum.into(data, %{})
   end
 
   @doc false

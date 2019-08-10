@@ -12,7 +12,7 @@
 
   <%= for short_board <- @short_boards do %>
     <a class="stack lb-card lb-card--clickable u-Pal u-Mbm"
-      href="<%= Routes.board_path(LucidboardWeb.Endpoint, :index, short_board.id) %>">
+      href="<%= Routes.live_path(LucidboardWeb.Endpoint, BoardLive, short_board.id) %>">
       <div class="content">
         <h3 class="lb-subtitle subtitle is-marginless">
           <%= short_board.title %>

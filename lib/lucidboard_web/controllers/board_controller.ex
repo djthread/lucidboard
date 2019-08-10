@@ -1,68 +1,6 @@
 defmodule LucidboardWeb.BoardController do
   use LucidboardWeb, :controller
-
-  alias Lucidboard.{
-    Account,
-    Board,
-    BoardSettings,
-    Column,
-    LiveBoard,
-    ShortBoard,
-    Twiddler
-  }
-
-  alias LucidboardWeb.BoardLive
-  alias LucidboardWeb.Router.Helpers, as: Routes
-  alias Phoenix.LiveView.Controller, as: LiveViewController
-
-  @templates Application.get_env(:lucidboard, :templates)
-
-  def index(conn, %{"id" => board_id}) do
-    LiveViewController.live_render(conn, BoardLive,
-      session: %{
-        id: board_id,
-        user_id: get_session(conn, :user_id)
-      }
-    )
-  end
-
-  def create_form(%{assigns: %{user: nil}} = conn, _) do
-    {:see_other, Routes.user_path(conn, :signin)}
-  end
-
-  def create_form(conn, _params) do
-    template_options =
-      for %{name: name, columns: columns} <- @templates do
-        {"#{name} (#{Enum.join(columns, ", ")})", name}
-      end
-
-    render(conn, "create.html",
-      template_options: template_options,
-      token: get_csrf_token()
-    )
-  end
-
-  def create(conn, %{"title" => title, "template" => template}) do
-    template = Enum.find(@templates, fn t -> t.name == template end)
-
-    columns =
-      Enum.map(Enum.with_index(template.columns), fn {c, idx} ->
-        Column.new(title: c, pos: idx)
-      end)
-
-    board =
-      Board.new(
-        title: title,
-        columns: columns,
-        user: conn.assigns[:user],
-        settings: BoardSettings.new(template.settings)
-      )
-
-    with {:ok, %Board{id: id} = board} <- Twiddler.insert(board) do
-      Lucidboard.broadcast("short_boards", {:new, ShortBoard.from_board(board)})
-      {:see_other, Routes.board_path(conn, :index, id)}
-    end
-  end
+  alias Lucidboard.{Account, LiveBoard}
 
   def dnd_into_junction(%{body_params: p} = conn, %{"id" => board_id}) do
     user = conn |> get_session(:user_id) |> Account.get!()

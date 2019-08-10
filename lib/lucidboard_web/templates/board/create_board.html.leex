@@ -1,13 +1,19 @@
+<%
+  target = Routes.board_path(LucidboardWeb.Endpoint, :create)
+  opts = [phx_submit: :create]
+%>
 <div class="centered-column">
   <h1 class="title">Create a Lucidboard</h1>
 
   <div class="card">
     <div class="lb-card__content card-content">
-    <%= form_for @conn, Routes.board_path(@conn, :create), fn f -> %>
-
+    <%= form_for @board_changeset, target, opts, fn f -> %>
       <div class="field">
         <div class="control is-medium">
-          <%= text_input f, :title, class: "lb-input input is-medium", placeholder: "Title" %>
+          <%= text_input(f, :title,
+            class: "lb-input input is-medium",
+            placeholder: "Title") %>
+          <%= error_tag(f, :title) %>
         </div>
       </div>
 
@@ -16,13 +22,16 @@
         <div class="control">
           <div class="select lb-select">
             <%= select(f, :template, @template_options) %>
+            <%= error_tag(f, :template) %>
           </div>
         </div>
       </div>
 
       <div class="field">
         <div class="control">
-          <button class="button lb-button is-primary">Create</button>
+          <button class="button lb-button is-primary">
+            Create
+          </button>
         </div>
       </div>
 
