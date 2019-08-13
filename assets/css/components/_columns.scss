@@ -1,7 +1,7 @@
 .lb-columns {
   @media all and (min-width: $widescreen) {
     overflow-x: auto;
-    min-height: 500px;
+    min-height: calc(100vh - 220px);
   }
 }
 
@@ -10,4 +10,8 @@
     max-width: 350px;
     min-width: 350px;
   }
+}
+
+main {
+  min-height: calc(100vh - 185px);
 }
