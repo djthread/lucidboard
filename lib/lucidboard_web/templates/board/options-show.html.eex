@@ -3,14 +3,8 @@
   <div class="stack__item stack__item--70s@m stack--split@m">
   <div class="stack__item">
     <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
-    <dl>
-    <dt>Likes Per User</dt>
-    <dd><%= settings.likes_per_user %></dd>
-    </dl>
-    <dl>
-    <dt>Likes Per User Per Card</dt>
-    <dd><%= settings.likes_per_user_per_card %></dd>
-    </dl>
+    <p>Likes Per User: <strong><%= settings.likes_per_user %></strong></p>
+    <p>Likes Per User Per Card: <strong><%= settings.likes_per_user_per_card %></strong></p>
   </div>
 
   <div class="stack__item">
