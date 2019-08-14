@@ -39,10 +39,12 @@
             </g>
         </symbol>
     </svg>
-    <%= render("header/header.html", assigns) %>
+    <%= render("accoutrements/header.html", assigns) %>
 
     <%= Map.get(assigns, :inner_layout)
           || render(@view_module, @view_template, assigns) %>
+
+    <%= render("accoutrements/footer.html", assigns) %>
 
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>

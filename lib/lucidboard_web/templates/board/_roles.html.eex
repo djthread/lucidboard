@@ -1,0 +1,44 @@
+<% more_than_one_owner = more_than_one_owner(@board.board_roles) %>
+
+<%= if @editable do %>
+<form phx-change="role_suggest"
+    phx-submit="grant"
+    onSubmit="datalistHelper.addIdOnSubmit(event)"
+    class="u-Mbl">
+  Grant owner access to
+  <input
+      class="input lb-input u-Mbm"
+      name="userSearch"
+      type="text"
+      onInput="datalistHelper.roleUpdate(event)"
+      list="matches"
+      placeholder="Find User..."
+      <%= unless has_role?(@user, @board, :owner) do %>
+      disabled="true"
+      <% end %>
+  />
+  <%= if has_role?(@user, @board, :owner) do %>
+    <datalist id="matches">
+      <%= for user <- @role_users_suggest do %>
+        <option data-value="<%= user.id %>"><%= display_name(user) %></option>
+      <% end %>
+    </datalist>
+    <input type="hidden" name="user" id="userId">
+    <input type="submit" value="Grant" class="button lb-button is-primary">
+  <% end %>
+</form>
+<% end %>
+<ul>
+  <%= for role <- @board.board_roles do %>
+    <li class="stack stack--center-row">
+      <%= avatar(role.user) %>
+      <%= display_name(role.user) %>
+      (<%= role.role %>)
+      <%= if @editable and more_than_one_owner do %>
+        <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
+          <%= fas("user-minus") %>
+        </a>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

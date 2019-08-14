@@ -1,0 +1,8 @@
+<div class="c-Footer footer">
+  &copy; 2019 Lucidboard &bull;
+  <a href="https://github.com/djthread/lucidboard">GitHub</a> &bull;
+  <a href="/changelog">CHANGELOG</a> &bull;
+  We want your feedback!
+    Submit a <a href="https://github.com/djthread/lucidboard/issues/new">GitHub issue</a>
+    or <a href="mailto:thread@threadbox.net">email Adam</a>.
+</div>

@@ -1,4 +1,4 @@
-<section class="stack stack--split@m stack--medium stack--spaceBetween@m u-Phm">
+<section class="stack stack--split@m stack--medium stack--spaceBetween@m u-Phm u-Pbl">
   <div class="stack__item">
     <ul>
     <%= for event <- Enum.reverse(@events) do %>

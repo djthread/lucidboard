@@ -1,11 +1,16 @@
-<section class="stack stack--split@m stack--large u-Phm">
+<section class="stack stack--split@m stack--large u-Phm u-Pbl">
   <div class="stack__item stack__item--30@m">
-    <h2 class="lb-heading--secondary lb-heading--divider u-Mbm">Manage Columns</h2>
+    <h2 class="lb-heading--secondary lb-heading--divider u-Mbm">
+      Manage Columns
+    </h2>
     <ul class="u-Mbl">
     <%= for %{id: id, title: title, pos: pos} <- @board.columns do %>
-      <li class="card lb-card-manage u-Mbm" phx-click="column_edit" phx-value="<%= id %>">
+      <li class="card lb-card-manage u-Mbm"
+          phx-click="column_edit"
+          phx-value="<%= id %>">
         <%= if has_role?(@user, @board, :owner) && (pos > 0 || pos < length(@board.columns) - 1) do %>
-        <div class="lb-card-manage__arrows <%= if pos === 0 do %> lb-card-manage__arrows--first <% end %>">
+        <div class="lb-card-manage__arrows<%=
+            if pos === 0, do: " lb-card-manage__arrows--first" %>">
           <%= if pos > 0 do %>
             <a phx-click="col_up" phx-value="<%= id %>" href="#" class="lb-card-manage__arrow">
               <%= fas("angle-up") %>
@@ -22,7 +27,10 @@
           <%= title %>
         </div>
         <%= if has_role?(@user, @board, :owner) do %>
-          <a class="u-Phm" href="#" phx-click="delete_column" phx-value="<%= id %>">
+          <a class="u-Phm"
+              href="#"
+              phx-click="delete_column"
+              phx-value="<%= id %>">
             <i class="fa fa-minus-circle" aria-hidden="true"></i>
           </a>
         <% end %>
@@ -41,10 +49,18 @@
 
       <h3 class="lb-heading--tertiary u-Mbs"><%= title %></h3>
 
-      <%= form_for @column_changeset, "#", [phx_submit: :column_save], fn f -> %>
-        <%= text_input f, :title, placeholder: "New column title", class: "input lb-input u-Mbm" %>
+      <%= form_for @column_changeset,
+            "#",
+            [phx_submit: :column_save],
+            fn f -> %>
+        <%= text_input f,
+              :title,
+              placeholder: "New column title",
+              class: "input lb-input u-Mbm" %>
         <%= error_tag f, :title %>
-        <%= submit button_txt, phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+        <%= submit button_txt,
+              phx_disable_with: "Saving...",
+              class: "button lb-button is-primary" %>
       <% end %>
     <% end %>
   </div>
@@ -52,7 +68,10 @@
   <div class="stack__item stack__item--70s@m stack--split@m">
   <div class="stack__item">
     <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
-    <%= form_for @board_settings_changeset, "#", [phx_submit: :board_settings_save], fn f -> %>
+    <%= form_for @board_settings_changeset,
+          "#",
+          [phx_submit: :board_settings_save],
+          fn f -> %>
       <%= label(:likes_per_user, "Likes Per User") %>
       <%= text_input f, :likes_per_user, class: "input lb-input u-Mbm",
             disabled: not has_role?(@user, @board, :owner) %>
@@ -63,51 +82,22 @@
       <%= error_tag f, :likes_per_user_per_card %>
       <%= if has_role?(@user, @board, :owner) do %>
         <br />
-        <%= submit "Save", phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+        <%= submit "Save",
+              phx_disable_with: "Saving...",
+              class: "button lb-button is-primary" %>
       <% end %>
     <% end %>
   </div>
 
   <div class="stack__item">
-      <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
-      <form phx-change="role_suggest" phx-submit="grant" onSubmit="datalistHelper.addIdOnSubmit(event)" class="u-Mbl">
-      Grant owner access to
-      <input
-          class="input lb-input u-Mbm"
-          name="userSearch"
-          type="text"
-          onInput="datalistHelper.roleUpdate(event)"
-          list="matches"
-          placeholder="Find User..."
-          <%= unless has_role?(@user, @board, :owner) do %>
-          disabled="true"
-          <% end %>
-      />
-      <%= if has_role?(@user, @board, :owner) do %>
-      <datalist id="matches">
-        <%= for user <- @role_users_suggest do %>
-          <option data-value="<%= user.id %>"><%= display_name(user) %></option>
-        <% end %>
-      </datalist>
-      <input type="hidden" name="user" id="userId">
-      <input type="submit" value="Grant" class="button lb-button is-primary">
-      <% end %>
-      </form>
-      <ul>
-        <% more_than_one_owner = more_than_one_owner(@board.board_roles) %>
-        <%= for role <- @board.board_roles do %>
-          <li class="stack stack--center-row">
-            <%= avatar(role.user) %>
-            <%= display_name(role.user) %>
-            (<%= role.role %>)
-            <%= if more_than_one_owner do %>
-            <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
-              <%= fas("user-minus") %>
-            </a>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
+    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
+      <%= render(
+            LucidboardWeb.BoardView,
+            "_roles.html",
+              board: @board,
+              user: @user,
+              role_users_suggest: @role_users_suggest,
+              editable: true) %>
+  </div>
   </div>
 </section>
