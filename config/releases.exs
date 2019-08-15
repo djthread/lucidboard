@@ -1,4 +1,4 @@
-use Config
+import Config
 
 config :lucidboard, LucidboardWeb.Endpoint,
   url: [host: System.get_env("URL_HOST", "localhost")]
