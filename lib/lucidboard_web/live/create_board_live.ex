@@ -67,7 +67,7 @@ defmodule LucidboardWeb.CreateBoardLive do
         {:noreply, assign(socket, :board_changeset, cs)}
 
       {:ok, %Board{id: id}} ->
-        {:noreply, live_redirect(socket, to: Routes.live_path(socket, BoardLive, id))}
+        {:noreply, redirect(socket, to: Routes.live_path(socket, BoardLive, id))}
     end
   end
 end
