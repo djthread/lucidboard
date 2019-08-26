@@ -55,7 +55,7 @@ defmodule Lucidboard.MixProject do
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
-      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
+      {:phoenix_live_view, "~> 0.1.0"},
       {:ueberauth_github, "~> 0.7"},
       {:ueberauth_pingfed,
        git: "https://github.com/borodark/ueberauth_pingfed.git"},
