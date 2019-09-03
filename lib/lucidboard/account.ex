@@ -35,7 +35,9 @@ defmodule Lucidboard.Account do
   @spec has_role?(User.t(), Board.t(), atom) :: boolean
   def has_role?(%User{id: user_id}, %Board{board_roles: roles}, role \\ :owner) do
     Enum.any?(roles, fn
-      %{user_id: ^user_id, role: ^role} -> true
+      %{user_id: ^user_id, role: :owner} -> true
+      %{user_id: ^user_id, role: :contributor} -> role in [:contributor, :observer]
+      %{user_id: ^user_id, role: :observer} -> role == :observer
       _ -> false
     end)
   end

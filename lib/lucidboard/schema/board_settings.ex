@@ -9,6 +9,7 @@ defmodule Lucidboard.BoardSettings do
   embedded_schema do
     field(:likes_per_user, :integer, default: 3)
     field(:likes_per_user_per_card, :integer, default: 3)
+    field(:access, BoardAccessEnum, default: :open)
     # field(:anonymous_cards, :boolean)
   end
 
@@ -28,7 +29,8 @@ defmodule Lucidboard.BoardSettings do
       end
 
     settings
-    |> cast(attrs, [:likes_per_user, :likes_per_user_per_card])
+    |> cast(attrs, [:likes_per_user, :likes_per_user_per_card, :access])
     |> validate_number(:likes_per_user_per_card, less_than_or_equal_to: per_user)
+    |> EctoEnum.validate_enum(:access)
   end
 end

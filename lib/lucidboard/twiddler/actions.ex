@@ -28,6 +28,10 @@ defmodule Lucidboard.Twiddler.Actions do
           with lpc when not is_nil(lpc) <-
                  get_in(args, ["settings", "likes_per_user_per_card"]) do
             "likes per user per card to `#{lpc}`"
+          end,
+          with access when not is_nil(access) <-
+                 get_in(args, ["settings", "access"]) do
+            "board access to `#{access}`"
           end
         ]
         |> Enum.reject(fn x -> is_nil(x) end)
