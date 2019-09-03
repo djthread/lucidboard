@@ -7,20 +7,20 @@
     >
   </form>
 </div>
-<div class="stack stack--medium stack--split@m stack--spaceBetween stack--center-row@m u-Mbm u-Phm">
+<div class="stack stack--medium stack--split@m stack--spaceBetween stack--center-row@m u-Mbl u-Phm">
   <div class="stack__item">
     <%= if @board_changeset && has_role?(@user, @board, :owner) do %>
       <%= form_for @board_changeset, "#", [phx_submit: :board_name_save], fn f -> %>
-        <section class="stack stack--split@m stack--medium u-Phm">
-        <%= raw board_access_icon(@board.settings.access) %>
-        <div class="stack__item">
-          <%= text_input f, :title, class: "input lb-input u-Mbm is-medium", maxlength: 255 %>
-          <%= error_tag f, :title %>
-        </div>
-        <div class="stack__item">
-          <%= submit "Save", phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
-          <button phx-click="board_name_edit_toggle" phx-value="false" class="button lb-button is-primary">Cancel</button>
-        </div>
+        <section class="stack stack--split@m stack--medium stack--center-row">
+          <%= raw board_access_icon(@board.settings.access) %>
+          <div class="stack__item">
+            <%= text_input f, :title, class: "input lb-input is-medium", maxlength: 255 %>
+            <%= error_tag f, :title %>
+          </div>
+          <div class="stack__item">
+            <%= submit "Save", phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
+            <button phx-click="board_name_edit_toggle" phx-value="false" class="button lb-button">Cancel</button>
+          </div>
         </section>
       <% end %>
     <% else %>

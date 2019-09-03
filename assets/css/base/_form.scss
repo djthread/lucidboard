@@ -59,3 +59,9 @@
 .lb-input::-ms-input-placeholder { /* Microsoft Edge */
   color: $grey-dark;
 }
+
+.lb-errorText {
+  color: $red;
+  display: block;
+  margin-top: 0.5rem;
+}
