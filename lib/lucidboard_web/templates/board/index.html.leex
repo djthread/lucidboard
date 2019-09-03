@@ -14,7 +14,7 @@
         <section class="stack stack--split@m stack--medium stack--center-row">
           <%= raw board_access_icon(@board.settings.access) %>
           <div class="stack__item">
-            <%= text_input f, :title, class: "input lb-input is-medium", maxlength: 255 %>
+            <%= text_input f, :title, class: "input lb-input lb-input--alt is-medium", maxlength: 255 %>
             <%= error_tag f, :title %>
           </div>
           <div class="stack__item">
@@ -24,17 +24,14 @@
         </section>
       <% end %>
     <% else %>
+      <%= if has_role?(@user, @board, :owner) do %>
+      <h1 class="title u-Mbn lb-inputTrigger js-boardTitle" phx-click="board_name_edit_toggle" phx-value="true">
+      <% else %>
       <h1 class="title u-Mbn">
+      <% end %>
         <%= raw board_access_icon(@board.settings.access) %>
         <%= @board.title %>
         &nbsp;
-        <%= if has_role?(@user, @board, :owner) do %>
-          <a phx-click="board_name_edit_toggle"
-            phx-value="true"
-            href="#">
-            <%= fas("edit") %>
-          </a>
-        <% end %>
       </h1>
     <% end %>
   </div>

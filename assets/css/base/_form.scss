@@ -60,8 +60,59 @@
   color: $grey-dark;
 }
 
+.lb-input--alt {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  padding: 0 0.5rem;
+}
+
 .lb-errorText {
   color: $red;
   display: block;
   margin-top: 0.5rem;
+}
+
+.lb-radioButton {
+  margin-bottom: 1rem;
+
+  &:last-child() {
+    margin-bottom: 0;
+  }
+}
+
+.lb-radioButton .lb-radioButton__input {
+  position: absolute;
+  opacity: 0;
+
+  + .lb-radioButton__label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &::before {
+      content: '';
+      background: $white;
+      border-radius: 100%;
+      border: 2px solid #cfcfcf;
+      display: inline-block;
+      width: 1.25rem;
+      height: 1.25rem;
+      position: relative;
+      margin-right: 1rem;
+      vertical-align: top;
+      cursor: pointer;
+      text-align: center;
+      transition: all 250ms ease;
+    }
+  }
+}
+
+.lb-radioButton .lb-radioButton__input:checked {
+  + .lb-radioButton__label {
+    &::before {
+      background-color: $white;
+    }
+  }
 }

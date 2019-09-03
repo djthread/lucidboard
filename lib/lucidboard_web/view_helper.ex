@@ -49,7 +49,7 @@ defmodule LucidboardWeb.ViewHelper do
     full_class = Enum.join(["icon"] ++ extra, " ")
 
     raw("""
-    <span class="#{full_class}">
+    <span class="#{full_class} lb-icon--fa">
       <i class="#{family} fa-#{name}"></i>
     </span>
     """)
