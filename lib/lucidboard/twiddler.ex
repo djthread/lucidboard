@@ -5,7 +5,7 @@ defmodule Lucidboard.Twiddler do
   import Ecto.Query
   alias Ecto.Association.NotLoaded
   alias Ecto.Changeset
-  alias Lucidboard.{Board, BoardRole, Event, ShortBoard}
+  alias Lucidboard.{Account, Board, BoardRole, Event, ShortBoard}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.{Actions, Op}
 
@@ -94,26 +94,38 @@ defmodule Lucidboard.Twiddler do
   def boards(user_id, page_index \\ 1, query \\ "") do
     {:ok, open_int} = BoardAccessEnum.dump(:open)
     {:ok, public_int} = BoardAccessEnum.dump(:public)
+    user = Account.get!(user_id)
 
-    query =
+    base_query =
       from(b in Board,
         left_join: u in assoc(b, :user),
-        left_join: role in assoc(b, :board_roles),
+        as: :user,
+        left_join: r in assoc(b, :board_roles),
+        as: :role,
         where:
-          (ilike(b.title, ^"%#{query}%") or
-             ilike(u.name, ^"%#{query}%") or
-             ilike(u.full_name, ^"%#{query}%")) and
-            (fragment(
-               "?->>'access' = ? or ?->>'access' = ?",
-               b.settings,
-               ^to_string(open_int),
-               b.settings,
-               ^to_string(public_int)
-             ) or
-               role.user_id == ^user_id),
+          ilike(b.title, ^"%#{query}%") or
+            ilike(u.name, ^"%#{query}%") or
+            ilike(u.full_name, ^"%#{query}%"),
         order_by: [desc: b.updated_at],
         preload: :user
       )
+
+    query =
+      if user.admin do
+        base_query
+      else
+        from([base, user: u, role: r] in base_query,
+          where:
+            fragment(
+              "?->>'access' = ? or ?->>'access' = ?",
+              base.settings,
+              ^to_string(open_int),
+              base.settings,
+              ^to_string(public_int)
+            ) or
+              r.user_id == ^user_id
+        )
+      end
 
     Repo.paginate(query, page: page_index)
   end
