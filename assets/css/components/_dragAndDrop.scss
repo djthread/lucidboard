@@ -2,9 +2,11 @@
 .lb-dnd-slot {
   line-height: 0rem;
   height: 1rem;
+  transition: height .2s ease-in-out;
 }
 
 .lb-dnd-slot.active {
+  border-radius: 0.4rem;
   line-height: 10rem;
   height: 8rem;
 }

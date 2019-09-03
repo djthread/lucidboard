@@ -28,47 +28,40 @@ import LiveSocket from 'phoenix_live_view';
 let liveSocket = new LiveSocket('/live');
 liveSocket.connect();
 
-// add gotta alter the height of the textarea based on how much text is in there
-var inlineEdit = document.getElementsByClassName('js-inlineEdit');
+document.body.addEventListener('click', function(e) {
+  let target = e.target;
 
-for (var edit = 0; edit < inlineEdit.length; edit++) {
-  inlineEdit[edit].addEventListener('click', function () {
-    setTimeout(function () {
-      var tx = document.getElementsByTagName('textarea');
+  // Focus and alter height of textarea if they click in the card or add a card
+  if (target.classList.contains('js-inlineEdit') || target.classList.contains('js-addCard')) {
+    setTimeout(() => {
+      const textarea = document.getElementById('txtarea');
 
-      for (var i = 0; i < tx.length; i++) {
-        tx[i].focus();
-        tx[i].setSelectionRange(tx[i].value.length, tx[i].value.length);
-        tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
-        tx[i].addEventListener('input', OnInput, false);
-      }
+      textarea.focus();
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      textarea.setAttribute('style', 'height:' + (textarea.scrollHeight) + 'px; overflow-y: hidden;');
+      textarea.addEventListener('input', OnInput, false);
 
       function OnInput(e) {
         this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
+        this.style.height = (this.scrollHeight - 15) + 'px';
       }
     }, 300);
-  })
-};
+  }
 
-// add gotta alter the height of the textarea for add card based on how much text is in there
-var addCard = document.getElementsByClassName('js-addCard');
+  // Focus and alter height of textarea if they click on card modal 
+  if (target.classList.contains('js-cardModal')) {
+    setTimeout(() => {
+      const modalTextarea = document.querySelector('.lb-modal-card-textarea');
 
-for (var a = 0; a < addCard.length; a++) {
-  addCard[a].addEventListener('click', function () {
-    setTimeout(function () {
-      var tx = document.getElementsByTagName('textarea');
-
-      for (var i = 0; i < tx.length; i++) {
-        tx[i].focus();
-        tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
-        tx[i].addEventListener('input', OnInput, false);
-      }
+      modalTextarea.focus();
+      modalTextarea.setSelectionRange(modalTextarea.value.length, modalTextarea.value.length);
+      modalTextarea.setAttribute('style', 'height:' + (modalTextarea.scrollHeight) + 'px; overflow-y: hidden;');
+      modalTextarea.addEventListener('input', OnInput, false);
 
       function OnInput(e) {
-        this.style.height = 'auto';
+        this.style.height = '1px';
         this.style.height = (this.scrollHeight) + 'px';
       }
     }, 300);
-  })
-};
+  }
+});
