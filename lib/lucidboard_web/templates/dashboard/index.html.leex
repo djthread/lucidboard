@@ -15,6 +15,7 @@
       href="<%= Routes.live_path(LucidboardWeb.Endpoint, BoardLive, short_board.id) %>">
       <div class="content">
         <h3 class="lb-subtitle subtitle is-marginless">
+          <%= raw board_access_icon(short_board.access) %>
           <%= short_board.title %>
         </h3>
           Created by <strong><%= short_board.username %></strong> at

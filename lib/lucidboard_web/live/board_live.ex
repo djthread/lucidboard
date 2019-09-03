@@ -38,34 +38,42 @@ defmodule LucidboardWeb.BoardLive do
 
     case LiveBoard.call(String.to_integer(board_id), :state) do
       {:ok, %{board: board, events: events}} ->
-        identifier = "board:#{board.id}"
-        Lucidboard.subscribe(identifier)
-        presence_meta = %{lv_ref: socket.id, name: user.name}
-        Presence.track(self(), identifier, user.id, presence_meta)
+        if Account.has_role?(user, board, :observer) do
+          identifier = "board:#{board.id}"
+          Lucidboard.subscribe(identifier)
+          presence_meta = %{lv_ref: socket.id, name: user.name}
+          Presence.track(self(), identifier, user.id, presence_meta)
 
-        socket =
-          assign(socket,
-            board: board,
-            events: events,
-            user: user,
-            modal_open?: false,
-            tab: :board,
-            column_changeset: new_column_changeset(),
-            board_settings_changeset: nil,
-            board_changeset: nil,
-            delete_confirming_card_id: nil,
-            online_count: online_count(board.id),
-            search: nil,
-            role_users_suggest: []
-          )
+          socket =
+            assign(socket,
+              board: board,
+              events: events,
+              user: user,
+              modal_open?: false,
+              tab: :board,
+              column_changeset: new_column_changeset(),
+              board_settings_changeset: nil,
+              board_changeset: nil,
+              delete_confirming_card_id: nil,
+              online_count: online_count(board.id),
+              search: nil,
+              role_users_suggest: []
+            )
 
-        {:ok, socket}
+          {:ok, socket}
+        else
+          # Throw 404 for insufficient access.
+          {:stop,
+           socket
+           |> put_flash(:error, "Board id #{board_id} not found!")
+           |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
+        end
 
       {:ok, {:error, :not_found}} ->
         {:stop,
          socket
          |> put_flash(:error, "Board id #{board_id} not found!")
-         |> redirect(to: "/404")}
+         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
 
       {:error, error} ->
         {:stop,

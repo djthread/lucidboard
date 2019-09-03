@@ -90,6 +90,32 @@
   </div>
 
   <div class="stack__item">
+    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Access</h2>
+    <%= form_for @board_settings_changeset,
+          "#",
+          [phx_submit: :board_settings_save],
+          fn f -> %>
+      <ul>
+        <li>
+          <%= label do %>
+            <%= radio_button(f, :access, "open") %>
+            <strong>Open</strong> - Anyone can contribute
+          <% end %>
+        </li>
+        <li>
+          <%= label do %>
+            <%= radio_button(f, :access, "private") %>
+            <strong>Private</strong> - Board is hidden
+          <% end %>
+        </li>
+      </ul>
+      <%= submit "Save",
+            phx_disable_with: "Saving...",
+            class: "button lb-button is-primary" %>
+    <% end %>
+
+    <p>&nbsp;</p>
+
     <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
       <%= render(
             LucidboardWeb.BoardView,

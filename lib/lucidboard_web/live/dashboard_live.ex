@@ -18,10 +18,10 @@ defmodule LucidboardWeb.DashboardLive do
     {:stop, socket}
   end
 
-  def mount(%{user_id: _user_id}, socket) do
+  def mount(%{user_id: user_id}, socket) do
     Lucidboard.subscribe("short_boards")
 
-    board_pagination = Twiddler.boards()
+    board_pagination = Twiddler.boards(user_id)
     short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
 
     socket =
