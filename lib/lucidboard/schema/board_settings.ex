@@ -9,7 +9,7 @@ defmodule Lucidboard.BoardSettings do
   embedded_schema do
     field(:likes_per_user, :integer, default: 3)
     field(:likes_per_user_per_card, :integer, default: 3)
-    field(:access, BoardAccessEnum, default: :open)
+    field(:access, BoardAccessEnum, default: 0)
     # field(:anonymous_cards, :boolean)
   end
 
