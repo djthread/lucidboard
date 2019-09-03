@@ -92,6 +92,9 @@ defmodule Lucidboard.Twiddler do
   @doc "Get a list of board records"
   @spec boards(integer, integer, String.t()) :: [Board.t()]
   def boards(user_id, page_index \\ 1, query \\ "") do
+    {:ok, open_int} = BoardAccessEnum.dump(:open)
+    {:ok, public_int} = BoardAccessEnum.dump(:public)
+
     query =
       from(b in Board,
         left_join: u in assoc(b, :user),
@@ -100,7 +103,14 @@ defmodule Lucidboard.Twiddler do
           (ilike(b.title, ^"%#{query}%") or
              ilike(u.name, ^"%#{query}%") or
              ilike(u.full_name, ^"%#{query}%")) and
-            (b.access in ["open", "public"] or role.user_id == ^user_id),
+            (fragment(
+               "?->>'access' = ? or ?->>'access' = ?",
+               b.settings,
+               ^to_string(open_int),
+               b.settings,
+               ^to_string(public_int)
+             ) or
+               role.user_id == ^user_id),
         order_by: [desc: b.updated_at],
         preload: :user
       )

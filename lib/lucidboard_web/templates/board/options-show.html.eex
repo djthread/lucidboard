@@ -1,18 +1,22 @@
 <% settings = Ecto.Changeset.apply_changes(@board_settings_changeset) %>
 <section class="stack stack--split@m stack--large u-Phm">
   <div class="stack__item stack__item--70s@m stack--split@m">
-  <div class="stack__item">
-    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
-    <p>Likes Per User: <strong><%= settings.likes_per_user %></strong></p>
-    <p>Likes Per User Per Card: <strong><%= settings.likes_per_user_per_card %></strong></p>
-  </div>
+    <div class="stack__item">
+      <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
+      <p>Likes Per User: <strong><%= settings.likes_per_user %></strong></p>
+      <p>Likes Per User Per Card: <strong><%= settings.likes_per_user_per_card %></strong></p>
+    </div>
 
-  <div class="stack__item">
-    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Roles</h2>
+    <div class="stack__item">
+      <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Roles</h2>
       <%= render(
         LucidboardWeb.BoardView,
         "_roles.html",
         board: @board, editable: false) %>
+
+      <p>&nbsp;</p>
+
+      <p>(This board is <strong><%= settings.access %></strong>.)</p>
     </div>
   </div>
 </section>

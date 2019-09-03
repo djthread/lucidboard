@@ -96,8 +96,18 @@
           [phx_submit: :board_settings_save],
           fn f -> %>
       <ul>
-        <li><%= radio_button(f, :access, "open") %> <strong>Open</strong> - Anyone can contribute</li>
-        <li><%= radio_button(f, :access, "private") %> <strong>Private</strong> - Board is hidden</li>
+        <li>
+          <%= label do %>
+            <%= radio_button(f, :access, "open") %>
+            <strong>Open</strong> - Anyone can contribute
+          <% end %>
+        </li>
+        <li>
+          <%= label do %>
+            <%= radio_button(f, :access, "private") %>
+            <strong>Private</strong> - Board is hidden
+          <% end %>
+        </li>
       </ul>
       <%= submit "Save",
             phx_disable_with: "Saving...",

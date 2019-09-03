@@ -8,6 +8,11 @@ defmodule LucidboardWeb.ViewHelper do
 
   def fab(name, class \\ nil), do: fa("fab", name, class)
 
+  @doc "Given a board access setting, return the icon HTML"
+  def board_access_icon(:private), do: fas("lock")
+  def board_access_icon(:public), do: fas("eye")
+  def board_access_icon(_), do: nil
+
   def show_card_count(column) do
     count =
       Enum.reduce(column.piles, 0, fn pile, acc ->

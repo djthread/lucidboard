@@ -38,7 +38,7 @@ defmodule LucidboardWeb.BoardLive do
 
     case LiveBoard.call(String.to_integer(board_id), :state) do
       {:ok, %{board: board, events: events}} ->
-        if Account.has_role?(user, board, :contributor) do
+        if Account.has_role?(user, board, :observer) do
           identifier = "board:#{board.id}"
           Lucidboard.subscribe(identifier)
           presence_meta = %{lv_ref: socket.id, name: user.name}

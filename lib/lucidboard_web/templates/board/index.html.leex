@@ -12,6 +12,7 @@
     <%= if @board_changeset && has_role?(@user, @board, :owner) do %>
       <%= form_for @board_changeset, "#", [phx_submit: :board_name_save], fn f -> %>
         <section class="stack stack--split@m stack--medium u-Phm">
+        <%= raw board_access_icon(@board.settings.access) %>
         <div class="stack__item">
           <%= text_input f, :title, class: "input lb-input u-Mbm is-medium", maxlength: 255 %>
           <%= error_tag f, :title %>
@@ -24,6 +25,7 @@
       <% end %>
     <% else %>
       <h1 class="title u-Mbn">
+        <%= raw board_access_icon(@board.settings.access) %>
         <%= @board.title %>
         &nbsp;
         <%= if has_role?(@user, @board, :owner) do %>

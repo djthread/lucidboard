@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## WIP
+
+* Private boards
+* Automatically focus card text area
+
 ## 2019-08-18
 
 * Create new board screen is now a LiveView.

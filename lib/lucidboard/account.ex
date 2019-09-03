@@ -3,7 +3,7 @@ defmodule Lucidboard.Account do
   import Ecto.Query
   alias Ecto.Changeset
   alias Lucidboard.Account.{Github, PingFed}
-  alias Lucidboard.{Board, BoardRole, Repo, User}
+  alias Lucidboard.{Board, BoardRole, BoardSettings, Repo, User}
   alias Ueberauth.Auth
   require Logger
 
@@ -33,12 +33,34 @@ defmodule Lucidboard.Account do
   end
 
   @spec has_role?(User.t(), Board.t(), atom) :: boolean
-  def has_role?(%User{id: user_id}, %Board{board_roles: roles}, role \\ :owner) do
+  def has_role?(user, board, role \\ :owner)
+
+  def has_role?(_user, %Board{settings: %BoardSettings{access: :open}}, role)
+      when role in [:observer, :contributor] do
+    true
+  end
+
+  def has_role?(
+        _user,
+        %Board{settings: %BoardSettings{access: :public}},
+        :observer
+      ) do
+    true
+  end
+
+  def has_role?(%User{id: user_id}, %Board{board_roles: roles}, role) do
     Enum.any?(roles, fn
-      %{user_id: ^user_id, role: :owner} -> true
-      %{user_id: ^user_id, role: :contributor} -> role in [:contributor, :observer]
-      %{user_id: ^user_id, role: :observer} -> role == :observer
-      _ -> false
+      %{user_id: ^user_id, role: :owner} ->
+        true
+
+      %{user_id: ^user_id, role: :contributor} ->
+        role in [:contributor, :observer]
+
+      %{user_id: ^user_id, role: :observer} ->
+        role == :observer
+
+      _ ->
+        false
     end)
   end
 
