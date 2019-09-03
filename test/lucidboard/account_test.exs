@@ -83,4 +83,12 @@ defmodule Lucidboard.AccountTest do
              :owner
            )
   end
+
+  test "admin is always an owner" do
+    assert has_role?(
+             %User{admin: true},
+             %Board{settings: %BoardSettings{access: :private}},
+             :owner
+           )
+  end
 end

@@ -48,6 +48,10 @@ defmodule Lucidboard.Account do
     true
   end
 
+  def has_role?(%User{admin: true}, _board, _role) do
+    true
+  end
+
   def has_role?(%User{id: user_id}, %Board{board_roles: roles}, role) do
     Enum.any?(roles, fn
       %{user_id: ^user_id, role: :owner} ->

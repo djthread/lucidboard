@@ -8,6 +8,7 @@ defmodule Lucidboard.User do
     field(:name)
     field(:full_name)
     field(:avatar_url)
+    field(:admin, :boolean)
     embeds_one(:settings, UserSettings, on_replace: :delete)
     many_to_many(:cards_liked, Card, join_through: Like)
     has_many(:board_roles, BoardRole)
