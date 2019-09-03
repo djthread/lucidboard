@@ -23,7 +23,6 @@
 
 .lb-card__footer--extra {
   display: flex;
-  border-top: 0;
   border-bottom-left-radius: 0.4rem;
   border-bottom-right-radius: 0.4rem;
 }
@@ -84,11 +83,6 @@
   padding: 1rem;
   display: block;
   text-align: center;
-}
-
-.lb-card--piled {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
 }
 
 .lb-card-button > * {

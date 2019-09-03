@@ -1,3 +1,7 @@
-.lb-textarea {
-  color: $white;
+.lb-textarea,
+.lb-input,
+.lb-select select,
+input::placeholder {
+  background: transparent;
+  color: $white !important;
 }
