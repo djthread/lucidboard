@@ -90,3 +90,7 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
+
+.lb-card-button > * {
+  pointer-events: none;
+}

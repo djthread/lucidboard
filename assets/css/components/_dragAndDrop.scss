@@ -2,13 +2,19 @@
 .lb-dnd-slot {
   line-height: 0rem;
   height: 1rem;
+  transition: height .2s ease-in-out;
 }
 
 .lb-dnd-slot.active {
+  border-radius: 0.4rem;
   line-height: 10rem;
   height: 8rem;
 }
 
 .dnd-dragging .lb-dnd-slot {
   border: 0.5px solid transparent;
+}
+
+.dnd-dragging .lb-card {
+  cursor: grabbing;
 }
