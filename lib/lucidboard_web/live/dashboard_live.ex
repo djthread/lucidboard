@@ -26,6 +26,7 @@ defmodule LucidboardWeb.DashboardLive do
 
     socket =
       assign(socket,
+        user_id: user_id,
         short_boards: short_boards,
         board_pagination: board_pagination,
         search_key: nil
@@ -42,6 +43,7 @@ defmodule LucidboardWeb.DashboardLive do
   def handle_event("search", %{"q" => search_key}, socket) do
     board_pagination =
       Twiddler.boards(
+        socket.assigns.user_id,
         socket.assigns.board_pagination.page_number,
         search_key
       )
@@ -62,6 +64,7 @@ defmodule LucidboardWeb.DashboardLive do
 
     board_pagination =
       Twiddler.boards(
+        socket.assigns.user_id,
         socket.assigns.board_pagination.page_number + paginate_direction,
         socket.assigns.search_key
       )
