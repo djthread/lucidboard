@@ -25,9 +25,9 @@
       <% end %>
     <% else %>
       <%= if has_role?(@user, @board, :owner) do %>
-      <h1 class="title u-Mbn lb-inputTrigger js-boardTitle" phx-click="board_name_edit_toggle" phx-value="true">
+      <h1 class="title u-Mbn lb-inputTrigger js-boardTitle stack stack--center-row" phx-click="board_name_edit_toggle" phx-value="true">
       <% else %>
-      <h1 class="title u-Mbn">
+      <h1 class="title u-Mbn stack stack--center-row">
       <% end %>
         <%= raw board_access_icon(@board.settings.access) %>
         <%= @board.title %>
