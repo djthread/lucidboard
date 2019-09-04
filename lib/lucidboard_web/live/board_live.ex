@@ -1,5 +1,6 @@
 defmodule LucidboardWeb.BoardLive do
   @moduledoc "The LiveView for a Lucidboard"
+  use LucidboardWeb.LiveHelper
   use Phoenix.LiveView
   import LucidboardWeb.BoardLive.Helper
   alias Ecto.Changeset
@@ -239,11 +240,18 @@ defmodule LucidboardWeb.BoardLive do
     case live_board_action(action, socket) do
       {:ok, {:error, %Changeset{} = invalid_cs}} ->
         {:noreply,
-         assign(socket, board_settings_changeset: invalid_cs.changes.settings)}
+         socket
+         |> put_the_flash(
+           :error,
+           "Invalid board settings. Please correct and try again."
+         )
+         |> assign(board_settings_changeset: invalid_cs.changes.settings)}
 
       {:ok, %{changeset: cs}} ->
         {:noreply,
-         assign(socket,
+         socket
+         |> put_the_flash(:info, "Board settings have been saved.")
+         |> assign(
            board_settings_changeset:
              cs
              |> Changeset.apply_changes()
