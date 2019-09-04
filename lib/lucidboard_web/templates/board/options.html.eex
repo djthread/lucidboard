@@ -96,16 +96,16 @@
           [phx_submit: :board_settings_save],
           fn f -> %>
       <ul>
-        <li>
-          <%= label do %>
-            <%= radio_button(f, :access, "open") %>
-            <strong>Open</strong> - Anyone can contribute
+        <li class="lb-radioButton">
+          <%= radio_button(f, :access, "open", class: "lb-radioButton__input") %>
+          <%= label f, :access, class: "lb-radioButton__label", for: "board_settings_access_open" do %>
+            <span class="lb-radioButton__label-text"><strong>Open</strong> - Anyone can contribute</span>
           <% end %>
         </li>
-        <li>
-          <%= label do %>
-            <%= radio_button(f, :access, "private") %>
-            <strong>Private</strong> - Board is hidden
+        <li class="lb-radioButton">
+          <%= radio_button(f, :access, "private", class: "lb-radioButton__input") %>
+          <%= label f, :access, class: "lb-radioButton__label", for: "board_settings_access_private" do %>
+            <span class="lb-radioButton__label-text"><strong>Private</strong> - Board is hidden</span>
           <% end %>
         </li>
       </ul>

@@ -45,7 +45,7 @@
   <a phx-click="modal_card_edit"
     phx-value="<%= @card.id %>"
     href="#"
-    class="card-footer-item lb-card-button js-cardModal"
+    class="card-footer-item lb-inputTrigger js-cardModal"
     data-modal="trigger">
     <%= fas("edit") %>
   </a>

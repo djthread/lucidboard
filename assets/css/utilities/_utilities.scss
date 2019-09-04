@@ -13,3 +13,7 @@
 .color-limegreen {
   color: limegreen;
 }
+
+.lb-inputTrigger > * {
+  pointer-events: none;
+}
