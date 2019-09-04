@@ -1,0 +1,13 @@
+.lb-search__wrapper {
+    background: #202525;
+}
+
+.lb-search__input {
+    &::placeholder {
+        color: #dbdee0 !important;
+    }
+}
+
+.lb-search__wrapper--open {
+    border-color: #dbdee0 !important;
+}

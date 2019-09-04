@@ -1,7 +1,12 @@
 .lb-tabs {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   position: relative;
+  
+  @media all and (min-width: $widescreen) {
+    flex-direction: row;
+  }
 }
 
 .lb-tab {

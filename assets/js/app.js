@@ -66,7 +66,6 @@ document.body.addEventListener('click', function(e) {
   }
   
   if (target.classList.contains('js-inputTrigger')) {
-    console.log('hi');
     setTimeout(() => {
       const inputAlt = document.querySelector('.lb-input--alt');
 

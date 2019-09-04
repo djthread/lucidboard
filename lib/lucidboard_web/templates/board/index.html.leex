@@ -1,8 +1,11 @@
-<div phx-keydown="keydown" phx-target="window">
-  <%= if assigns[:flash_msg] do %>
-    <% class = if assigns[:flash_type] == :info, do: "alert-info u-Mbm", else: "alert-danger" %>
-    <p class="alert <%= class %>" role="alert"><%= assigns[:flash_msg] %></p>
-  <% end %>
+<div phx-keydown="keydown" phx-target="window" class="is-relative">
+<%= if assigns[:flash_msg] do %>
+  <% class = if assigns[:flash_type] == :info, do: "is-success", else: "is-danger" %>
+  <div class="notification lb-notification <%= class %>" role="alert">
+    <%= assigns[:flash_msg] %>
+  </div>
+<% end %>
+
 <div class="stack stack--medium stack--split@m stack--spaceBetween stack--center-row@m u-Mbl u-Phm">
   <div class="stack__item">
     <%= if @board_changeset && has_role?(@user, @board, :owner) do %>

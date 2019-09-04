@@ -1,0 +1,14 @@
+.lb-notification {
+  border-radius: 4px;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  top: -1rem;
+  margin: auto;
+  
+  @media all and (min-width: $widescreen) {
+    width: 40rem;
+  }
+}
