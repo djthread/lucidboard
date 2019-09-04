@@ -56,8 +56,8 @@ defmodule LucidboardWeb.BoardLive do
               board_settings_changeset: nil,
               board_changeset: nil,
               delete_confirming_card_id: nil,
-              online_count: online_count(board.id),
               search: nil,
+              search_opened?: false,
               role_users_suggest: []
             )
 
@@ -286,6 +286,22 @@ defmodule LucidboardWeb.BoardLive do
      assign(socket, :search, get_search_assign(q, socket.assigns.board))}
   end
 
+  def handle_event("search_open", _, socket) do
+    {:noreply, assign(socket, :search_opened?, true)}
+  end
+
+  def handle_event("search_close", _, socket) do
+    {:noreply, assign(socket, :search_opened?, false)}
+  end
+
+  def handle_event("keydown", %{"key" => "Escape"}, socket) do
+    {:noreply, socket |> assign(:search_opened?, false) |> assign(:tab, :board)}
+  end
+
+  def handle_event("keydown", _, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event("sortby_likes", col_id, socket) do
     live_board_action({:sortby_likes, id: col_id}, socket)
     {:noreply, socket}
@@ -343,12 +359,7 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do
     users = online_users(socket.assigns.board.id)
-
-    socket =
-      assign(socket,
-        online_users: users,
-        online_count: users |> Map.keys() |> length()
-      )
+    socket = assign(socket, online_users: users)
 
     {:noreply, socket}
   end

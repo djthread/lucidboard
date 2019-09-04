@@ -22,3 +22,78 @@ $fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "components/tab";
 @import "utilities/spacing";
 @import "utilities/utilities";
+
+// Masthead Search
+.lb-search {
+    min-width: 24px;
+}
+
+.lb-search__wrapper {
+    align-items: center;
+    background: #202525;
+    display: flex;
+    height: 61px;
+    justify-content: center;
+    left: calc(100% - 3rem);
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: right 0.2s, left 0.2s;
+
+    @media (min-width: 750px) {
+        border-bottom: 2px solid transparent;
+        height: 130%; // SafarIE. Will revisit.
+        justify-content: flex-start;
+        left: 0;
+        right: calc(100% - 24px);
+    }
+}
+
+.lb-search__close {
+    display: none;
+}
+
+.lb-search__icon {
+  font-size: 1.25rem;
+}
+
+.lb-search__close__icon {
+  font-size: 1.5rem;
+}
+
+.lb-search__form {
+    display: none;
+    margin: 0 0.5rem;
+    width: calc(100% - 57px);
+}
+
+.lb-search__input {
+    width: 100%;
+    border: 0;
+    margin: 0;
+    height: 100%;
+
+    &:focus {
+        outline: none;
+    }
+
+    &::placeholder {
+        color: #dbdee0;
+    }
+}
+
+.lb-search__wrapper--open {
+    left: 0;
+    padding: 0 1rem;
+
+    @media (min-width: 750px) {
+        border-color: #dbdee0;
+        padding: 0;
+        right: 0;
+    }
+
+    .lb-search__form, 
+    .lb-search__close {
+        display: inline-flex;
+    }
+}
