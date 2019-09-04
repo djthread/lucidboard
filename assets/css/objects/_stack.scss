@@ -64,6 +64,10 @@
     }
 }
 
+.stack__item--flex {
+  flex: 1;
+}
+
 .stack--split\@m.stack--medium .stack__item {
     @media all and (min-width: $widescreen) {
         margin-right: 1rem;

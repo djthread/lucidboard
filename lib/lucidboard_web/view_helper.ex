@@ -9,9 +9,10 @@ defmodule LucidboardWeb.ViewHelper do
   def fab(name, class \\ nil), do: fa("fab", name, class)
 
   @doc "Given a board access setting, return the icon HTML"
-  def board_access_icon(:private), do: fas("lock")
-  def board_access_icon(:public), do: fas("eye")
-  def board_access_icon(_), do: nil
+  def board_access_icon(type, class \\ nil)
+  def board_access_icon(:private, class), do: fas("lock", class)
+  def board_access_icon(:public, class), do: fas("eye", class)
+  def board_access_icon(_, _), do: nil
 
   def show_card_count(column) do
     count =
@@ -49,7 +50,7 @@ defmodule LucidboardWeb.ViewHelper do
     full_class = Enum.join(["icon"] ++ extra, " ")
 
     raw("""
-    <span class="#{full_class} lb-icon--fa u-Mrs">
+    <span class="#{full_class}">
       <i class="#{family} fa-#{name}"></i>
     </span>
     """)

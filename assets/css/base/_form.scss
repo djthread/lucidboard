@@ -32,11 +32,21 @@
   border-width: 4px;
   border-radius: 4px;
   box-shadow: none;
+  height: auto;
+  font-size: 1rem;
   
   &:hover,
   &:focus,
   &:active {
     box-shadow: none;
+  }
+}
+
+.lb-select {
+  width: 100%;
+  
+  @media all and (min-width: $widescreen) {
+      width: auto;
   }
 }
 
@@ -115,4 +125,9 @@
       background-color: $white;
     }
   }
+}
+
+label {
+  margin-bottom: 0.25rem;
+  display: inline-block;
 }

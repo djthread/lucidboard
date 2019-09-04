@@ -59,7 +59,7 @@
       <a href="#"
         phx-click="add_card"
         phx-value="<%= column.id %>"
-        class="is-primary icon-padder js-addCard lb-card-button">
+        class="is-primary icon-padder js-addCard lb-inputTrigger">
         <%= fas("plus") %><span>Add Card</span>
       </a>
       <% end %>

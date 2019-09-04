@@ -65,12 +65,12 @@ document.body.addEventListener('click', function(e) {
     }, 300);
   }
   
-  if (target.classList.contains('js-boardTitle')) {
+  if (target.classList.contains('js-inputTrigger')) {
     setTimeout(() => {
-      const boardTitle = document.querySelector('.lb-input--alt');
-      
-      boardTitle.focus();
-      boardTitle.setSelectionRange(boardTitle.value.length, boardTitle.value.length);
+      const inputAlt = document.querySelector('.lb-input--alt');
+
+      inputAlt.focus();
+      inputAlt.setSelectionRange(inputAlt.value.length, inputAlt.value.length);
     }, 300);
   }
 });

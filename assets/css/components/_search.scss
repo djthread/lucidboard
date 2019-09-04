@@ -1,0 +1,64 @@
+.lb-search {
+  min-width: 24px;
+  height: 40px;
+
+  @media (min-width: $widescreen) {
+    height: auto;
+  }
+}
+
+.lb-search__wrapper {
+  align-items: center;
+  display: flex;
+  height: 35px;
+  right: calc(100% - 24px);
+  left: 0;
+  position: absolute;
+  top: 0;
+  transition: right 0.2s, left 0.2s;
+  border-bottom: 2px solid transparent;
+  justify-content: flex-start;
+
+  @media (min-width: $widescreen) {
+      height: 130%; // SafarIE. Will revisit.
+  }
+}
+
+.lb-search__close {
+  display: none;
+}
+
+.lb-search__icon {
+  font-size: 1.25rem;
+}
+
+.lb-search__close__icon {
+  font-size: 1.5rem;
+}
+
+.lb-search__form {
+  display: none;
+  margin: 0 0.5rem;
+  width: calc(100% - 57px);
+}
+
+.lb-search__input {
+  width: 100%;
+  border: 0;
+  margin: 0;
+  height: 100%;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.lb-search__wrapper--open {
+  right: 0;
+  padding: 0;
+
+  .lb-search__form, 
+  .lb-search__close {
+    display: inline-flex;
+  }
+}

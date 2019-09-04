@@ -5,23 +5,29 @@
     phx-submit="grant"
     onSubmit="datalistHelper.addIdOnSubmit(event)"
     class="u-Mbl">
-  Grant
-  <select name="role">
-    <option>owner</option>
-    <option>contributor</option>
-  </select>
-  access to
-  <input
-      class="input lb-input u-Mbm"
-      name="userSearch"
-      type="text"
-      onInput="datalistHelper.roleUpdate(event)"
-      list="matches"
-      placeholder="Find User..."
-      <%= unless has_role?(@user, @board, :owner) do %>
-      disabled="true"
-      <% end %>
-  />
+  <label>
+    Grant access to
+  </label>
+  <div class="stack stack--split@m">
+    <input
+        class="input lb-input u-Mbm u-Mrs"
+        name="userSearch"
+        type="text"
+        onInput="datalistHelper.roleUpdate(event)"
+        list="matches"
+        placeholder="Find User..."
+        <%= unless has_role?(@user, @board, :owner) do %>
+        disabled="true"
+        <% end %>
+    />
+    <div class="controls select lb-select u-Mbm">
+      <select name="role" class="lb-select">
+        <option>owner</option>
+        <option>contributor</option>
+      </select>
+    </div>
+  </div>
+
   <%= if has_role?(@user, @board, :owner) do %>
     <datalist id="matches">
       <%= for user <- @role_users_suggest do %>
@@ -29,7 +35,7 @@
       <% end %>
     </datalist>
     <input type="hidden" name="user" id="userId">
-    <input type="submit" value="Grant" class="button lb-button is-primary">
+    <input type="submit" value="Grant" class="button lb-button is-primary u-DisplayBlock">
   <% end %>
 </form>
 <% end %>

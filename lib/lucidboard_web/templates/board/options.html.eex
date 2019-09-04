@@ -65,65 +65,65 @@
     <% end %>
   </div>
 
-  <div class="stack__item stack__item--70s@m stack--split@m">
-  <div class="stack__item">
-    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
-    <%= form_for @board_settings_changeset,
-          "#",
-          [phx_submit: :board_settings_save],
-          fn f -> %>
-      <%= label(:likes_per_user, "Likes Per User") %>
-      <%= text_input f, :likes_per_user, class: "input lb-input u-Mbm",
-            disabled: not has_role?(@user, @board, :owner) %>
-      <%= error_tag f, :likes_per_user %>
-      <%= label(:likes_per_user, "Likes Per User per Card") %>
-      <%= text_input f, :likes_per_user_per_card, class: "input lb-input u-Mbm",
-            disabled: not has_role?(@user, @board, :owner) %>
-      <%= error_tag f, :likes_per_user_per_card %>
-      <%= if has_role?(@user, @board, :owner) do %>
-        <br />
+  <div class="stack__item stack--split@m">
+    <div class="stack__item stack__item--flex">
+      <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Settings</h2>
+      <%= form_for @board_settings_changeset,
+            "#",
+            [phx_submit: :board_settings_save],
+            fn f -> %>
+        <%= label(:likes_per_user, "Likes Per User") %>
+        <%= text_input f, :likes_per_user, class: "input lb-input u-Mbm",
+              disabled: not has_role?(@user, @board, :owner) %>
+        <%= error_tag f, :likes_per_user %>
+        <%= label(:likes_per_user, "Likes Per User per Card") %>
+        <%= text_input f, :likes_per_user_per_card, class: "input lb-input u-Mbm",
+              disabled: not has_role?(@user, @board, :owner) %>
+        <%= error_tag f, :likes_per_user_per_card %>
+        <%= if has_role?(@user, @board, :owner) do %>
+          <br />
+          <%= submit "Save",
+                phx_disable_with: "Saving...",
+                class: "button lb-button is-primary" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="stack__item stack__item--flex">
+      <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Access</h2>
+      <%= form_for @board_settings_changeset,
+            "#",
+            [phx_submit: :board_settings_save],
+            fn f -> %>
+        <ul>
+          <li class="lb-radioButton">
+            <%= radio_button(f, :access, "open", class: "lb-radioButton__input") %>
+            <%= label f, :access, class: "lb-radioButton__label", for: "board_settings_access_open" do %>
+              <span class="lb-radioButton__label-text"><strong>Open</strong> - Anyone can contribute</span>
+            <% end %>
+          </li>
+          <li class="lb-radioButton">
+            <%= radio_button(f, :access, "private", class: "lb-radioButton__input") %>
+            <%= label f, :access, class: "lb-radioButton__label", for: "board_settings_access_private" do %>
+              <span class="lb-radioButton__label-text"><strong>Private</strong> - Board is hidden</span>
+            <% end %>
+          </li>
+        </ul>
         <%= submit "Save",
               phx_disable_with: "Saving...",
               class: "button lb-button is-primary" %>
       <% end %>
-    <% end %>
-  </div>
 
-  <div class="stack__item">
-    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Board Access</h2>
-    <%= form_for @board_settings_changeset,
-          "#",
-          [phx_submit: :board_settings_save],
-          fn f -> %>
-      <ul>
-        <li class="lb-radioButton">
-          <%= radio_button(f, :access, "open", class: "lb-radioButton__input") %>
-          <%= label f, :access, class: "lb-radioButton__label", for: "board_settings_access_open" do %>
-            <span class="lb-radioButton__label-text"><strong>Open</strong> - Anyone can contribute</span>
-          <% end %>
-        </li>
-        <li class="lb-radioButton">
-          <%= radio_button(f, :access, "private", class: "lb-radioButton__input") %>
-          <%= label f, :access, class: "lb-radioButton__label", for: "board_settings_access_private" do %>
-            <span class="lb-radioButton__label-text"><strong>Private</strong> - Board is hidden</span>
-          <% end %>
-        </li>
-      </ul>
-      <%= submit "Save",
-            phx_disable_with: "Saving...",
-            class: "button lb-button is-primary" %>
-    <% end %>
+      <p>&nbsp;</p>
 
-    <p>&nbsp;</p>
-
-    <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
-      <%= render(
-            LucidboardWeb.BoardView,
-            "_roles.html",
-              board: @board,
-              user: @user,
-              role_users_suggest: @role_users_suggest,
-              editable: true) %>
-  </div>
+      <h2 class="lb-heading--secondary lb-heading--divider u-Mbs">Manage Roles</h2>
+        <%= render(
+              LucidboardWeb.BoardView,
+              "_roles.html",
+                board: @board,
+                user: @user,
+                role_users_suggest: @role_users_suggest,
+                editable: true) %>
+    </div>
   </div>
 </section>

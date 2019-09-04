@@ -1,16 +1,11 @@
-<div class="stack stack--end-row u-Mbm">
-  <%= if assigns[:flash_msg] do %>
-    <% class = if assigns[:flash_type] == :info, do: "alert-info u-Mbm", else: "alert-danger" %>
-    <p class="alert <%= class %>" role="alert"><%= assigns[:flash_msg] %></p>
-  <% end %>
-  <form phx-change="search_key">
-    <input class="input lb-input" type="text" name="q" list="matches" placeholder="Search"
-    <%= if @search do %>
-    value="<%= @search.q %>"
-    <% end %>
-    >
-  </form>
-</div>
+<div phx-keydown="keydown" phx-target="window" class="is-relative">
+<%= if assigns[:flash_msg] do %>
+  <% class = if assigns[:flash_type] == :info, do: "is-success", else: "is-danger" %>
+  <div class="notification lb-notification <%= class %>" role="alert">
+    <%= assigns[:flash_msg] %>
+  </div>
+<% end %>
+
 <div class="stack stack--medium stack--split@m stack--spaceBetween stack--center-row@m u-Mbl u-Phm">
   <div class="stack__item">
     <%= if @board_changeset && has_role?(@user, @board, :owner) do %>
@@ -29,11 +24,11 @@
       <% end %>
     <% else %>
       <%= if has_role?(@user, @board, :owner) do %>
-      <h1 class="title u-Mbn lb-inputTrigger js-boardTitle stack stack--center-row" phx-click="board_name_edit_toggle" phx-value="true">
+      <h1 class="title u-Mbn lb-inputTrigger stack stack--center-row js-inputTrigger" phx-click="board_name_edit_toggle" phx-value="true">
       <% else %>
       <h1 class="title u-Mbn stack stack--center-row">
       <% end %>
-        <%= raw board_access_icon(@board.settings.access) %>
+        <%= raw board_access_icon(@board.settings.access, "lb-icon--fa u-Mrs") %>
         <%= @board.title %>
         &nbsp;
       </h1>
@@ -42,11 +37,23 @@
 
   <div class="stack__item">
     <ul class="lb-tabs">
-      <li class="lb-tab">
-        <a class="lb-tab__link" phx-click="tab" phx-value="events" href="#">
-          <span class="color-limegreen">&bull;</span> &nbsp; <%= @online_count %> Online
-        </a>
-      </li>
+      <li class="lb-tab lb-search">
+          <div class="lb-search__wrapper <%= if assigns.search_opened?, do: "lb-search__wrapper--open" %>">
+              <a href="#search" class="js-inputTrigger lb-inputTrigger" phx-click="search_open">
+                <i class="fa fa-search lb-search__icon" aria-hidden="true"></i>
+              </a>
+              <form phx-change="search_key" class="lb-search__form">
+                <input class="lb-search__input input lb-input lb-input--alt is-medium" type="text" name="q" list="matches" placeholder="Search"
+                <%= if @search do %>
+                value="<%= @search.q %>"
+                <% end %>
+                >
+              </form>
+              <a href="#searchClose" class="b-Link--plain b-Link--base lb-search__close" phx-click="search_close">
+                <i class="fa fa-times lb-search__icon lb-search__close__icon" aria-hidden="true"></i>
+              </a>
+          </div>
+      </li>  
       <li class="lb-tab <%= if @tab == :board, do: "is-active" %>">
         <a class="lb-tab__link" phx-click="tab" phx-value="board" href="#">
           <span class="icon is-small"><%= fas("grip-vertical") %></span>
@@ -91,3 +98,4 @@
     render(LucidboardWeb.BoardView, "modal_card.html", assigns)
   end
 %>
+</div>
