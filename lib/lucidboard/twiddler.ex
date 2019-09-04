@@ -106,6 +106,7 @@ defmodule Lucidboard.Twiddler do
           ilike(b.title, ^"%#{query}%") or
             ilike(u.name, ^"%#{query}%") or
             ilike(u.full_name, ^"%#{query}%"),
+        distinct: [desc: b.id],
         order_by: [desc: b.updated_at],
         preload: :user
       )
