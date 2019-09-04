@@ -288,10 +288,13 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, assign(socket, :role_users_suggest, suggestions)}
   end
 
-  def handle_event("grant", %{"user" => user_id}, socket) do
-    with {int, ""} <- Integer.parse(user_id),
+  def handle_event("grant", %{"user" => user_id} = params, socket) do
+    # Role code here is for an opera bug (maybe) where the role field doesn't
+    # submit. We'll just ignore the message, in this case.
+    with role when not is_nil(role) <- Map.get(params, "role"),
+         {int, ""} <- Integer.parse(user_id),
          user when not is_nil(user) <- Account.get(int) do
-      live_board_action({:grant, id: user.id, role: :owner}, socket)
+      live_board_action({:grant, id: user.id, role: role}, socket)
     end
 
     {:noreply, socket}

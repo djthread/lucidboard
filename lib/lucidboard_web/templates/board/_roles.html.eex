@@ -5,7 +5,12 @@
     phx-submit="grant"
     onSubmit="datalistHelper.addIdOnSubmit(event)"
     class="u-Mbl">
-  Grant owner access to
+  Grant
+  <select name="role">
+    <option>owner</option>
+    <option>contributor</option>
+  </select>
+  access to
   <input
       class="input lb-input u-Mbm"
       name="userSearch"
