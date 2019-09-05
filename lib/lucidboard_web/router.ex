@@ -38,13 +38,10 @@ defmodule LucidboardWeb.Router do
     post("/user-settings", UserController, :update_settings)
 
     live("/dashboard", DashboardLive, session: [:user_id])
-    live("/boards", DashboardLive, session: [:user_id])
-
-    # get("/create-board", BoardController, :create_form)
-    post("/create-board", BoardController, :create)
-
-    live("/boards/:id", BoardLive, session: [:path_params, :user_id])
     live("/create-board", CreateBoardLive, session: [:path_params, :user_id])
+
+    live("/boards", DashboardLive, session: [:user_id])
+    live("/boards/:id", BoardLive, session: [:path_params, :user_id])
 
     post("/boards/:id/dnd-into-junction", BoardController, :dnd_into_junction)
     post("/boards/:id/dnd-into-pile", BoardController, :dnd_into_pile)
