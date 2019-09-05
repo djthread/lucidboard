@@ -46,14 +46,14 @@ defmodule LucidboardWeb.CreateBoardLive do
           {nil, nil}
 
         tpl ->
-          {:ok, access} = BoardAccessEnum.dump(params["access"])
-          settings = tpl.settings ++ [access: access]
-
           {
             Enum.map(Enum.with_index(tpl.columns), fn {c, idx} ->
               Column.new([title: c, pos: idx], :just_map)
             end),
-            BoardSettings.new(settings, :just_map)
+            BoardSettings.new(
+              tpl.settings ++ [access: String.to_integer(params["access"])],
+              :just_map
+            )
           }
       end
 
@@ -70,7 +70,8 @@ defmodule LucidboardWeb.CreateBoardLive do
         {:noreply, assign(socket, :board_changeset, cs)}
 
       {:ok, %Board{id: id}} ->
-        {:noreply, redirect(socket, to: Routes.live_path(socket, BoardLive, id))}
+        {:noreply,
+         redirect(socket, to: Routes.live_path(socket, BoardLive, id))}
     end
   end
 end

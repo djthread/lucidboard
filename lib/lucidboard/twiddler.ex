@@ -153,7 +153,7 @@ defmodule Lucidboard.Twiddler do
         {:error, cs}
 
       {:ok, {:ok, %Board{} = b}} ->
-        Lucidboard.broadcast("short_boards_add_and_remove", :new)
+        Lucidboard.broadcast("dashboards", :full_reload)
         {:ok, Repo.preload(b, :user)}
     end
   end

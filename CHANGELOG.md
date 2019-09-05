@@ -1,9 +1,15 @@
 # CHANGELOG
 
-## WIP
+## 2019-09-05
 
 * Private boards
+* Contributor access can now be granted
+* New search UI on board screen
 * Automatically focus card text area
+* Dashboard listing is fully live and receiving updates
+* New message feedback style for usability
+* Admin users
+* Lots of fixes & cleanup
 
 ## 2019-08-18
 

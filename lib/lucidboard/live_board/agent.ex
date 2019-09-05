@@ -49,6 +49,13 @@ defmodule Lucidboard.LiveBoard.Agent do
         {event, events} = add_event(state.events, event, new_board, user)
         new_state = %{state | board: new_board, events: events}
 
+        if event.desc =~ ~r/board access/ do
+          # If the last event changed the board access setting, we'll wait a
+          # moment to be sure the Scribe has written to the database, then
+          # broadcast to have all Dashboard views do a full refresh.
+          Process.send_after(self(), :reload_all_dashboards, 200)
+        end
+
         Lucidboard.broadcast(
           "board:#{new_board.id}",
           {:update, new_board, event}
@@ -87,6 +94,12 @@ defmodule Lucidboard.LiveBoard.Agent do
 
   def handle_call(:events, _from, state) do
     {:reply, state.events, state}
+  end
+
+  @impl true
+  def handle_info(:reload_all_dashboards, state) do
+    Lucidboard.broadcast("dashboards", :full_reload)
+    {:noreply, state}
   end
 
   defp add_event(events, nil, _board, _user) do
