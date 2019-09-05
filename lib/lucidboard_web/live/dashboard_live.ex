@@ -19,7 +19,7 @@ defmodule LucidboardWeb.DashboardLive do
   end
 
   def mount(%{user_id: user_id}, socket) do
-    Lucidboard.subscribe("short_boards_add_and_remove")
+    Lucidboard.subscribe("dashboards")
 
     socket =
       socket
@@ -32,23 +32,17 @@ defmodule LucidboardWeb.DashboardLive do
     {:ok, socket}
   end
 
-  def handle_info(:new, socket) do
+  def handle_info(:full_reload, socket) do
     {:noreply, load_data_and_handle_subscriptions(socket)}
   end
 
-  def handle_info({:short_board, %{last_event: last_event} = short_board}, socket) do
+  def handle_info({:short_board, short_board}, socket) do
     short_boards =
-      if last_event && last_event.desc =~ ~r/board access/ do
-        # If the last event changed the board access setting, just reload
-        # everything to ensure that boards made private actually disappear.
-        load_data_and_handle_subscriptions(socket)
-      else
-        socket.assigns.short_boards
-        |> Enum.find_index(fn sb -> sb.id == short_board.id end)
-        |> case do
-          nil -> socket.assigns.short_boards
-          idx -> List.replace_at(socket.assigns.short_boards, idx, short_board)
-        end
+      socket.assigns.short_boards
+      |> Enum.find_index(fn sb -> sb.id == short_board.id end)
+      |> case do
+        nil -> socket.assigns.short_boards
+        idx -> List.replace_at(socket.assigns.short_boards, idx, short_board)
       end
 
     {:noreply, assign(socket, :short_boards, short_boards)}
