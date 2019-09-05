@@ -127,6 +127,14 @@
   }
 }
 
+.lb-inputTrigger {
+  display: inline-block;
+}
+
+.lb-inputTrigger > * {
+  pointer-events: none;
+}
+
 label {
   margin-bottom: 0.25rem;
   display: inline-block;
