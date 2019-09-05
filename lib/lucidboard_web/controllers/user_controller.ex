@@ -10,7 +10,7 @@ defmodule LucidboardWeb.UserController do
     if signed_in?(conn) do
       conn
       |> put_status(:see_other)
-      |> redirect(to: Routes.dashboard_path(conn, :index))
+      |> redirect(to: Routes.live_path(conn, DashboardLive))
     else
       render(conn, "signin.html")
     end

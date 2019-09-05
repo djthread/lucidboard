@@ -5,6 +5,8 @@ defmodule LucidboardWeb.LiveHelper do
   import Phoenix.LiveView, only: [assign: 3]
   alias Phoenix.LiveView.Socket
 
+  @flash_timeout 5_000
+
   defmacro __using__(_args) do
     quote do
       import unquote(__MODULE__), only: [put_the_flash: 3]
@@ -20,7 +22,7 @@ defmodule LucidboardWeb.LiveHelper do
   @spec put_the_flash(Socket.t(), :info | :error, String.t()) :: Socket.t()
   def put_the_flash(%Socket{} = socket, type, msg)
       when type in [:info, :error] do
-    Process.send_after(self(), :clear_flash, 5_000)
+    Process.send_after(self(), :clear_flash, @flash_timeout)
 
     socket
     |> assign(:flash_type, type)

@@ -16,7 +16,7 @@ defmodule LucidboardWeb.BoardLive do
   }
 
   alias Lucidboard.Twiddler.Op
-  alias LucidboardWeb.{BoardView, Endpoint}
+  alias LucidboardWeb.{BoardView, DashboardLive, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Phoenix.LiveView.Socket
   alias Phoenix.Socket.Broadcast
@@ -67,20 +67,20 @@ defmodule LucidboardWeb.BoardLive do
           {:stop,
            socket
            |> put_flash(:error, "Board id #{board_id} not found!")
-           |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
+           |> redirect(to: Routes.live_path(socket, DashboardLive))}
         end
 
       {:ok, {:error, :not_found}} ->
         {:stop,
          socket
          |> put_flash(:error, "Board id #{board_id} not found!")
-         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
+         |> redirect(to: Routes.live_path(socket, DashboardLive))}
 
       {:error, error} ->
         {:stop,
          socket
          |> put_flash(:error, error)
-         |> redirect(to: Routes.dashboard_path(Endpoint, :index))}
+         |> redirect(to: Routes.live_path(socket, DashboardLive))}
     end
   end
 
@@ -340,21 +340,32 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_info({:update, board, event}, socket) do
-    events =
-      if event do
-        Enum.slice([event | socket.assigns.events], 0, TimeMachine.page_size())
-      else
-        socket.assigns.events
-      end
+    if Account.has_role?(socket.assigns.user, board, :observer) do
+      events =
+        if event do
+          Enum.slice(
+            [event | socket.assigns.events],
+            0,
+            TimeMachine.page_size()
+          )
+        else
+          socket.assigns.events
+        end
 
-    socket =
-      assign(socket,
-        board: board,
-        events: events,
-        search: get_search_assign(socket.assigns.search, board)
-      )
+      socket =
+        assign(socket,
+          board: board,
+          events: events,
+          search: get_search_assign(socket.assigns.search, board)
+        )
 
-    {:noreply, socket}
+      {:noreply, socket}
+    else
+      {:noreply,
+       socket
+       |> put_flash(:error, "The board has been made private.")
+       |> redirect(to: Routes.live_path(socket, DashboardLive))}
+    end
   end
 
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do
@@ -364,6 +375,7 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket}
   end
 
-  def topic(%Socket{} = socket), do: "board:#{socket.assigns.board.id}"
-  def topic(board_id), do: "board:#{board_id}"
+  def topic(%Socket{assigns: %{board: %{id: id}}}), do: "board:#{id}"
+  def topic(board_id) when is_number(board_id), do: "board:#{board_id}"
+  def topic(_), do: nil
 end

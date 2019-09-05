@@ -43,13 +43,18 @@ defmodule LucidboardWeb.BoardLive.Helper do
         card = Changeset.apply_changes(changeset)
 
         unless delete_card_if_empty(socket, card) do
-          data = if card.settings do
-            %{id: card.id, body: String.trim(card.body), settings: %{color: card.settings.color}}
-          else
-            %{id: card.id, body: String.trim(card.body)}
-          end
-          {:update_card, data}
-          |> live_board_action(socket)
+          data =
+            if card.settings do
+              %{
+                id: card.id,
+                body: String.trim(card.body),
+                settings: %{color: card.settings.color}
+              }
+            else
+              %{id: card.id, body: String.trim(card.body)}
+            end
+
+          live_board_action({:update_card, data}, socket)
         end
 
         {:ok, finish_card_edit(socket)}
@@ -81,11 +86,15 @@ defmodule LucidboardWeb.BoardLive.Helper do
   end
 
   def online_count(socket_or_board_id) do
-    socket_or_board_id |> online_users() |> Map.keys() |> length()
+    with map when is_map(map) <- online_users(socket_or_board_id) do
+      map_size(map)
+    end
   end
 
   def online_users(socket_or_board_id) do
-    socket_or_board_id |> BoardLive.topic() |> Presence.list()
+    with topic when not is_nil(topic) <- BoardLive.topic(socket_or_board_id) do
+      Presence.list(topic)
+    end
   end
 
   def get_search_assign(q, _board) when q in ["", nil], do: nil

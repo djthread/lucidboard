@@ -37,8 +37,8 @@ defmodule LucidboardWeb.Router do
     get("/user-settings", UserController, :settings)
     post("/user-settings", UserController, :update_settings)
 
-    get("/dashboard", DashboardController, :index)
-    get("/boards", DashboardController, :index)
+    live("/dashboard", DashboardLive, session: [:user_id])
+    live("/boards", DashboardLive, session: [:user_id])
 
     # get("/create-board", BoardController, :create_form)
     post("/create-board", BoardController, :create)

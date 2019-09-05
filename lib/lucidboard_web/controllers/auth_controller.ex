@@ -27,13 +27,13 @@ defmodule LucidboardWeb.AuthController do
           |> put_flash(:info, """
           We've created your account and you're now signed in!
           """)
-          |> redirect(to: Routes.dashboard_path(conn, :index))
+          |> redirect(to: Routes.live_path(conn, DashboardLive))
 
         user ->
           conn
           |> put_session(:user_id, user.id)
           |> put_flash(:info, "You have successfully signed in!")
-          |> redirect(to: Routes.dashboard_path(conn, :index))
+          |> redirect(to: Routes.live_path(conn, DashboardLive))
       end
     end
   end
@@ -57,8 +57,7 @@ defmodule LucidboardWeb.AuthController do
         conn
         |> put_session(:user_id, user.id)
         |> put_flash(:info, "Hello, #{user.name}!")
-        # |> configure_session(renew: true)
-        |> redirect(to: Routes.dashboard_path(conn, :index))
+        |> redirect(to: Routes.live_path(conn, DashboardLive))
 
       {:error, reason} ->
         conn
