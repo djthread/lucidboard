@@ -4,6 +4,7 @@ defmodule LucidboardWeb.AuthController do
   """
   use LucidboardWeb, :controller
   alias Lucidboard.Account
+  alias LucidboardWeb.DashboardLive
   alias LucidboardWeb.Router.Helpers, as: Routes
   alias Ueberauth.Strategy.Helpers
 
