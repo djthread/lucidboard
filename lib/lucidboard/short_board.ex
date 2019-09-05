@@ -25,7 +25,6 @@ defmodule Lucidboard.ShortBoard do
     last_event =
       case events do
         nil -> board.id |> TimeMachine.events(size: 1) |> List.first()
-        # events -> List.last(events)
         [ev | _] -> ev
       end
 

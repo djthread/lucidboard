@@ -72,11 +72,13 @@ defmodule LucidboardWeb.DashboardLive do
   # Loads all dashboard data and updates subscriptions to reflect the visible
   # boards.
   defp load_data_and_handle_subscriptions(socket, page_direction \\ 0, q \\ nil) do
+    search_key = q || socket.assigns[:search_key]
+
     board_pagination =
       Twiddler.boards(
         socket.assigns.user_id,
         (get_page_number(socket) || 1) + page_direction,
-        q || socket.assigns[:search_key]
+        search_key
       )
 
     short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
@@ -95,7 +97,7 @@ defmodule LucidboardWeb.DashboardLive do
       short_boards: short_boards,
       board_pagination: board_pagination,
       subscriptions: new_subscriptions,
-      search_key: q
+      search_key: search_key
     )
   end
 
