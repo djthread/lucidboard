@@ -95,20 +95,7 @@
             "#",
             [phx_submit: :board_settings_save],
             fn f -> %>
-        <ul>
-          <li class="lb-radioButton">
-            <%= radio_button(f, :access, "open", class: "lb-radioButton__input") %>
-            <%= label f, :access, class: "lb-radioButton__label", for: "board_settings_access_open" do %>
-              <span class="lb-radioButton__label-text"><strong>Open</strong> - Anyone can contribute</span>
-            <% end %>
-          </li>
-          <li class="lb-radioButton">
-            <%= radio_button(f, :access, "private", class: "lb-radioButton__input") %>
-            <%= label f, :access, class: "lb-radioButton__label", for: "board_settings_access_private" do %>
-              <span class="lb-radioButton__label-text"><strong>Private</strong> - Board is hidden</span>
-            <% end %>
-          </li>
-        </ul>
+        <%= render(LucidboardWeb.BoardView, "_access_field.html", f: f) %>
         <%= submit "Save",
               phx_disable_with: "Saving...",
               class: "button lb-button is-primary" %>

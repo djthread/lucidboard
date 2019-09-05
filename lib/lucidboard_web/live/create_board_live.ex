@@ -46,11 +46,14 @@ defmodule LucidboardWeb.CreateBoardLive do
           {nil, nil}
 
         tpl ->
+          {:ok, access} = BoardAccessEnum.dump(params["access"])
+          settings = tpl.settings ++ [access: access]
+
           {
             Enum.map(Enum.with_index(tpl.columns), fn {c, idx} ->
               Column.new([title: c, pos: idx], :just_map)
             end),
-            BoardSettings.new(tpl.settings, :just_map)
+            BoardSettings.new(settings, :just_map)
           }
       end
 
