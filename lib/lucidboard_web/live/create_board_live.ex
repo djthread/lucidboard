@@ -51,7 +51,7 @@ defmodule LucidboardWeb.CreateBoardLive do
               Column.new([title: c, pos: idx], :just_map)
             end),
             BoardSettings.new(
-              tpl.settings ++ [access: String.to_integer(params["access"])],
+              tpl.settings ++ [access: params["access"]],
               :just_map
             )
           }

@@ -93,8 +93,6 @@ defmodule Lucidboard.Twiddler do
   @doc "Get a list of board records"
   @spec boards(integer, integer, String.t() | nil) :: [Board.t()]
   def boards(user_id, page_index \\ 1, q \\ nil) do
-    {:ok, open_int} = BoardAccessEnum.dump(:open)
-    {:ok, public_int} = BoardAccessEnum.dump(:public)
     user = Account.get!(user_id)
 
     base_query =
@@ -121,9 +119,9 @@ defmodule Lucidboard.Twiddler do
             fragment(
               "?->>'access' = ? or ?->>'access' = ?",
               base.settings,
-              ^to_string(open_int),
+              "open",
               base.settings,
-              ^to_string(public_int)
+              "public"
             ) or
               r.user_id == ^user_id
         )

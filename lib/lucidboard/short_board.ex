@@ -8,7 +8,7 @@ defmodule Lucidboard.ShortBoard do
           username: String.t(),
           updated_at: DateTime.t(),
           last_event: Event.t(),
-          access: atom
+          access: String.t()
         }
 
   defstruct [

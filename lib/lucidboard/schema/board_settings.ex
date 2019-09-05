@@ -9,7 +9,7 @@ defmodule Lucidboard.BoardSettings do
   embedded_schema do
     field(:likes_per_user, :integer, default: 3)
     field(:likes_per_user_per_card, :integer, default: 3)
-    field(:access, BoardAccessEnum, default: 0)
+    field(:access, :string, default: "open")
     # field(:anonymous_cards, :boolean)
   end
 
@@ -31,6 +31,15 @@ defmodule Lucidboard.BoardSettings do
     settings
     |> cast(attrs, [:likes_per_user, :likes_per_user_per_card, :access])
     |> validate_number(:likes_per_user_per_card, less_than_or_equal_to: per_user)
-    |> EctoEnum.validate_enum(:access)
+    |> validate_access(:access)
+  end
+
+  def validate_access(changeset, field, options \\ []) do
+    validate_change(changeset, field, fn _, access ->
+      case access in ["open", "private"] do
+        true -> []
+        false -> [{field, options[:message] || "Unexpected Access Value"}]
+      end
+    end)
   end
 end

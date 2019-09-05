@@ -7,7 +7,7 @@ defmodule Lucidboard.Repo.Migrations.PrivateBoards do
     # All existing boards have been and will remain open (0).
     query!(
       Repo,
-      "UPDATE boards SET settings = jsonb_set(settings, '{access}', '0')",
+      "UPDATE boards SET settings = jsonb_set(settings, '{access}', '\"open\"')",
       []
     )
   end
