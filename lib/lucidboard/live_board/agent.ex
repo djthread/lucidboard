@@ -3,7 +3,7 @@ defmodule Lucidboard.LiveBoard.Agent do
   GenServer for a live board
   """
   use GenServer
-  alias Lucidboard.{Board, Event, TimeMachine, Twiddler, User}
+  alias Lucidboard.{Board, Event, ShortBoard, TimeMachine, Twiddler, User}
   alias Lucidboard.LiveBoard.Scribe
   require Logger
 
@@ -54,6 +54,11 @@ defmodule Lucidboard.LiveBoard.Agent do
           {:update, new_board, event}
         )
 
+        Lucidboard.broadcast(
+          "short_board:#{new_board.id}",
+          {:short_board, ShortBoard.from_board(new_board, events)}
+        )
+
         Scribe.write(new_board.id, [
           tx_fn,
           if(event, do: fn -> TimeMachine.commit(event) end)
@@ -68,14 +73,6 @@ defmodule Lucidboard.LiveBoard.Agent do
 
       {:error, message} ->
         {:reply, {:error, message}, state}
-
-        # {:caught, type, error, stacktrace} ->
-        #   Logger.error("""
-        #   Error executing action #{inspect(action)}: \
-        #   #{Exception.format(type, error, stacktrace)}\
-        #   """)
-
-        #   {:reply, :error, state}
     end
   end
 

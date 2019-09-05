@@ -1,6 +1,6 @@
 defmodule Lucidboard.ShortBoard do
   @moduledoc "Struct for a board in a listing (on the dashboard)"
-  alias Lucidboard.{Event, TimeMachine}
+  alias Lucidboard.{Board, Event, TimeMachine}
 
   @type t :: %__MODULE__{
           id: integer,
@@ -21,8 +21,13 @@ defmodule Lucidboard.ShortBoard do
     :access
   ]
 
-  def from_board(board) do
-    last_event = board.id |> TimeMachine.events(size: 1) |> List.first()
+  def from_board(%Board{} = board, events \\ nil) do
+    last_event =
+      case events do
+        nil -> board.id |> TimeMachine.events(size: 1) |> List.first()
+        # events -> List.last(events)
+        [ev | _] -> ev
+      end
 
     %__MODULE__{
       id: board.id,

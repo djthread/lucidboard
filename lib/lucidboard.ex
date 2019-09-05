@@ -13,6 +13,11 @@ defmodule Lucidboard do
   end
 
   @doc false
+  def unsubscribe(topic) do
+    PubSub.unsubscribe(@pubsub, topic)
+  end
+
+  @doc false
   def broadcast(topic, message) do
     PubSub.broadcast(@pubsub, topic, message)
   end

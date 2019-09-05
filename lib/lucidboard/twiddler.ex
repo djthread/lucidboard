@@ -5,7 +5,7 @@ defmodule Lucidboard.Twiddler do
   import Ecto.Query
   alias Ecto.Association.NotLoaded
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Board, BoardRole, Event, ShortBoard}
+  alias Lucidboard.{Account, Board, BoardRole, Event}
   alias Lucidboard.Repo
   alias Lucidboard.Twiddler.{Actions, Op}
 
@@ -57,6 +57,7 @@ defmodule Lucidboard.Twiddler do
           left_join: cards in assoc(piles, :cards),
           left_join: likes in assoc(cards, :likes),
           preload: [
+            :user,
             columns: {columns, piles: {piles, cards: {cards, likes: likes}}},
             board_roles: {board_roles, user: role_users}
           ]
@@ -90,8 +91,8 @@ defmodule Lucidboard.Twiddler do
   end
 
   @doc "Get a list of board records"
-  @spec boards(integer, integer, String.t()) :: [Board.t()]
-  def boards(user_id, page_index \\ 1, q \\ "") do
+  @spec boards(integer, integer, String.t() | nil) :: [Board.t()]
+  def boards(user_id, page_index \\ 1, q \\ nil) do
     {:ok, open_int} = BoardAccessEnum.dump(:open)
     {:ok, public_int} = BoardAccessEnum.dump(:public)
     user = Account.get!(user_id)
@@ -152,7 +153,7 @@ defmodule Lucidboard.Twiddler do
         {:error, cs}
 
       {:ok, {:ok, %Board{} = b}} ->
-        Lucidboard.broadcast("short_boards", {:new, ShortBoard.from_board(b)})
+        Lucidboard.broadcast("short_boards_add_and_remove", :new)
         {:ok, Repo.preload(b, :user)}
     end
   end

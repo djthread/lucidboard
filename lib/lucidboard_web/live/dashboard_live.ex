@@ -19,63 +19,88 @@ defmodule LucidboardWeb.DashboardLive do
   end
 
   def mount(%{user_id: user_id}, socket) do
-    Lucidboard.subscribe("short_boards")
-
-    board_pagination = Twiddler.boards(user_id)
-    short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
+    Lucidboard.subscribe("short_boards_add_and_remove")
 
     socket =
-      assign(socket,
+      socket
+      |> assign(
         user_id: user_id,
-        short_boards: short_boards,
-        board_pagination: board_pagination,
-        search_key: nil
+        subscriptions: MapSet.new()
       )
+      |> load_data_and_handle_subscriptions()
 
     {:ok, socket}
   end
 
-  def handle_info({:new, short_board}, socket) do
-    short_boards = List.insert_at(socket.assigns.short_boards, 0, short_board)
+  def handle_info(:new, socket) do
+    {:noreply, load_data_and_handle_subscriptions(socket)}
+  end
+
+  def handle_info({:short_board, %{last_event: last_event} = short_board}, socket) do
+    short_boards =
+      if last_event && last_event.desc =~ ~r/board access/ do
+        # If the last event changed the board access setting, just reload
+        # everything to ensure that boards made private actually disappear.
+        load_data_and_handle_subscriptions(socket)
+      else
+        socket.assigns.short_boards
+        |> Enum.find_index(fn sb -> sb.id == short_board.id end)
+        |> case do
+          nil -> socket.assigns.short_boards
+          idx -> List.replace_at(socket.assigns.short_boards, idx, short_board)
+        end
+      end
+
     {:noreply, assign(socket, :short_boards, short_boards)}
   end
 
   def handle_event("search", %{"q" => search_key}, socket) do
-    board_pagination =
-      Twiddler.boards(
-        socket.assigns.user_id,
-        socket.assigns.board_pagination.page_number,
-        search_key
-      )
-
-    short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
-
-    socket =
-      socket
-      |> assign(:short_boards, short_boards)
-      |> assign(:board_pagination, board_pagination)
-      |> assign(:search_key, search_key)
-
-    {:noreply, socket}
+    {:noreply, load_data_and_handle_subscriptions(socket, 0, search_key)}
   end
 
   def handle_event("paginate", direction, socket) do
-    paginate_direction = if direction == "prev", do: -1, else: 1
-
-    board_pagination =
-      Twiddler.boards(
-        socket.assigns.user_id,
-        socket.assigns.board_pagination.page_number + paginate_direction,
+    socket =
+      load_data_and_handle_subscriptions(
+        socket,
+        if(direction == "prev", do: -1, else: 1),
         socket.assigns.search_key
       )
 
-    short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
-
-    socket =
-      socket
-      |> assign(:short_boards, short_boards)
-      |> assign(:board_pagination, board_pagination)
-
     {:noreply, socket}
   end
+
+  # Loads all dashboard data and updates subscriptions to reflect the visible
+  # boards.
+  defp load_data_and_handle_subscriptions(socket, page_direction \\ 0, q \\ nil) do
+    board_pagination =
+      Twiddler.boards(
+        socket.assigns.user_id,
+        (get_page_number(socket) || 1) + page_direction,
+        q || socket.assigns[:search_key]
+      )
+
+    short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
+    new_subscriptions = short_boards |> Enum.map(& &1.id) |> MapSet.new()
+    orig_subscriptions = socket.assigns.subscriptions
+
+    Enum.each(MapSet.difference(orig_subscriptions, new_subscriptions), fn id ->
+      Lucidboard.unsubscribe("short_board:#{id}")
+    end)
+
+    Enum.each(MapSet.difference(new_subscriptions, orig_subscriptions), fn id ->
+      Lucidboard.subscribe("short_board:#{id}")
+    end)
+
+    assign(socket,
+      short_boards: short_boards,
+      board_pagination: board_pagination,
+      subscriptions: new_subscriptions,
+      search_key: q
+    )
+  end
+
+  defp get_page_number(%{assigns: %{board_pagination: %{page_number: num}}}),
+    do: num
+
+  defp get_page_number(_), do: nil
 end
