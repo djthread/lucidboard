@@ -2,7 +2,7 @@ defmodule LucidboardWeb.DashboardLive do
   @moduledoc "The LiveView for the dashboard page"
   use Phoenix.LiveView
   alias Lucidboard.{ShortBoard, Twiddler}
-  alias LucidboardWeb.DashboardView
+  alias LucidboardWeb.{DashboardView, Endpoint}
   alias LucidboardWeb.Router.Helpers, as: Routes
 
   def render(assigns) do
