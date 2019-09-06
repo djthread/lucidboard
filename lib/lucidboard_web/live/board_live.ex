@@ -294,18 +294,6 @@ defmodule LucidboardWeb.BoardLive do
     {:noreply, socket |> assign(:search_opened?, false) |> assign(:search, nil)}
   end
 
-  def handle_event("keydown", %{"key" => "Escape"}, socket) do
-    {:noreply,
-     socket
-     |> assign(:search_opened?, false)
-     |> assign(:search, nil)
-     |> assign(:tab, :board)}
-  end
-
-  def handle_event("keydown", _, socket) do
-    {:noreply, socket}
-  end
-
   def handle_event("sortby_likes", col_id, socket) do
     live_board_action({:sortby_likes, id: col_id}, socket)
     {:noreply, socket}

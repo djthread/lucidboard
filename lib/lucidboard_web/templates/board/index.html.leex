@@ -1,4 +1,4 @@
-<div phx-keydown="keydown" phx-target="window" class="is-relative">
+<div phx-target="window" class="is-relative">
 <%= if assigns[:flash_msg] do %>
   <% class = if assigns[:flash_type] == :info, do: "is-success", else: "is-danger" %>
   <div class="notification lb-notification <%= class %>" role="alert">
