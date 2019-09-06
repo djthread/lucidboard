@@ -83,4 +83,6 @@ WORKDIR /opt/app
 
 COPY --from=builder /opt/built .
 
-CMD trap 'exit' INT; /opt/app/bin/${APP_NAME} start
+CMD trap 'exit' INT; \
+  /opt/app/bin/${APP_NAME} eval "Lucidboard.Release.migrate()"; \
+  /opt/app/bin/${APP_NAME} start
