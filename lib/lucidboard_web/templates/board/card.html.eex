@@ -4,7 +4,7 @@
     <%= form_for @card_changeset, "#", [phx_submit: :card_save], fn f -> %>
     <%= textarea f, :body, class: "textarea is-medium has-fixed-size lb-textarea u-Phm u-Ptm", id: "txtarea" %>
     <%= error_tag f, :body %>
-    <div class="u-Pam">
+    <div class="u-Pam lb-buttons--inline">
       <%= submit "Save", phx_disable_with: "Saving...", class: "button lb-button is-primary" %>
       <%= submit "Cancel", phx_click: :card_cancel, class: "button lb-button" %>
     </div>
@@ -57,10 +57,10 @@
 
 <%= if @delete_confirming_card_id == @card.id do %>
 <div class="u-Phm u-Pbm">
-  <div class="">
-    <p class="u-Mbm">
-      If you delete the card, it's gone forever. Are you sure?
-    </p>
+  <p class="u-Mbm">
+    If you delete the card, it's gone forever. Are you sure?
+  </p>
+  <div class="lb-buttons--inline">
     <button phx-click="card_delete_confirmed" phx-value="<%= @card.id %>" class="button lb-button is-primary">Confirm</button>
     <button phx-click="card_delete_cancelled" phx-value="<%= @card.id %>" class="button lb-button">Cancel</button>
   </div>
