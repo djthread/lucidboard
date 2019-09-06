@@ -51,7 +51,12 @@ defmodule LucidboardWeb do
       import Lucidboard, only: [utc_to_formatted: 2]
 
       import Lucidboard.Account,
-        only: [display_name: 1, has_role?: 2, has_role?: 3]
+        only: [
+          display_name: 1,
+          has_role?: 2,
+          has_role?: 3,
+          card_is_editable?: 3
+        ]
 
       import Phoenix.LiveView, only: [live_render: 2, live_render: 3]
       alias Lucidboard.Twiddler.Op

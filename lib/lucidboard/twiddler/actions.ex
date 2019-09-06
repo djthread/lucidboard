@@ -87,21 +87,25 @@ defmodule Lucidboard.Twiddler.Actions do
   end
 
   @spec update_card(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
-  def update_card(board, args, _opts \\ []) do
+  def update_card(board, args, opts \\ []) do
     with [id] <- grab(args, [:id]),
+         user <- Keyword.get(opts, :user),
          {:ok, lens} <- Glass.card_by_id(board, id),
-         %Changeset{valid?: true} = cs <-
-           lens |> Focus.view(board) |> Card.changeset(args) do
+         card <- Focus.view(lens, board),
+         true <- Account.card_is_editable?(card, user, board) || :unauthorized,
+         %Changeset{valid?: true} = cs <- Card.changeset(card, args) do
       {:ok, Focus.set(lens, board, Changeset.apply_changes(cs)),
        fn -> Repo.update(cs) end, %{}, event("has changed card text.")}
     end
   end
 
   @spec delete_card(Board.t(), map, keyword) :: Twiddler.action_ok_or_error()
-  def delete_card(board, args, _opts \\ []) do
+  def delete_card(board, args, opts \\ []) do
     with [id] <- grab(args, [:id]),
+         user <- Keyword.get(opts, :user),
          {:ok, card_path} <- Glass.card_path_by_id(board, id),
-         {:ok, new_board, card, tx_fn} <- Op.cut_card(board, card_path) do
+         {:ok, new_board, card, tx_fn} <- Op.cut_card(board, card_path),
+         true <- Account.card_is_editable?(card, user, board) || :unauthorized do
       del_card = fn -> QueryBuilder.delete_card(card) end
       {:ok, new_board, [del_card, tx_fn], %{}, event("has deleted a card.")}
     end

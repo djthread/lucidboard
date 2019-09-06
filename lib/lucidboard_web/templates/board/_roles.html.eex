@@ -1,4 +1,4 @@
-<% more_than_one_owner = more_than_one_owner(@board.board_roles) %>
+<% more_than_one_owner? = more_than_one_owner?(@board.board_roles) %>
 
 <%= if @editable do %>
 <form phx-change="role_suggest"
@@ -45,7 +45,7 @@
       <%= avatar(role.user) %>
       <%= display_name(role.user) %>
       (<%= role.role %>)
-      <%= if @editable and (role.role != :owner or more_than_one_owner) do %>
+      <%= if @editable and (role.role != :owner or more_than_one_owner?) do %>
         <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
           <%= fas("user-minus") %>
         </a>

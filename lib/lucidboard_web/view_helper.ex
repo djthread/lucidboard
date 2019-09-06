@@ -70,8 +70,8 @@ defmodule LucidboardWeb.ViewHelper do
     """)
   end
 
-  @spec more_than_one_owner([BoardRole.t()]) :: boolean
-  def more_than_one_owner(roles) do
+  @spec more_than_one_owner?([BoardRole.t()]) :: boolean
+  def more_than_one_owner?(roles) do
     true ==
       Enum.reduce_while(roles, 0, fn
         %{role: :owner}, 1 -> {:halt, true}
