@@ -3,6 +3,7 @@
 ## 2019-09-06
 
 * Private boards
+* Anonymous boards
 * Contributor access can now be granted
 * New search UI on board screen
 * Automatically focus card text area
