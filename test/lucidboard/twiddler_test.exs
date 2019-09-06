@@ -1,7 +1,7 @@
 defmodule Lucidboard.TwiddlerTest do
   @moduledoc false
   use LucidboardWeb.BoardCase
-  alias Lucidboard.{Card, CardSettings, Column, Pile}
+  alias Lucidboard.{Card, CardSettings, Column, Pile, User}
   alias Lucidboard.LiveBoard.Scribe
   alias Lucidboard.Twiddler
   alias Lucidboard.Twiddler.Glass
@@ -47,7 +47,8 @@ defmodule Lucidboard.TwiddlerTest do
       Twiddler.act(
         board,
         {:update_card,
-         id: actual_card_id, body: "OH YEAH", settings: %{color: "FFF000"}}
+         id: actual_card_id, body: "OH YEAH", settings: %{color: "FFF000"}},
+        user: %User{admin: true}
       )
 
     assert "has changed card text." == event.desc
@@ -65,7 +66,7 @@ defmodule Lucidboard.TwiddlerTest do
     assert 3 == length(pile_before.cards)
 
     {:ok, new_board, tx_fn, %{}, event} =
-      Twiddler.act(board, {:delete_card, id: card.id})
+      Twiddler.act(board, {:delete_card, id: card.id}, user: %User{admin: true})
 
     pile_after = Glass.pile_by_path(new_board, card_path)
     assert ~w(srs? neat) == Enum.map(pile_after.cards, fn c -> c.body end)
@@ -90,7 +91,7 @@ defmodule Lucidboard.TwiddlerTest do
     assert 1 == length(pile_before.cards)
 
     {:ok, new_board, tx_fn, %{}, event} =
-      Twiddler.act(board, {:delete_card, id: card.id})
+      Twiddler.act(board, {:delete_card, id: card.id}, user: %User{admin: true})
 
     column_after = Glass.column_by_path(new_board, card_path)
     assert Enum.empty?(column_after.piles)
@@ -228,13 +229,17 @@ defmodule Lucidboard.TwiddlerTest do
     execute_tx_and_assert_board_matches(tx_fn, new_board)
   end
 
-  test "add locked card", %{board: %{user_id: user_id} = board} do
+  test "add locked card", %{
+    board: %{user_id: board_user_id} = board,
+    user: user
+  } do
     col_lens = Lens.make_lens(:columns) ~> Lens.idx(1)
     col = Focus.view(col_lens, board)
 
     assert 1 == length(col.piles)
 
-    action = {:add_and_lock_card, col_id: col.id, user_id: user_id}
+    action = {:add_and_lock_card, col_id: col.id, user: user}
+
     {:ok, new_board, tx_fn, %{card: _card}, event} = Twiddler.act(board, action)
 
     %Column{piles: [_original_pile, %Pile{cards: [%Card{} = new_card]}]} =
@@ -246,7 +251,7 @@ defmodule Lucidboard.TwiddlerTest do
              body: "",
              pos: 0,
              settings: %CardSettings{},
-             user_id: ^user_id,
+             user_id: ^board_user_id,
              likes: []
            } = new_card
 
