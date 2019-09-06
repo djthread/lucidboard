@@ -49,7 +49,7 @@ defmodule Lucidboard.LiveBoard.Agent do
         {event, events} = add_event(state.events, event, new_board, user)
         new_state = %{state | board: new_board, events: events}
 
-        if event.desc =~ ~r/board access/ do
+        if event && event.desc =~ ~r/board access/ do
           # If the last event changed the board access setting, we'll wait a
           # moment to be sure the Scribe has written to the database, then
           # broadcast to have all Dashboard views do a full refresh.
