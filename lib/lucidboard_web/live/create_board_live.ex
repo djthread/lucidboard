@@ -51,7 +51,11 @@ defmodule LucidboardWeb.CreateBoardLive do
               Column.new([title: c, pos: idx], :just_map)
             end),
             BoardSettings.new(
-              tpl.settings ++ [access: params["access"]],
+              tpl.settings ++
+                [
+                  access: params["access"],
+                  anonymous: params["anonymous"] == "1"
+                ],
               :just_map
             )
           }

@@ -24,7 +24,7 @@
         <%= if short_board.last_event do %>
           <span class="u-Mtm is-block">
           <%= fas("clock") %>
-          <%= display_event(short_board.last_event) %>
+          <%= display_event(short_board.last_event, short_board.anonymous) %>
           </span>
         <% end %>
       </div>

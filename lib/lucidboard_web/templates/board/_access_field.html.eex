@@ -1,16 +1,14 @@
-<div class="field u-Mbl">
-    <ul>
-        <li class="lb-radioButton">
-        <%= radio_button(@f, :access, "open", class: "lb-radioButton__input", checked: "checked", id: "board_settings_access_open") %>
-        <%= label @f, :access, class: "lb-radioButton__label", for: "board_settings_access_open" do %>
-            <span class="lb-radioButton__label-text"><strong>Open</strong> - Anyone can contribute</span>
-        <% end %>
-        </li>
-        <li class="lb-radioButton">
-        <%= radio_button(@f, :access, "private", class: "lb-radioButton__input", id: "board_settings_access_private") %>
-        <%= label @f, :access, class: "lb-radioButton__label", for: "board_settings_access_private" do %>
-            <span class="lb-radioButton__label-text"><strong>Private</strong> - Board is hidden</span>
-        <% end %>
-        </li>
-    </ul>
-</div>
+<ul>
+  <li class="lb-radioButton">
+  <%= radio_button(@f, :access, "open", class: "lb-radioButton__input", checked: "checked", id: "board_settings_access_open") %>
+  <%= label @f, :access, class: "lb-radioButton__label", for: "board_settings_access_open" do %>
+    <span class="lb-radioButton__label-text"><strong>Open</strong> &mdash; Anyone can contribute</span>
+  <% end %>
+  </li>
+  <li class="lb-radioButton">
+  <%= radio_button(@f, :access, "private", class: "lb-radioButton__input", id: "board_settings_access_private") %>
+  <%= label @f, :access, class: "lb-radioButton__label", for: "board_settings_access_private" do %>
+    <span class="lb-radioButton__label-text"><strong>Private</strong> &mdash; Board is hidden</span>
+  <% end %>
+  </li>
+</ul>

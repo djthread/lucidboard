@@ -33,14 +33,18 @@ defmodule LucidboardWeb.ViewHelper do
     end
   end
 
-  def display_event(%Event{
-        inserted_at: inserted_at,
-        user: %{name: name},
-        desc: desc
-      }) do
+  @spec display_event(Event.t(), boolean) :: Phoenix.HTML.safe()
+  def display_event(
+        %Event{
+          inserted_at: inserted_at,
+          user: %{name: name},
+          desc: desc
+        },
+        anonymous
+      ) do
     raw("""
     #{Lucidboard.utc_to_formatted(inserted_at)} \
-    <strong>#{name}</strong> \
+    #{if anonymous, do: "a user", else: "<strong>#{name}</strong>"} \
     #{desc}\
     """)
   end

@@ -55,10 +55,13 @@ defmodule Lucidboard.Twiddler do
           left_join: columns in assoc(board, :columns),
           left_join: piles in assoc(columns, :piles),
           left_join: cards in assoc(piles, :cards),
+          left_join: user in assoc(cards, :user),
           left_join: likes in assoc(cards, :likes),
           preload: [
             :user,
-            columns: {columns, piles: {piles, cards: {cards, likes: likes}}},
+            columns:
+              {columns,
+               piles: {piles, cards: {cards, user: user, likes: likes}}},
             board_roles: {board_roles, user: role_users}
           ]
         )

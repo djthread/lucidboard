@@ -17,15 +17,21 @@
     <p phx-click="inline_edit"
       phx-value="<%= @card.id %>"
       class="content is-size-<%= card_body_size_by_copy(@card.body) %> js-inlineEdit u-Phm u-Ptm">
-      <%= @card.body
-      |> String.split("\n", trim: false)
-      |> Enum.intersperse(Phoenix.HTML.Tag.tag(:br)) %>
+      <%=
+        @card.body
+        |> String.split("\n", trim: false)
+        |> Enum.intersperse(Phoenix.HTML.Tag.tag(:br))
+        %>
     </p>
   <% end %>
 </div>
 
 <%= unless @locked? do %>
 <footer class="lb-card__footer card-footer">
+  <%= unless @board.settings.anonymous do %>
+    <em style="color:#aaa"><%= @card.user.name %></em>
+  <% end %>
+
   <%= if count_user_likes(@card.likes, @user.id) > 0  do %>
   <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
     <%= fas("heart-broken") %>

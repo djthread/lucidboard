@@ -10,7 +10,7 @@ defmodule Lucidboard.BoardSettings do
     field(:likes_per_user, :integer, default: 3)
     field(:likes_per_user_per_card, :integer, default: 3)
     field(:access, :string, default: "open")
-    # field(:anonymous_cards, :boolean)
+    field(:anonymous, :boolean, default: true)
   end
 
   @spec new(keyword) :: BoardSettings.t()

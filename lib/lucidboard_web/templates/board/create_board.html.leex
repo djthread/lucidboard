@@ -27,7 +27,28 @@
         </div>
       </div>
 
-      <%= render(LucidboardWeb.BoardView, "_access_field.html", f: f) %>
+      <div class="field u-Mbl">
+        <label class="label">Board Access</label>
+        <%= render(LucidboardWeb.BoardView, "_access_field.html", f: f) %>
+      </div>
+
+      <div class="field u-Mbl">
+        <label class="label">Anonymous</label>
+        <ul>
+          <li class="lb-radioButton">
+          <%= radio_button(f, :anonymous, "1", class: "lb-radioButton__input", checked: "checked", id: "board_settings_anonymous_true") %>
+          <%= label f, :anonymous, class: "lb-radioButton__label", for: "board_settings_anonymous_true" do %>
+            <span class="lb-radioButton__label-text"><strong>Yes</strong> &mdash; User actions are anonymous</span>
+          <% end %>
+          </li>
+          <li class="lb-radioButton">
+          <%= radio_button(f, :anonymous, "0", class: "lb-radioButton__input", id: "board_settings_anonymous_false") %>
+          <%= label f, :anonymous, class: "lb-radioButton__label", for: "board_settings_anonymous_false" do %>
+            <span class="lb-radioButton__label-text"><strong>No</strong> &mdash; Usernames are attached to actions</span>
+          <% end %>
+          </li>
+        </ul>
+      </div>
 
       <div class="field">
         <div class="control">

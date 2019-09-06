@@ -2,7 +2,7 @@
   <div class="stack__item">
     <ul>
     <%= for event <- Enum.reverse(@events) do %>
-      <li><%= display_event(event) %></li>
+      <li><%= display_event(event, @board.settings.anonymous) %></li>
     <% end %>
     </ul>
   </div>

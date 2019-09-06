@@ -8,7 +8,8 @@ defmodule Lucidboard.ShortBoard do
           username: String.t(),
           updated_at: DateTime.t(),
           last_event: Event.t(),
-          access: String.t()
+          access: String.t(),
+          anonymous: boolean
         }
 
   defstruct [
@@ -18,7 +19,8 @@ defmodule Lucidboard.ShortBoard do
     :inserted_at,
     :updated_at,
     :last_event,
-    :access
+    :access,
+    :anonymous
   ]
 
   def from_board(%Board{} = board, events \\ nil) do
@@ -35,7 +37,8 @@ defmodule Lucidboard.ShortBoard do
       inserted_at: board.inserted_at,
       updated_at: board.updated_at,
       last_event: last_event,
-      access: board.settings.access
+      access: board.settings.access,
+      anonymous: board.settings.anonymous
     }
   end
 end

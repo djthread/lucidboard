@@ -95,7 +95,9 @@
             "#",
             [phx_submit: :board_settings_save],
             fn f -> %>
-        <%= render(LucidboardWeb.BoardView, "_access_field.html", f: f) %>
+        <div class="field u-Mbl">
+          <%= render(LucidboardWeb.BoardView, "_access_field.html", f: f) %>
+        </div>
         <%= submit "Save",
               phx_disable_with: "Saving...",
               class: "button lb-button is-primary" %>
