@@ -212,11 +212,11 @@ defmodule Lucidboard.Twiddler.Op do
   end
 
   @doc "Add a new pile at the end of the column with one locked card."
-  @spec add_locked_card(Column.t(), integer) ::
+  @spec add_locked_card(Column.t(), User.t()) ::
           {:ok, Column.t(), Column.t(), Twiddler.meta()}
-  def add_locked_card(%Column{piles: piles} = column, user_id) do
+  def add_locked_card(%Column{piles: piles} = column, user) do
     pile_uuid = UUID.generate()
-    new_card = Card.new(pile_id: pile_uuid, user_id: user_id, locked: true)
+    new_card = Card.new(pile_id: pile_uuid, user: user, locked: true)
 
     new_pile =
       Pile.new(

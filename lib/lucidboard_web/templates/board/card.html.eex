@@ -30,7 +30,7 @@
 <footer class="lb-card__footer card-footer">
   <div class="lb-card__footer-user">
     <%= unless @board.settings.anonymous do %>
-      <%= @card.user.name %>
+      <p title="<%= @card.user.full_name %>"><%= @card.user.name %></p>
     <% end %>
   </div>
   <div class="lb-card__footer-actions">

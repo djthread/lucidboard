@@ -105,7 +105,7 @@ defmodule LucidboardWeb.BoardLive do
 
   def handle_event("add_card", col_id, socket) do
     {:ok, %{card: new_card}} =
-      {:add_and_lock_card, col_id: col_id, user_id: user_id(socket)}
+      {:add_and_lock_card, col_id: col_id, user: user(socket)}
       |> live_board_action(socket)
 
     {:noreply, presence_lock_card(socket, new_card)}
