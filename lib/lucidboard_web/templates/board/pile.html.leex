@@ -53,7 +53,7 @@
       <%= rendered_card %>
     </div>
     <div class="lb-card__footer--extra">
-      <span class="card-footer-item lb-card-footer-item">of <%= length(@pile.cards) %></span>
+      <span class="card-footer-item lb-card-footer-item"><%= length(@pile.cards) %> cards</span>
       <span class="card-footer-item lb-card-footer-item"><%= fas("heart") %> <%= Op.likes(@pile) %></span>
       <a phx-click="unflip_pile" phx-value="<%= @pile.id %>" href="#" class="card-footer-item"><%= fas("angle-left") %></a>
       <a phx-click="flip_pile" phx-value="<%= @pile.id %>" href="#" class="card-footer-item"><%= fas("angle-right") %></a>
