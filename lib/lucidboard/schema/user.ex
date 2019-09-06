@@ -18,7 +18,7 @@ defmodule Lucidboard.User do
 
   @spec new(keyword) :: User.t()
   def new(fields \\ []) do
-    defaults = [settings: UserSettings.new()]
+    defaults = [settings: UserSettings.new(), admin: false]
     struct(__MODULE__, Keyword.merge(defaults, fields))
   end
 
