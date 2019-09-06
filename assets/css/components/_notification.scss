@@ -7,8 +7,19 @@
   z-index: 9;
   top: -1rem;
   margin: auto;
-  
+  font-weight: bold;
+  font-size: 1.15rem;
+  text-align: center;
+
   @media all and (min-width: $widescreen) {
-    width: 40rem;
+    width: 25rem;
   }
+}
+
+.lb-notification.is-success {
+    background-color: #2ecc71d6;
+}
+
+.lb-notification.is-danger {
+  width: 33rem;
 }
