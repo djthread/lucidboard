@@ -295,7 +295,11 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("keydown", %{"key" => "Escape"}, socket) do
-    {:noreply, socket |> assign(:search_opened?, false) |> assign(:tab, :board)}
+    {:noreply,
+     socket
+     |> assign(:search_opened?, false)
+     |> assign(:search, nil)
+     |> assign(:tab, :board)}
   end
 
   def handle_event("keydown", _, socket) do
