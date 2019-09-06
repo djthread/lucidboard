@@ -38,7 +38,7 @@
   <div class="stack__item">
     <ul class="lb-tabs">
       <li class="lb-tab lb-search">
-          <div class="lb-search__wrapper <%= if assigns.search_opened?, do: "lb-search__wrapper--open" %>">
+          <div class="lb-search__wrapper<%= if assigns.search_opened?, do: " lb-search__wrapper--open" %>">
               <a href="#search" class="js-inputTrigger lb-inputTrigger" phx-click="search_open">
                 <i class="fa fa-search lb-search__icon" aria-hidden="true"></i>
               </a>
