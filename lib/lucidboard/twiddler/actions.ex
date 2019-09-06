@@ -278,9 +278,10 @@ defmodule Lucidboard.Twiddler.Actions do
   def grant(board, args, opts \\ []) do
     with true <-
            Account.has_role?(Keyword.get(opts, :user), board) || :unauthorized,
-         [id, role] <- grab(args, [:id, :role]) do
+         [id, role] when role in ["observer", "contributor", "owner"] <-
+           grab(args, [:id, :role]) do
       board_role =
-        [user_id: id, board_id: board.id, role: role]
+        [user_id: id, board_id: board.id, role: String.to_atom(role)]
         |> BoardRole.new()
         |> Repo.preload(:user)
 
