@@ -14,8 +14,11 @@
   <i class="fa fa-comment-dots fa-3x lb-card-locked" aria-hidden="true"></i>
 
   <% true -> %>
-    <p phx-click="inline_edit"
+    <p
+      <%= if card_is_editable?(@card, @user, @board) do %>
+      phx-click="inline_edit"
       phx-value="<%= @card.id %>"
+      <% end %>
       class="content is-size-<%= card_body_size_by_copy(@card.body) %> js-inlineEdit u-Phm u-Ptm">
       <%=
         @card.body
@@ -48,16 +51,18 @@
     </a>
   <% end %>
 
-  <a phx-click="modal_card_edit"
-    phx-value="<%= @card.id %>"
-    href="#"
-    class="card-footer-item lb-inputTrigger js-cardModal"
-    data-modal="trigger">
-    <%= fas("edit") %>
-  </a>
-  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
-    <%= fas("trash-alt") %>
-  </a>
+  <%= if card_is_editable?(@card, @user, @board) do %>
+    <a phx-click="modal_card_edit"
+      phx-value="<%= @card.id %>"
+      href="#"
+      class="card-footer-item lb-inputTrigger js-cardModal"
+      data-modal="trigger">
+      <%= fas("edit") %>
+    </a>
+    <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
+      <%= fas("trash-alt") %>
+    </a>
+  <% end %>
 </footer>
 <% end %>
 

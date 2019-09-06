@@ -3,18 +3,18 @@ defmodule LucidboardWeb.ViewHelperTest do
   alias Lucidboard.BoardRole
   alias LucidboardWeb.ViewHelper
 
-  test "more_than_one_owner" do
-    assert false == ViewHelper.more_than_one_owner([])
+  test "more_than_one_owner?" do
+    assert false == ViewHelper.more_than_one_owner?([])
 
     assert true ==
-             ViewHelper.more_than_one_owner([
+             ViewHelper.more_than_one_owner?([
                %BoardRole{board_id: 1, user_id: 1, role: :observer},
                %BoardRole{board_id: 1, user_id: 2, role: :owner},
                %BoardRole{board_id: 1, user_id: 3, role: :owner}
              ])
 
     assert false ==
-             ViewHelper.more_than_one_owner([
+             ViewHelper.more_than_one_owner?([
                %BoardRole{board_id: 1, user_id: 1, role: :observer},
                %BoardRole{board_id: 1, user_id: 2, role: :owner}
              ])

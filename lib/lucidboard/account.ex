@@ -3,7 +3,7 @@ defmodule Lucidboard.Account do
   import Ecto.Query
   alias Ecto.Changeset
   alias Lucidboard.Account.{Github, PingFed}
-  alias Lucidboard.{Board, BoardRole, BoardSettings, Repo, User}
+  alias Lucidboard.{Board, BoardRole, BoardSettings, Card, Repo, User}
   alias Ueberauth.Auth
   require Logger
 
@@ -66,6 +66,18 @@ defmodule Lucidboard.Account do
       _ ->
         false
     end)
+  end
+
+  @spec card_is_editable?(Card.t(), User.t(), Board.t()) :: boolean
+  def card_is_editable?(card, user, board)
+
+  def card_is_editable?(_, %User{admin: true}, _), do: true
+
+  def card_is_editable?(%Card{user: %User{id: user_id}}, %User{id: user_id}, _),
+    do: true
+
+  def card_is_editable?(_, %User{id: user_id}, %Board{board_roles: board_roles}) do
+    Enum.any?(board_roles, fn %{user: %{id: uid}, role: :owner} -> uid == user_id end)
   end
 
   @spec suggest_users(String.t()) :: [User.t()]
