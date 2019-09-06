@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2019-09-05
+## 2019-09-06
 
 * Private boards
 * Contributor access can now be granted

@@ -45,7 +45,7 @@
       <%= avatar(role.user) %>
       <%= display_name(role.user) %>
       (<%= role.role %>)
-      <%= if @editable and more_than_one_owner do %>
+      <%= if @editable and (role.role != :owner or more_than_one_owner) do %>
         <a href="#" phx-click="revoke" phx-value="<%= role.user.id %>">
           <%= fas("user-minus") %>
         </a>
