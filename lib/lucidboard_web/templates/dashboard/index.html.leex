@@ -6,8 +6,8 @@
 
   <h2 class="title">Lucidboards</h2>
 
-  <form class="u-Mbl" phx-change="search">
-    <input class="input lb-input lb-input-huge" type="text" name="q" value="<%= @search_key %>" placeholder="Search" />
+  <form class="u-Mbl" phx-change="search" id="lb-search">
+    <input class="input lb-input lb-input-huge js-search" type="text" name="q" value="<%= @search_key %>" placeholder="Search" />
   </form>
 
   <%= for short_board <- @short_boards do %>

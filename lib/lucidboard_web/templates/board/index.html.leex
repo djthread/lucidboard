@@ -42,8 +42,8 @@
               <a href="#search" class="js-inputTrigger lb-inputTrigger" phx-click="search_open">
                 <i class="fa fa-search lb-search__icon" aria-hidden="true"></i>
               </a>
-              <form phx-change="search_key" class="lb-search__form">
-                <input class="lb-search__input input lb-input lb-input--alt is-medium" type="text" name="q" list="matches" placeholder="Search"
+              <form phx-change="search_key" class="lb-search__form" id="lb-search">
+                <input class="lb-search__input input lb-input lb-input--alt is-medium js-search" type="text" name="q" list="matches" placeholder="Search"
                 <%= if @search do %>
                 value="<%= @search.q %>"
                 <% end %>

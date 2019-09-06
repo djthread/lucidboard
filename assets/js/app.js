@@ -74,3 +74,10 @@ document.body.addEventListener('click', function(e) {
     }, 300);
   }
 });
+
+// Only run this is js-search is on the page
+if (document.querySelector('input').classList.contains('js-search')) {
+  document.getElementById('lb-search').addEventListener('submit', (e) => {
+      e.preventDefault();
+  });
+}
