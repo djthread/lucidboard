@@ -29,7 +29,7 @@
 <%= unless @locked? do %>
 <footer class="lb-card__footer card-footer">
   <%= unless @board.settings.anonymous do %>
-    <em style="color:#aaa"><%= @card.user.name %></em>
+    <em style="color:#aaa" title="<%= @card.user.full_name %>"><%= @card.user.name %></em>
   <% end %>
 
   <%= if count_user_likes(@card.likes, @user.id) > 0  do %>
