@@ -10,8 +10,8 @@ defmodule LucidboardWeb.ViewHelper do
 
   @doc "Given a board access setting, return the icon HTML"
   def board_access_icon(type, class \\ nil)
-  def board_access_icon(:private, class), do: fas("lock", class)
-  def board_access_icon(:public, class), do: fas("eye", class)
+  def board_access_icon("private", class), do: fas("lock", class)
+  def board_access_icon("public", class), do: fas("eye", class)
   def board_access_icon(_, _), do: nil
 
   def show_card_count(column) do

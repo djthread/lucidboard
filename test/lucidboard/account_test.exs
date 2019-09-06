@@ -6,19 +6,19 @@ defmodule Lucidboard.AccountTest do
   test "has_role?: open boards are cool for non-owners" do
     assert has_role?(
              %User{},
-             %Board{settings: %BoardSettings{access: :open}},
+             %Board{settings: %BoardSettings{access: "open"}},
              :observer
            )
 
     assert has_role?(
              %User{},
-             %Board{settings: %BoardSettings{access: :open}},
+             %Board{settings: %BoardSettings{access: "open"}},
              :contributor
            )
 
     refute has_role?(
              %User{},
-             %Board{settings: %BoardSettings{access: :open}, board_roles: []},
+             %Board{settings: %BoardSettings{access: "open"}, board_roles: []},
              :owner
            )
   end
@@ -26,20 +26,20 @@ defmodule Lucidboard.AccountTest do
   test "has_role?: public boards" do
     assert has_role?(
              %User{},
-             %Board{settings: %BoardSettings{access: :public}},
+             %Board{settings: %BoardSettings{access: "public"}},
              :observer
            )
 
     refute has_role?(
              %User{},
-             %Board{settings: %BoardSettings{access: :public}, board_roles: []},
+             %Board{settings: %BoardSettings{access: "public"}, board_roles: []},
              :contributor
            )
 
     assert has_role?(
              %User{id: 2},
              %Board{
-               settings: %BoardSettings{access: :public},
+               settings: %BoardSettings{access: "public"},
                board_roles: [%BoardRole{user_id: 2, role: :contributor}]
              },
              :contributor
@@ -48,7 +48,7 @@ defmodule Lucidboard.AccountTest do
     refute has_role?(
              %User{id: 2},
              %Board{
-               settings: %BoardSettings{access: :public},
+               settings: %BoardSettings{access: "public"},
                board_roles: [%BoardRole{user_id: 2, role: :contributor}]
              },
              :owner
@@ -59,7 +59,7 @@ defmodule Lucidboard.AccountTest do
     refute has_role?(
              %User{},
              %Board{
-               settings: %BoardSettings{access: :private},
+               settings: %BoardSettings{access: "private"},
                board_roles: []
              },
              :owner
@@ -68,7 +68,7 @@ defmodule Lucidboard.AccountTest do
     refute has_role?(
              %User{id: 3},
              %Board{
-               settings: %BoardSettings{access: :private},
+               settings: %BoardSettings{access: "private"},
                board_roles: [%BoardRole{user_id: 3, role: :contributor}]
              },
              :owner
@@ -77,7 +77,7 @@ defmodule Lucidboard.AccountTest do
     assert has_role?(
              %User{id: 3},
              %Board{
-               settings: %BoardSettings{access: :private},
+               settings: %BoardSettings{access: "private"},
                board_roles: [%BoardRole{user_id: 3, role: :owner}]
              },
              :owner
@@ -87,7 +87,7 @@ defmodule Lucidboard.AccountTest do
   test "admin is always an owner" do
     assert has_role?(
              %User{admin: true},
-             %Board{settings: %BoardSettings{access: :private}},
+             %Board{settings: %BoardSettings{access: "private"}},
              :owner
            )
   end

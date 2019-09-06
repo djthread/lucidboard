@@ -35,14 +35,14 @@ defmodule Lucidboard.Account do
   @spec has_role?(User.t(), Board.t(), atom) :: boolean
   def has_role?(user, board, role \\ :owner)
 
-  def has_role?(_user, %Board{settings: %BoardSettings{access: :open}}, role)
+  def has_role?(_user, %Board{settings: %BoardSettings{access: "open"}}, role)
       when role in [:observer, :contributor] do
     true
   end
 
   def has_role?(
         _user,
-        %Board{settings: %BoardSettings{access: :public}},
+        %Board{settings: %BoardSettings{access: "public"}},
         :observer
       ) do
     true
