@@ -17,8 +17,19 @@
 .lb-card__footer {
   display: flex;
   transition: all .2s ease-in-out;
-  align-self: flex-end;
-  justify-content: space-between;
+}
+
+.lb-card__footer-user {
+  align-items: center;
+  color: $grey-light;
+  font-style: italic;
+  display: flex;
+  flex: 1;
+  padding-left: 0.75rem;
+}
+
+.lb-card__footer-actions {
+  display: flex;
 }
 
 .lb-card__footer--extra {

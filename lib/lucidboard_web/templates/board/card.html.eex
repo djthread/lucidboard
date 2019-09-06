@@ -28,36 +28,39 @@
 
 <%= unless @locked? do %>
 <footer class="lb-card__footer card-footer">
-  <%= unless @board.settings.anonymous do %>
-    <em style="color:#aaa"><%= @card.user.name %></em>
-  <% end %>
-
-  <%= if count_user_likes(@card.likes, @user.id) > 0  do %>
-  <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
-    <%= fas("heart-broken") %>
-  </a>
-  <% end %>
-
-  <%= if count_user_likes(@card.likes, @user.id) < @board.settings.likes_per_user_per_card do %>
-    <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
-      <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
+  <div class="lb-card__footer-user">
+    <%= unless @board.settings.anonymous do %>
+      <%= @card.user.name %>
+    <% end %>
+  </div>
+  <div class="lb-card__footer-actions">
+    <%= if count_user_likes(@card.likes, @user.id) > 0  do %>
+    <a phx-click="unlike" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
+      <%= fas("heart-broken") %>
     </a>
-  <% else %>
-    <a href="#" class="card-footer-item lb-card__footer-item--disabled">
-      <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
-    </a>
-  <% end %>
+    <% end %>
 
-  <a phx-click="modal_card_edit"
-    phx-value="<%= @card.id %>"
-    href="#"
-    class="card-footer-item lb-inputTrigger js-cardModal"
-    data-modal="trigger">
-    <%= fas("edit") %>
-  </a>
-  <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
-    <%= fas("trash-alt") %>
-  </a>
+    <%= if count_user_likes(@card.likes, @user.id) < @board.settings.likes_per_user_per_card do %>
+      <a phx-click="like" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
+        <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
+      </a>
+    <% else %>
+      <a href="#" class="card-footer-item lb-card__footer-item--disabled">
+        <%= fas("heart") %>&nbsp;<%= length(@card.likes) %>
+      </a>
+    <% end %>
+
+    <a phx-click="modal_card_edit"
+      phx-value="<%= @card.id %>"
+      href="#"
+      class="card-footer-item lb-inputTrigger js-cardModal"
+      data-modal="trigger">
+      <%= fas("edit") %>
+    </a>
+    <a phx-click="card_delete" phx-value="<%= @card.id %>" href="#" class="card-footer-item">
+      <%= fas("trash-alt") %>
+    </a>
+  </div>
 </footer>
 <% end %>
 
