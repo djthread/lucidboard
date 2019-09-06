@@ -1,6 +1,8 @@
+<%= if @user do %>
 <a class="navbar-item" href="/dashboard">
   Dashboard
 </a>
 <a class="navbar-item" href="/create-board">
   Create Board
 </a>
+<% end %>

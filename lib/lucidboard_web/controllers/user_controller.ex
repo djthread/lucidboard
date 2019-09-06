@@ -2,6 +2,7 @@ defmodule LucidboardWeb.UserController do
   use LucidboardWeb, :controller
   alias Ecto.Changeset
   alias Lucidboard.{Repo, User}
+  alias LucidboardWeb.DashboardLive
   alias LucidboardWeb.Router.Helpers, as: Routes
 
   @themes Application.get_env(:lucidboard, :themes)
