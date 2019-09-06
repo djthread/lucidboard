@@ -264,7 +264,7 @@ defmodule Lucidboard.Twiddler.Actions do
       {sorted_piles, tx_fn} =
         column
         |> Map.get(:piles)
-        |> Enum.sort(fn p1, p2 -> Op.likes(p1) > Op.likes(p2) end)
+        |> Enum.sort(fn p1, p2 -> Op.likes(p1) >= Op.likes(p2) end)
         |> Op.renumber_piles()
 
       new_board = Focus.set(col_lens, board, %{column | piles: sorted_piles})
