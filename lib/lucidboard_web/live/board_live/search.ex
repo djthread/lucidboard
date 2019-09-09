@@ -1,7 +1,7 @@
 defmodule LucidboardWeb.BoardLive.Search do
   @moduledoc "The on-board search results"
   alias Lucidboard.Board
-  alias Lucidboard.Twiddler.{Op, Glass}
+  alias Lucidboard.Twiddler.{Glass, Op}
 
   @type t :: %__MODULE__{
           q: String.t(),
