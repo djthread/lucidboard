@@ -111,7 +111,7 @@
               "_roles.html",
                 board: @board,
                 user: @user,
-                role_users_suggest: @role_users_suggest,
+                role_suggest: @role_suggest,
                 editable: true) %>
     </div>
   </div>

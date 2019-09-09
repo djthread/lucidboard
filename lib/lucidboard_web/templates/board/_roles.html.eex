@@ -30,7 +30,7 @@
 
   <%= if has_role?(@user, @board, :owner) do %>
     <datalist id="matches">
-      <%= for user <- @role_users_suggest do %>
+      <%= for user <- @role_suggest.list do %>
         <option data-value="<%= user.id %>"><%= display_name(user) %></option>
       <% end %>
     </datalist>
