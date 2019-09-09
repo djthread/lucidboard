@@ -361,7 +361,6 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_info(:role_suggest_fire, socket) do
-    IO.inspect("FIRE! #{inspect(socket.assigns.role_suggest)}")
     suggest = role_suggest_run(socket.assigns.role_suggest)
     {:noreply, assign(socket, :role_suggest, suggest)}
   end
