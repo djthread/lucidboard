@@ -282,8 +282,8 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("search_key", %{"q" => q}, socket) do
-    {:noreply,
-     assign(socket, :search, get_search_assign(q, socket.assigns.board))}
+    search_assign = get_search_assign(q, socket.assigns.board)
+    {:noreply, assign(socket, :search, search_assign)}
   end
 
   def handle_event("search_open", _, socket) do

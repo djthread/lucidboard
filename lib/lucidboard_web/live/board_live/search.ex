@@ -1,7 +1,7 @@
 defmodule LucidboardWeb.BoardLive.Search do
   @moduledoc "The on-board search results"
   alias Lucidboard.Board
-  alias Lucidboard.Twiddler.Actions
+  alias Lucidboard.Twiddler.{Op, Glass}
 
   @type t :: %__MODULE__{
           q: String.t(),
@@ -37,10 +37,12 @@ defmodule LucidboardWeb.BoardLive.Search do
     if match do
       board
     else
-      {:ok, new_board, _tx_fn, _, _event} =
-        Actions.delete_card(board, %{id: card.id})
-
-      new_board
+      with {:ok, card_path} <- Glass.card_path_by_id(board, card.id),
+           {:ok, new_board, _card, _tx_fn} <- Op.cut_card(board, card_path) do
+        new_board
+      else
+        bad -> raise "Unexpected return!: #{inspect(bad)}"
+      end
     end
   end
 end
