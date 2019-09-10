@@ -77,15 +77,20 @@ defmodule Lucidboard.Account do
     do: true
 
   def card_is_editable?(_, %User{id: user_id}, %Board{board_roles: board_roles}) do
-    Enum.any?(board_roles, fn %{user: %{id: uid}, role: :owner} -> uid == user_id end)
+    Enum.any?(board_roles, fn %{user: %{id: uid}, role: :owner} ->
+      uid == user_id
+    end)
   end
 
-  @spec suggest_users(String.t()) :: [User.t()]
-  def suggest_users(query) do
+  @spec suggest_users(String.t(), User.t()) :: [User.t()]
+  def suggest_users(query, %User{id: user_id}) do
     q = "%#{query}%"
 
     Repo.all(
-      from(u in User, where: ilike(u.name, ^q) or ilike(u.full_name, ^q))
+      from(u in User,
+        where:
+          (ilike(u.name, ^q) or ilike(u.full_name, ^q)) and u.id != ^user_id
+      )
     )
   end
 

@@ -2,12 +2,12 @@ defmodule LucidboardWeb.BoardLive.Helper do
   @moduledoc "Functionality to help the BoardLive"
   import Phoenix.LiveView, only: [assign: 2, assign: 3]
   alias Ecto.Changeset
-  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence}
+  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, User}
   alias LucidboardWeb.BoardLive
   alias LucidboardWeb.BoardLive.Search
   alias Phoenix.LiveView.Socket
 
-  @debounce_timeout 1_000
+  @debounce_timeout 500
 
   defmodule RoleSuggest do
     @moduledoc "Holds data related to role autocompletion"
@@ -132,7 +132,11 @@ defmodule LucidboardWeb.BoardLive.Helper do
     %{suggest | q: input, timer: timer}
   end
 
-  def role_suggest_run(%RoleSuggest{q: q} = suggest) do
-    %{suggest | list: Account.suggest_users(q), timer: nil}
+  @doc """
+  Add suggestions. Second arg is the user themselves who should not be
+  suggested.
+  """
+  def role_suggest_run(%RoleSuggest{q: q} = suggest, %User{} = user) do
+    %{suggest | list: Account.suggest_users(q, user), timer: nil}
   end
 end
