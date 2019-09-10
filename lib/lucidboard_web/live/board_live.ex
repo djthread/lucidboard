@@ -58,7 +58,7 @@ defmodule LucidboardWeb.BoardLive do
               delete_confirming_card_id: nil,
               search: nil,
               search_opened?: false,
-              role_users_suggest: []
+              role_suggest: role_suggest_new()
             )
 
           {:ok, socket}
@@ -300,8 +300,8 @@ defmodule LucidboardWeb.BoardLive do
   end
 
   def handle_event("role_suggest", %{"userSearch" => input}, socket) do
-    suggestions = Account.suggest_users(input)
-    {:noreply, assign(socket, :role_users_suggest, suggestions)}
+    suggest = role_suggest_debounce(socket.assigns.role_suggest, input)
+    {:noreply, assign(socket, :role_suggest, suggest)}
   end
 
   def handle_event("grant", %{"user" => user_id} = params, socket) do
@@ -358,6 +358,11 @@ defmodule LucidboardWeb.BoardLive do
        |> put_flash(:error, "The board has been made private.")
        |> redirect(to: Routes.live_path(socket, DashboardLive))}
     end
+  end
+
+  def handle_info(:role_suggest_fire, socket) do
+    suggest = role_suggest_run(socket.assigns.role_suggest, socket.assigns.user)
+    {:noreply, assign(socket, :role_suggest, suggest)}
   end
 
   def handle_info(%Broadcast{event: "presence_diff"}, socket) do

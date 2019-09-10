@@ -2,10 +2,17 @@ defmodule LucidboardWeb.BoardLive.Helper do
   @moduledoc "Functionality to help the BoardLive"
   import Phoenix.LiveView, only: [assign: 2, assign: 3]
   alias Ecto.Changeset
-  alias Lucidboard.{Card, Column, LiveBoard, Presence}
+  alias Lucidboard.{Account, Card, Column, LiveBoard, Presence, User}
   alias LucidboardWeb.BoardLive
   alias LucidboardWeb.BoardLive.Search
   alias Phoenix.LiveView.Socket
+
+  @debounce_timeout 500
+
+  defmodule RoleSuggest do
+    @moduledoc "Holds data related to role autocompletion"
+    defstruct q: nil, list: [], timer: nil
+  end
 
   def user(%Socket{assigns: %{user: user}}), do: user
 
@@ -103,4 +110,33 @@ defmodule LucidboardWeb.BoardLive.Helper do
 
   def get_search_assign(q, board),
     do: %Search{q: q, board: Search.query(q, board)}
+
+  def role_suggest_new, do: %RoleSuggest{}
+
+  def role_suggest_debounce(nil, input) do
+    role_suggest_debounce(%RoleSuggest{}, input)
+  end
+
+  def role_suggest_debounce(%RoleSuggest{timer: timer} = suggest, input)
+      when not is_nil(timer) do
+    Process.cancel_timer(timer)
+    role_suggest_debounce(%{suggest | timer: nil}, input)
+  end
+
+  def role_suggest_debounce(%RoleSuggest{} = suggest, input) do
+    timer =
+      if String.length(input) >= 3 do
+        Process.send_after(self(), :role_suggest_fire, @debounce_timeout)
+      end
+
+    %{suggest | q: input, timer: timer}
+  end
+
+  @doc """
+  Add suggestions. Second arg is the user themselves who should not be
+  suggested.
+  """
+  def role_suggest_run(%RoleSuggest{q: q} = suggest, %User{} = user) do
+    %{suggest | list: Account.suggest_users(q, user), timer: nil}
+  end
 end
