@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/#{@conn.assigns[:theme_css]}") %>">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>">
     <link href="<%= Routes.static_path(@conn, "/fonts/Arsenal-Regular.ttf") %>">
+    <link rel="shortcut icon" href="<%= Routes.static_path(@conn, "/favicon.ico") %>" />
     <%=
       board_id = Map.get(@conn.path_params, "id")
       if board_id, do: raw ~s/    <meta name="board_id" content="#{board_id}">\n/
