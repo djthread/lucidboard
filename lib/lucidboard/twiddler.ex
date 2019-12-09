@@ -94,8 +94,8 @@ defmodule Lucidboard.Twiddler do
   end
 
   @doc "Get a list of board records"
-  @spec boards(integer, integer, String.t() | nil) :: [Board.t()]
-  def boards(user_id, page_index \\ 1, q \\ nil) do
+  @spec boards(integer, integer, String.t() | nil, String.t() | nil) :: [Board.t()]
+  def boards(user_id, page_index \\ 1, q \\ nil, boards_filter \\ nil) do
     user = Account.get!(user_id)
 
     base_query =
@@ -130,7 +130,17 @@ defmodule Lucidboard.Twiddler do
         )
       end
 
-    Repo.paginate(query, page: page_index)
+    filter_query =
+      if boards_filter == "created" do
+        from([base, user: u, role: r] in query,
+          where:
+            r.user_id == ^user_id
+        )
+      else
+        query
+      end
+
+    Repo.paginate(filter_query, page: page_index)
   end
 
   @doc """

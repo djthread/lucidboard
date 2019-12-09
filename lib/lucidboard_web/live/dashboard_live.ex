@@ -25,7 +25,8 @@ defmodule LucidboardWeb.DashboardLive do
       socket
       |> assign(
         user_id: user_id,
-        subscriptions: MapSet.new()
+        subscriptions: MapSet.new(),
+        boards_filter: "all"
       )
       |> load_data_and_handle_subscriptions()
 
@@ -48,8 +49,13 @@ defmodule LucidboardWeb.DashboardLive do
     {:noreply, assign(socket, :short_boards, short_boards)}
   end
 
-  def handle_event("search", %{"q" => search_key}, socket) do
-    {:noreply, load_data_and_handle_subscriptions(socket, 0, search_key)}
+  def handle_event(
+        "search",
+        %{"q" => search_key, "boards_filter" => boards_filter},
+        socket
+      ) do
+    {:noreply,
+     load_data_and_handle_subscriptions(socket, 0, search_key, boards_filter)}
   end
 
   def handle_event("paginate", direction, socket) do
@@ -57,7 +63,8 @@ defmodule LucidboardWeb.DashboardLive do
       load_data_and_handle_subscriptions(
         socket,
         if(direction == "prev", do: -1, else: 1),
-        socket.assigns.search_key
+        socket.assigns.search_key,
+        socket.assigns.boards_filter
       )
 
     {:noreply, socket}
@@ -65,14 +72,21 @@ defmodule LucidboardWeb.DashboardLive do
 
   # Loads all dashboard data and updates subscriptions to reflect the visible
   # boards.
-  defp load_data_and_handle_subscriptions(socket, page_direction \\ 0, q \\ nil) do
+  defp load_data_and_handle_subscriptions(
+         socket,
+         page_direction \\ 0,
+         q \\ nil,
+         boards_filter \\ nil
+       ) do
     search_key = q || socket.assigns[:search_key]
+    boards_filter = boards_filter || socket.assigns[:boards_filter]
 
     board_pagination =
       Twiddler.boards(
         socket.assigns.user_id,
         (get_page_number(socket) || 1) + page_direction,
-        search_key
+        search_key,
+        boards_filter
       )
 
     short_boards = Enum.map(board_pagination, &ShortBoard.from_board/1)
@@ -91,7 +105,8 @@ defmodule LucidboardWeb.DashboardLive do
       short_boards: short_boards,
       board_pagination: board_pagination,
       subscriptions: new_subscriptions,
-      search_key: search_key
+      search_key: search_key,
+      boards_filter: boards_filter
     )
   end
 
