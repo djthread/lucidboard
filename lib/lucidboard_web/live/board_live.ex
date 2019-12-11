@@ -25,11 +25,11 @@ defmodule LucidboardWeb.BoardLive do
     BoardView.render("index.html", assigns)
   end
 
-  def mount(%{user_id: nil}, socket) do
+  def mount(%{user_id: nil, path_params: %{"id" => board_id}}, socket) do
     socket =
       socket
       |> put_flash(:error, "You must be signed in")
-      |> redirect(to: Routes.user_path(Endpoint, :signin))
+      |> redirect(to: Routes.user_path(Endpoint, :signin, board_id: board_id))
 
     {:stop, socket}
   end
