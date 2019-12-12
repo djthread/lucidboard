@@ -66,3 +66,6 @@
     </div>
   <% end %>
 </section>
+
+<%= title = Map.get(@board, :title) %>
+<%= if title, do: raw(~s(<script>document.title = "#{title} | Lucidboard";</script>)) %>
