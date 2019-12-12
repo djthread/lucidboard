@@ -89,7 +89,9 @@ defmodule Lucidboard.Account do
     Repo.all(
       from(u in User,
         where:
-          (ilike(u.name, ^q) or ilike(u.full_name, ^q)) and u.id != ^user_id
+          (ilike(u.name, ^q) or ilike(u.full_name, ^q)) and u.id != ^user_id,
+        order_by: [asc: u.name]
+
       )
     )
   end
