@@ -8,6 +8,29 @@
 
   <form class="u-Mbl" phx-change="search" id="lb-search">
     <input class="input lb-input lb-input-huge js-search" type="text" name="q" value="<%= @search_key %>" placeholder="Search" />
+
+    <div class="control">
+      <label class="radio">
+        <input
+          type="radio"
+          value="all"
+          name="boards_filter
+          id="radio_all"
+          <%= if @boards_filter == "all", do: "checked", else: "" %>
+        />
+        All Boards
+      </label>
+      <label class="radio">
+        <input
+          type="radio"
+          value="created"
+          name="boards_filter"
+          id="radio_created"
+          <%= if @boards_filter == "created", do: "checked", else: "" %>
+        />
+        Your Boards
+      </label>
+    </div>
   </form>
 
   <%= for short_board <- @short_boards do %>
